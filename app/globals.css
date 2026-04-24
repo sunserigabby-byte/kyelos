@@ -1,0 +1,82 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+html {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  /* Prevent text sizing adjust on iOS rotation */
+  -webkit-text-size-adjust: 100%;
+  /* Fix mobile viewport height issues */
+  height: 100%;
+}
+
+body {
+  background: #F9F9F5;
+  min-height: 100%;
+  /* Prevent overscroll bounce on iOS */
+  overscroll-behavior-y: none;
+  /* Better font rendering on mobile */
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* iOS notch / safe area */
+.safe-padding {
+  padding-left: max(1rem, env(safe-area-inset-left));
+  padding-right: max(1rem, env(safe-area-inset-right));
+  padding-bottom: max(6rem, calc(env(safe-area-inset-bottom) + 5rem));
+}
+
+/* Nav safe area for top */
+.safe-top {
+  padding-top: max(0.75rem, env(safe-area-inset-top));
+}
+
+/* Tappable items — larger touch target + tap feedback */
+.tappable {
+  cursor: pointer;
+  -webkit-user-select: none;
+  user-select: none;
+  min-height: 44px; /* Apple's minimum */
+  transition: transform 0.08s ease, background-color 0.15s ease, border-color 0.15s ease;
+}
+.tappable:active {
+  transform: scale(0.98);
+}
+
+/* Checkbox pop animation */
+@keyframes checkPop {
+  0% { transform: scale(0.5); opacity: 0; }
+  60% { transform: scale(1.15); opacity: 1; }
+  100% { transform: scale(1); opacity: 1; }
+}
+.check-pop {
+  animation: checkPop 0.2s ease-out;
+}
+
+/* Fade-in for newly loaded content */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(4px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.fade-in {
+  animation: fadeIn 0.2s ease-out;
+}
+
+/* Hide scroll bars on horizontal scrollers */
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+/* Pulse indicator for live sync */
+@keyframes livePulse {
+  0%, 100% { opacity: 0.5; }
+  50% { opacity: 1; }
+}
+.live-pulse {
+  animation: livePulse 1.5s ease-in-out infinite;
+}
