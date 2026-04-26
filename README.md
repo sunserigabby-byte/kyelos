@@ -2,6 +2,8 @@
 
 A shared Next.js app to track the Puerto Rico 10-Day Cut Protocol for Gabby and Jon. Installs as a PWA on mobile, live syncs across devices, and lets you see each other's progress in real time.
 
+**Live:** https://cut-tracker-six.vercel.app
+
 **Protocol runs April 23 → May 2, 2026.**
 
 ## Features
