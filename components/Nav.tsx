@@ -49,6 +49,12 @@ export default function Nav() {
           >
             Today
           </Link>
+          <Link
+            href="/food"
+            className={`pb-1 transition ${pathname === "/food" ? "border-b-2 border-gold text-white" : "text-white/60"}`}
+          >
+            Food
+          </Link>
           {person === "gabby" && (
             <Link
               href="/cycle"
