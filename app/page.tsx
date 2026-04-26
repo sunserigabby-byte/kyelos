@@ -6,7 +6,9 @@ import { getPlan, getCurrentDay } from "@/lib/plan-data";
 import CheckItem from "@/components/CheckItem";
 import CheckInForm from "@/components/CheckInForm";
 import DaySelector from "@/components/DaySelector";
+import MealCard from "@/components/MealCard";
 import { useCycleSettings } from "@/components/useCycleSettings";
+import { useMealSwaps } from "@/components/useMealSwaps";
 import {
   PHASE_LABEL,
   getCycleDayForDate,
@@ -27,6 +29,7 @@ export default function TodayPage() {
   }, []);
 
   const day = plan[selectedDay - 1];
+  const { swaps: mealSwaps } = useMealSwaps(person, selectedDay);
   if (!day) return null;
 
   let cycleBadge: { cycleDay: number; phaseLabel: string } | null = null;
@@ -85,13 +88,14 @@ export default function TodayPage() {
       {/* Meals */}
       <Section title="Meals">
         {day.meals.map((m) => (
-          <CheckItem
+          <MealCard
             key={m.key}
             person={person}
             dayNum={day.day}
-            itemKey={m.key}
-            title={`${m.label} — ${m.time}`}
-            detail={m.food}
+            meal={m}
+            swap={mealSwaps[m.key]}
+            currentDay={currentDay}
+            maxDay={plan.length}
           />
         ))}
       </Section>
