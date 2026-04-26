@@ -5,6 +5,8 @@ import { useProfile } from "@/components/ProfileContext";
 import { getPlan } from "@/lib/plan-data";
 import { supabase } from "@/lib/supabase";
 import PartnerView from "@/components/PartnerView";
+import { useCycleSettings } from "@/components/useCycleSettings";
+import { getCycleDayForDate, getCyclePhase } from "@/lib/cycle";
 
 type Log = {
   day_num: number;
@@ -29,6 +31,14 @@ export default function ProgressPage() {
   const [completions, setCompletions] = useState<Completion[]>([]);
   const [loading, setLoading] = useState(true);
   const mountedRef = useRef(true);
+  const { settings: cycleSettings } = useCycleSettings(person);
+
+  function isLateLutealDay(isoDate: string): boolean {
+    if (person !== "gabby" || !cycleSettings) return false;
+    const cd = getCycleDayForDate(cycleSettings.last_period_start, isoDate);
+    return getCyclePhase(cd, cycleSettings.cycle_length) === "late_luteal";
+  }
+  const anyLateLuteal = plan.some((d) => isLateLutealDay(d.isoDate));
 
   useEffect(() => {
     mountedRef.current = true;
@@ -155,8 +165,15 @@ export default function ProgressPage() {
                 >
                   <td className="p-3">
                     <div className="font-semibold text-navy">Day {day.day}</div>
-                    <div className="text-xs text-gray-500">
+                    <div className="text-xs text-gray-500 flex items-center gap-1">
                       {day.date.split(", ")[1]}
+                      {isLateLutealDay(day.isoDate) && (
+                        <span
+                          className="inline-block w-2 h-2 rounded-full"
+                          style={{ backgroundColor: "#A88A3F" }}
+                          aria-label="late luteal phase"
+                        />
+                      )}
                     </div>
                   </td>
                   <td className="p-3 text-right">{log?.weight ?? "—"}</td>
@@ -182,6 +199,16 @@ export default function ProgressPage() {
           </tbody>
         </table>
       </div>
+
+      {anyLateLuteal && (
+        <p className="text-xs text-gray-500 mt-2 ml-1 flex items-center gap-1">
+          <span
+            className="inline-block w-2 h-2 rounded-full"
+            style={{ backgroundColor: "#A88A3F" }}
+          />
+          = late luteal phase (expect water retention)
+        </p>
+      )}
 
       {/* Notes summary */}
       <div className="mt-6">

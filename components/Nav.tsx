@@ -49,6 +49,14 @@ export default function Nav() {
           >
             Today
           </Link>
+          {person === "gabby" && (
+            <Link
+              href="/cycle"
+              className={`pb-1 transition ${pathname === "/cycle" ? "border-b-2 border-gold text-white" : "text-white/60"}`}
+            >
+              Cycle
+            </Link>
+          )}
           <Link
             href="/progress"
             className={`pb-1 transition ${pathname === "/progress" ? "border-b-2 border-gold text-white" : "text-white/60"}`}

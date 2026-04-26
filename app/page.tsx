@@ -6,12 +6,19 @@ import { getPlan, getCurrentDay } from "@/lib/plan-data";
 import CheckItem from "@/components/CheckItem";
 import CheckInForm from "@/components/CheckInForm";
 import DaySelector from "@/components/DaySelector";
+import { useCycleSettings } from "@/components/useCycleSettings";
+import {
+  PHASE_LABEL,
+  getCycleDayForDate,
+  getCyclePhase,
+} from "@/lib/cycle";
 
 export default function TodayPage() {
   const { person } = useProfile();
   const plan = getPlan(person);
   const [currentDay, setCurrentDay] = useState(1);
   const [selectedDay, setSelectedDay] = useState(1);
+  const { settings: cycleSettings } = useCycleSettings(person);
 
   useEffect(() => {
     const d = getCurrentDay();
@@ -22,18 +29,31 @@ export default function TodayPage() {
   const day = plan[selectedDay - 1];
   if (!day) return null;
 
+  let cycleBadge: { cycleDay: number; phaseLabel: string } | null = null;
+  if (person === "gabby" && cycleSettings) {
+    const cd = getCycleDayForDate(cycleSettings.last_period_start, day.isoDate);
+    const phase = getCyclePhase(cd, cycleSettings.cycle_length);
+    cycleBadge = { cycleDay: cd, phaseLabel: PHASE_LABEL[phase] };
+  }
+
   return (
     <div>
       <DaySelector currentDay={currentDay} selectedDay={selectedDay} onSelect={setSelectedDay} />
 
       {/* Day banner */}
-      <div className="bg-navy text-white rounded-lg p-5 mb-4 border-t-4 border-b-4 border-gold">
+      <div className="bg-navy text-white rounded-lg p-5 mb-2 border-t-4 border-b-4 border-gold">
         <div className="text-gold text-xs font-bold tracking-widest mb-1">
           DAY {day.day}  •  {day.date.toUpperCase()}
         </div>
         <div className="text-2xl font-bold mb-1">{day.title}</div>
         <div className="text-white/70 text-sm italic">{day.phase}</div>
       </div>
+
+      {cycleBadge && (
+        <div className="text-xs font-semibold tracking-wide mb-4 ml-1" style={{ color: "#A88A3F" }}>
+          Cycle Day {cycleBadge.cycleDay} · {cycleBadge.phaseLabel}
+        </div>
+      )}
 
       {/* Focus */}
       <Section title="Today's Focus">
