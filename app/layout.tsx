@@ -6,7 +6,7 @@ import ServiceWorkerRegister from "@/components/ServiceWorkerRegister";
 
 export const metadata: Metadata = {
   title: "PR Cut Tracker",
-  description: "Puerto Rico 10-Day Cut Protocol Tracker",
+  description: "Puerto Rico 7-Day Cut Protocol Tracker",
   manifest: "/manifest.json",
   appleWebApp: {
     capable: true,

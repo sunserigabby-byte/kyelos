@@ -1,5 +1,5 @@
 // Cut protocol data for Gabby + Jon
-// April 23 - May 2, 2026
+// April 26 - May 2, 2026 (7 days)
 
 export type Person = "gabby" | "jon";
 
@@ -10,8 +10,8 @@ export type WorkoutExercise = {
 
 export type DayPlan = {
   day: number;
-  date: string;           // display string, e.g. "Thursday, April 23"
-  isoDate: string;        // "2026-04-23"
+  date: string;           // display string, e.g. "Sunday, April 26"
+  isoDate: string;        // "2026-04-26"
   title: string;
   phase: string;
   focus: string;
@@ -48,47 +48,42 @@ const gabbyStandardSupps = [
 
 export const gabbyPlan: DayPlan[] = [
   {
-    day: 1, date: "Thursday, April 23", isoDate: "2026-04-23",
-    title: "Full Body Strength",
+    day: 1, date: "Sunday, April 26", isoDate: "2026-04-26",
+    title: "Tournament Day",
     phase: "Phase 1: Aggressive Deficit",
-    focus: "Posterior chain emphasis. RDL is the heaviest lift — ramp to top set of 5 @ RPE 8–9.",
-    amCardio: "30 min incline walk | 3.5 mph, 10% grade | HR 120–135 | Fasted",
-    meals: gabbyStandardMeals("5 oz white fish + 1 cup roasted zucchini & asparagus + ½ sweet potato"),
+    focus: "Tournament play replaces training today. Stay hydrated, eat normally, save legs and arms for the rest of the week.",
+    amCardio: "Optional today — tournament is the priority. If you do cardio, keep it light (20 min easy walk).",
+    meals: gabbyStandardMeals("5 oz chicken or white fish + 1 cup roasted veggies + ½ sweet potato"),
     supplements: gabbyStandardSupps,
     workout: {
-      exercises: [
-        { name: "A. RDL — top set + back-offs", prescription: "Top: 1×5 @ RPE 8–9 | Back-offs: 2×8 @ 75%" },
-        { name: "B. Goblet box squat (parallel)", prescription: "4 × 8 @ RPE 8" },
-        { name: "C1. Chest-supported DB row", prescription: "4 × 8 @ RPE 8" },
-        { name: "C2. DB bench press", prescription: "4 × 8 @ RPE 8" },
-        { name: "D. DB Pendlay row", prescription: "3 × 10 @ RPE 8" },
-        { name: "E. Finisher: Assault bike", prescription: "10 min, 15 cal on / 45s off" },
-      ],
+      circuitIntro: "Tournament play today replaces training. Skip the PM session.",
     },
   },
   {
-    day: 2, date: "Friday, April 24", isoDate: "2026-04-24",
-    title: "Advanced Conditioning + Core",
+    day: 2, date: "Monday, April 27", isoDate: "2026-04-27",
+    title: "Glute Focus + Arm Pump",
     phase: "Phase 1: Aggressive Deficit",
-    focus: "Hard metabolic work. Zero jumping. Descending ladder + heavy core.",
+    focus: "Glute-dominant lower + super-set arm pump for aesthetics. Different from Day 1 — hip thrust anchors instead of RDL. Arms in super-sets to maximize pump in minimum time.",
     amCardio: "30 min incline walk | Zone 2 | HR 120–135",
     meals: gabbyStandardMeals("5 oz 93/7 ground turkey + 1 cup roasted zucchini & asparagus + ½ sweet potato"),
     supplements: gabbyStandardSupps,
     workout: {
-      circuitIntro: "Descending ladder — 21-15-9-6 reps for time (target sub-15 min):",
-      circuit: [
-        "Calorie row",
-        "DB thrusters (20–25 lb per hand)",
-        "Reverse lunges (per leg)",
-        "— THEN CORE x 3 rounds —",
-        "Ab wheel rollouts: 10 reps",
-        "Pallof press: 12/side @ heavy tension",
-        "Weighted plank: 45s",
+      exercises: [
+        { name: "A. Barbell hip thrust — top set + back-offs", prescription: "Top: 1×6 @ RPE 9 | Back-offs: 3×10 @ 75%" },
+        { name: "B. Tempo goblet box squat (3s eccentric)", prescription: "3 × 10 @ RPE 8" },
+        { name: "C1. Cable kickback (single leg)", prescription: "3 × 12/leg @ RPE 8" },
+        { name: "C2. Standing cable hip abduction", prescription: "3 × 15/side @ RPE 8" },
+        { name: "D. Frog pump or banded glute bridge burnout", prescription: "2 × 30 reps" },
+        { name: "E1. Cable curl", prescription: "4 × 12 @ RPE 8" },
+        { name: "E2. Rope pushdown", prescription: "4 × 12 @ RPE 8" },
+        { name: "F1. Hammer curl", prescription: "3 × 12 @ RPE 8–9" },
+        { name: "F2. Overhead tricep extension (rope)", prescription: "3 × 12 @ RPE 8–9" },
+        { name: "G. Myo-rep lateral raise", prescription: "1×12 + 4 mini-sets of 4 reps, 15s rest" },
       ],
     },
   },
   {
-    day: 3, date: "Saturday, April 25", isoDate: "2026-04-25",
+    day: 3, date: "Tuesday, April 28", isoDate: "2026-04-28",
     title: "Upper Body Strength + HIIT",
     phase: "Phase 1: Aggressive Deficit",
     focus: "Heavy press + heavy pull. Full knee rest. Myo-reps on delts and face pulls.",
@@ -108,7 +103,7 @@ export const gabbyPlan: DayPlan[] = [
     },
   },
   {
-    day: 4, date: "Sunday, April 26", isoDate: "2026-04-26",
+    day: 4, date: "Wednesday, April 29", isoDate: "2026-04-29",
     title: "Lower Strength — The Big Day",
     phase: "Phase 1: Aggressive Deficit",
     focus: "Anchor session of the week. Heavy hip thrust + heavy RDL. Target 185+ lb hip thrust top set.",
@@ -127,66 +122,7 @@ export const gabbyPlan: DayPlan[] = [
     },
   },
   {
-    day: 5, date: "Monday, April 27", isoDate: "2026-04-27",
-    title: "Conditioning + Heavy Carries",
-    phase: "Phase 1: Aggressive Deficit",
-    focus: "Full-body intensity without joint stress. KB swings, push press, carries.",
-    amCardio: "30 min incline walk | Zone 2 | HR 120–135",
-    meals: gabbyStandardMeals("5 oz shrimp or white fish + 1 cup roasted zucchini & asparagus + ½ sweet potato"),
-    supplements: gabbyStandardSupps,
-    workout: {
-      circuitIntro: "EMOM 24 — cycle through 6 times:",
-      circuit: [
-        "Min 1: 15 heavy KB swings (35 lb+, eye level)",
-        "Min 2: 12 DB push press",
-        "Min 3: 15 cal Assault bike or row",
-        "Min 4: 40-yard farmer's carry (40–50 lb each hand)",
-        "— FINISHER x 3 rounds —",
-        "Hollow body hold: 30s",
-        "Side plank: 30s/side",
-        "Dead bugs: 10 slow",
-      ],
-    },
-  },
-  {
-    day: 6, date: "Tuesday, April 28", isoDate: "2026-04-28",
-    title: "Upper Hypertrophy (Pump Day)",
-    phase: "Phase 1: Aggressive Deficit",
-    focus: "Higher volume, moderate load, rest-pause on isolations. CNS break before Day 8.",
-    amCardio: "30 min incline walk | Zone 2 | HR 120–135",
-    meals: gabbyStandardMeals("5 oz chicken or white fish + 1 cup roasted veggies + ½ sweet potato"),
-    supplements: gabbyStandardSupps,
-    workout: {
-      exercises: [
-        { name: "A1. Cable chest press or flat DB press", prescription: "4 × 10 @ RPE 8" },
-        { name: "A2. Seated cable row or DB row", prescription: "4 × 10 @ RPE 8" },
-        { name: "B1. Rest-pause DB curl", prescription: "Failure @ 10RM → 15s → failure → 15s → failure" },
-        { name: "B2. Rest-pause tricep pushdown", prescription: "Same protocol" },
-        { name: "C. Super-set lateral + rear delt fly", prescription: "4 × 12 each" },
-        { name: "D. Core circuit x 3", prescription: "Cable crunch 15, leg raise 10, Pallof 12/side" },
-      ],
-    },
-  },
-  {
-    day: 7, date: "Wednesday, April 29", isoDate: "2026-04-29",
-    title: "Active Recovery",
-    phase: "Phase 1: Last day of deficit",
-    focus: "Full rest. CNS and knee both need it. Sleep 8+ hours — Day 8 is heavy.",
-    amCardio: "60-min outdoor walk (replaces treadmill)",
-    meals: gabbyStandardMeals("5 oz chicken or white fish + 1 cup roasted veggies + ½ sweet potato"),
-    supplements: gabbyStandardSupps,
-    workout: {
-      circuitIntro: "No hard training today. Do mobility + walk:",
-      circuit: [
-        "60-min outdoor walk",
-        "20–30 min mobility (couch stretch, 90/90, T-spine)",
-        "Sauna 20 min if available",
-        "Restock groceries",
-      ],
-    },
-  },
-  {
-    day: 8, date: "Thursday, April 30", isoDate: "2026-04-30",
+    day: 5, date: "Thursday, April 30", isoDate: "2026-04-30",
     title: "Upper Strength (Peak Week Begins)",
     phase: "Phase 2: Peak Week",
     focus: "Last truly hard session. Water manipulation begins. Sauna if possible.",
@@ -211,7 +147,7 @@ export const gabbyPlan: DayPlan[] = [
     },
   },
   {
-    day: 9, date: "Friday, May 1", isoDate: "2026-05-01",
+    day: 6, date: "Friday, May 1", isoDate: "2026-05-01",
     title: "Lower Volume / Glycogen Deplete",
     phase: "Phase 2: Peak Week",
     focus: "Higher reps, moderate load. Depletion — not strength. Sodium drops hard.",
@@ -241,7 +177,7 @@ export const gabbyPlan: DayPlan[] = [
     },
   },
   {
-    day: 10, date: "Saturday, May 2", isoDate: "2026-05-02",
+    day: 7, date: "Saturday, May 2", isoDate: "2026-05-02",
     title: "Travel Day — Puerto Rico! 🌴",
     phase: "Phase 3: Travel Day",
     focus: "Dry out, pump up, go. Single AM workout before the airport.",
@@ -299,11 +235,23 @@ const jonStandardSupps = [
 
 export const jonPlan: DayPlan[] = [
   {
-    day: 1, date: "Thursday, April 23", isoDate: "2026-04-23",
+    day: 1, date: "Sunday, April 26", isoDate: "2026-04-26",
+    title: "Tournament Day",
+    phase: "Phase 1: Aggressive Deficit",
+    focus: "Tournament play replaces training today. Stay hydrated, eat normally, save your push for tomorrow.",
+    amCardio: "Optional today — tournament is the priority. If you do cardio, keep it light (20 min easy walk).",
+    meals: jonStandardMeals("7 oz chicken or white fish + 1 cup roasted veggies + 1 medium sweet potato"),
+    supplements: jonStandardSupps,
+    workout: {
+      circuitIntro: "Tournament play today replaces training. Skip the PM session.",
+    },
+  },
+  {
+    day: 2, date: "Monday, April 27", isoDate: "2026-04-27",
     title: "PUSH — Chest, Shoulders, Tri's",
     phase: "Phase 1: Aggressive Deficit",
     focus: "Heavy barbell bench. Top set of 5 @ RPE 8–9, followed by volume on chest and shoulders.",
-    amCardio: "40 min incline walk | 3.5 mph, 10% grade | HR 125–145 | Fasted",
+    amCardio: "40 min incline walk | Zone 2 | HR 125–145",
     meals: jonStandardMeals("7 oz white fish + 1 cup roasted zucchini & asparagus + 1 medium sweet potato"),
     supplements: jonStandardSupps,
     workout: {
@@ -319,7 +267,7 @@ export const jonPlan: DayPlan[] = [
     },
   },
   {
-    day: 2, date: "Friday, April 24", isoDate: "2026-04-24",
+    day: 3, date: "Tuesday, April 28", isoDate: "2026-04-28",
     title: "PULL — Back, Rear Delts, Bi's",
     phase: "Phase 1: Aggressive Deficit",
     focus: "Weighted pull-ups lead. Heavy rowing volume — thickness + width.",
@@ -339,7 +287,7 @@ export const jonPlan: DayPlan[] = [
     },
   },
   {
-    day: 3, date: "Saturday, April 25", isoDate: "2026-04-25",
+    day: 4, date: "Wednesday, April 29", isoDate: "2026-04-29",
     title: "LEGS — Squat Focus",
     phase: "Phase 1: Aggressive Deficit",
     focus: "Heavy back squat anchors. Top set of 5 @ RPE 9. Quad and hamstring accessories after.",
@@ -358,87 +306,7 @@ export const jonPlan: DayPlan[] = [
     },
   },
   {
-    day: 4, date: "Sunday, April 26", isoDate: "2026-04-26",
-    title: "Upper Hypertrophy (Pump Day)",
-    phase: "Phase 1: Aggressive Deficit",
-    focus: "Higher volume, moderate load, intensity techniques. Super-sets + rest-pause.",
-    amCardio: "40 min incline walk | Zone 2 | HR 125–145",
-    meals: jonStandardMeals("7 oz salmon or white fish + 1 cup roasted veggies + 1 medium sweet potato"),
-    supplements: jonStandardSupps,
-    workout: {
-      exercises: [
-        { name: "A1. Incline DB press", prescription: "4 × 10 @ RPE 8" },
-        { name: "A2. Chest-supported row", prescription: "4 × 10 @ RPE 8" },
-        { name: "B1. Cable chest fly (high to low)", prescription: "3 × 12 @ RPE 8" },
-        { name: "B2. Wide-grip lat pulldown", prescription: "3 × 12 @ RPE 8" },
-        { name: "C1. Super-set lateral raise", prescription: "4 × 15 @ RPE 9" },
-        { name: "C2. Super-set rear delt fly", prescription: "4 × 15 @ RPE 9" },
-        { name: "D1. Rest-pause hammer curl", prescription: "Failure @ 12RM → 15s → failure → 15s → failure" },
-        { name: "D2. Rest-pause pushdown", prescription: "Same protocol" },
-      ],
-    },
-  },
-  {
-    day: 5, date: "Monday, April 27", isoDate: "2026-04-27",
-    title: "Conditioning + Heavy Carries",
-    phase: "Phase 1: Aggressive Deficit",
-    focus: "Full-body metabolic work. Heavy carries, swings, optional sled push.",
-    amCardio: "40 min incline walk | Zone 2 | HR 125–145",
-    meals: jonStandardMeals("7 oz shrimp or chicken + 1 cup roasted zucchini & asparagus + 1 medium sweet potato"),
-    supplements: jonStandardSupps,
-    workout: {
-      circuitIntro: "EMOM 28 — cycle through 7 times:",
-      circuit: [
-        "Min 1: 20 heavy KB swings (53–70 lb, eye level)",
-        "Min 2: 15 DB push press",
-        "Min 3: 15 cal Assault bike or row",
-        "Min 4: 50-yard farmer's carry (70+ lb each hand)",
-        "— FINISHER x 3 rounds —",
-        "Hollow body hold: 45s",
-        "Side plank: 45s/side",
-        "Weighted dead bugs: 10 slow",
-      ],
-    },
-  },
-  {
-    day: 6, date: "Tuesday, April 28", isoDate: "2026-04-28",
-    title: "LEGS — Deadlift Focus",
-    phase: "Phase 1: Aggressive Deficit",
-    focus: "Conventional or trap bar deadlift. Top set of 3 @ RPE 9. Posterior chain emphasis.",
-    amCardio: "40 min incline walk | Zone 2 | HR 125–145",
-    meals: jonStandardMeals("7 oz lean sirloin or chicken + 1 cup roasted veggies + 1 medium sweet potato"),
-    supplements: jonStandardSupps,
-    workout: {
-      exercises: [
-        { name: "A. Deadlift — top + back-offs", prescription: "Top: 1×3 @ RPE 9 | Back-offs: 3×5 @ 80%" },
-        { name: "B. Barbell hip thrust", prescription: "4 × 8 @ RPE 8" },
-        { name: "C. Front squat or hack squat", prescription: "3 × 10 @ RPE 8" },
-        { name: "D. Reverse lunge", prescription: "3 × 10/leg @ RPE 8" },
-        { name: "E. Glute-ham raise or Nordic curl", prescription: "3 × 8 @ RPE 8–9" },
-        { name: "F. Seated calf raise", prescription: "4 × 15 @ RPE 9" },
-      ],
-    },
-  },
-  {
-    day: 7, date: "Wednesday, April 29", isoDate: "2026-04-29",
-    title: "Active Recovery",
-    phase: "Phase 1: Last day of deficit",
-    focus: "Full rest. CNS needs it. Sleep 8+ hours — Day 8 is a peak week session.",
-    amCardio: "60-min outdoor walk (replaces treadmill)",
-    meals: jonStandardMeals("7 oz chicken or white fish + 1 cup roasted veggies + 1 medium sweet potato"),
-    supplements: jonStandardSupps,
-    workout: {
-      circuitIntro: "No hard training today. Movement + restock:",
-      circuit: [
-        "60-min outdoor walk",
-        "20–30 min mobility (couch stretch, 90/90, T-spine)",
-        "Sauna 20 min if available",
-        "Restock groceries",
-      ],
-    },
-  },
-  {
-    day: 8, date: "Thursday, April 30", isoDate: "2026-04-30",
+    day: 5, date: "Thursday, April 30", isoDate: "2026-04-30",
     title: "Upper Strength — Peak Week Begins",
     phase: "Phase 2: Peak Week",
     focus: "Last hard upper session. Push/Pull combined. Water manipulation begins.",
@@ -465,7 +333,7 @@ export const jonPlan: DayPlan[] = [
     },
   },
   {
-    day: 9, date: "Friday, May 1", isoDate: "2026-05-01",
+    day: 6, date: "Friday, May 1", isoDate: "2026-05-01",
     title: "Lower Volume / Glycogen Deplete",
     phase: "Phase 2: Peak Week",
     focus: "Higher reps, moderate load. Depletion — not strength. Sodium drops hard.",
@@ -496,7 +364,7 @@ export const jonPlan: DayPlan[] = [
     },
   },
   {
-    day: 10, date: "Saturday, May 2", isoDate: "2026-05-02",
+    day: 7, date: "Saturday, May 2", isoDate: "2026-05-02",
     title: "Travel Day — Puerto Rico! 🌴",
     phase: "Phase 3: Travel Day",
     focus: "Dry out, pump up, go. Single AM pump before the airport.",
@@ -542,12 +410,12 @@ export function getPlan(person: Person): DayPlan[] {
 }
 
 export function getCurrentDay(): number {
-  // Day 1 = April 23, 2026
-  const start = new Date("2026-04-23T00:00:00");
+  // Day 1 = April 26, 2026
+  const start = new Date("2026-04-26T00:00:00");
   const now = new Date();
   const diffMs = now.getTime() - start.getTime();
   const diffDays = Math.floor(diffMs / (1000 * 60 * 60 * 24)) + 1;
   if (diffDays < 1) return 1;
-  if (diffDays > 10) return 10;
+  if (diffDays > 7) return 7;
   return diffDays;
 }

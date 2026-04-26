@@ -1,10 +1,10 @@
 # PR Cut Tracker 🌴
 
-A shared Next.js app to track the Puerto Rico 10-Day Cut Protocol for Gabby and Jon. Installs as a PWA on mobile, live syncs across devices, and lets you see each other's progress in real time.
+A shared Next.js app to track the Puerto Rico 7-Day Cut Protocol for Gabby and Jon. Installs as a PWA on mobile, live syncs across devices, and lets you see each other's progress in real time.
 
 **Live:** https://cut-tracker-six.vercel.app
 
-**Protocol runs April 23 → May 2, 2026.**
+**Protocol runs April 26 → May 2, 2026.**
 
 ## Features
 
@@ -13,7 +13,7 @@ A shared Next.js app to track the Puerto Rico 10-Day Cut Protocol for Gabby and 
 - 👥 **Partner view** — see both Gabby and Jon's stats side-by-side on the Progress page
 - ✅ **Daily checklist** — AM cardio, meals, supplements, workout, all checkable
 - 📝 **Check-in form** — weight, waist, sleep, energy, compliance, notes (auto-saves)
-- 📊 **Progress page** — 10-day table with completion %, weight trend, notes summary
+- 📊 **Progress page** — 7-day table with completion %, weight trend, notes summary
 - 📳 **Haptic feedback** on mobile when you check items
 - 🎨 **Blueprint Athletics branding** — navy + gold throughout
 
@@ -86,11 +86,11 @@ Both of you do this on your own phones. The icon opens the app full-screen, no b
 
 ## How to use it
 
-- **Day 1 = April 23, 2026.** The app auto-detects today's day. Today is highlighted in gold on the day selector.
+- **Day 1 = April 26, 2026.** The app auto-detects today's day. Today is highlighted in gold on the day selector.
 - **Toggle profiles** at the top-right (Gabby / Jon). Each device remembers which profile you're using.
 - **Tap items** to check them off. Data saves instantly, syncs instantly to the other device.
 - **Live indicator** (green pulse in top-left) shows when Realtime is connected.
-- **Progress tab** shows the Partner View at top (both of you side-by-side with live updates), then your own 10-day table below.
+- **Progress tab** shows the Partner View at top (both of you side-by-side with live updates), then your own 7-day table below.
 
 ## Data model
 

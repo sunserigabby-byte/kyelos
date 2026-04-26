@@ -109,7 +109,7 @@ export default function ProgressPage() {
 
       {/* Your own summary */}
       <div className="text-xs font-bold tracking-widest text-navy/60 mb-2">
-        YOUR 10-DAY PROGRESS
+        YOUR 7-DAY PROGRESS
       </div>
       <div className="bg-navy text-white rounded-lg p-5 mb-4 border-t-4 border-b-4 border-gold">
         <div className="grid grid-cols-3 gap-3">
@@ -129,7 +129,7 @@ export default function ProgressPage() {
         </div>
       </div>
 
-      {/* 10-day table */}
+      {/* 7-day table */}
       <div className="bg-white rounded-lg border border-gray-200 overflow-hidden">
         <table className="w-full text-sm">
           <thead className="bg-navy text-white">
