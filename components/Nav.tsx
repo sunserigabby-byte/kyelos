@@ -5,6 +5,20 @@ import { usePathname } from "next/navigation";
 import { useProfile } from "./ProfileContext";
 import { useLiveStatus } from "./useLiveStatus";
 
+function GearIcon() {
+  return (
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+      <path
+        d="M12 15.5a3.5 3.5 0 100-7 3.5 3.5 0 000 7z M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 11-2.83 2.83l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 11-4 0v-.09a1.65 1.65 0 00-1.08-1.51 1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 11-2.83-2.83l.06-.06a1.65 1.65 0 00.33-1.82 1.65 1.65 0 00-1.51-1H3a2 2 0 110-4h.09a1.65 1.65 0 001.51-1.08 1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 112.83-2.83l.06.06a1.65 1.65 0 001.82.33H9a1.65 1.65 0 001-1.51V3a2 2 0 114 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 112.83 2.83l-.06.06a1.65 1.65 0 00-.33 1.82V9a1.65 1.65 0 001.51 1H21a2 2 0 110 4h-.09a1.65 1.65 0 00-1.51 1z"
+        stroke="currentColor"
+        strokeWidth="1.5"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+    </svg>
+  );
+}
+
 export default function Nav() {
   const { person, setPerson } = useProfile();
   const pathname = usePathname();
@@ -68,6 +82,13 @@ export default function Nav() {
             className={`pb-1 transition ${pathname === "/progress" ? "border-b-2 border-gold text-white" : "text-white/60"}`}
           >
             Progress
+          </Link>
+          <Link
+            href="/settings"
+            className={`pb-1 transition ml-auto ${pathname === "/settings" ? "border-b-2 border-gold text-white" : "text-white/60"}`}
+            aria-label="Settings"
+          >
+            <GearIcon />
           </Link>
         </div>
       </div>

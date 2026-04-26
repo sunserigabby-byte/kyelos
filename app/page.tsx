@@ -1,12 +1,15 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useProfile } from "@/components/ProfileContext";
 import { getPlan, getCurrentDay } from "@/lib/plan-data";
 import CheckItem from "@/components/CheckItem";
 import CheckInForm from "@/components/CheckInForm";
 import DaySelector from "@/components/DaySelector";
 import MealCard from "@/components/MealCard";
+import HydrationCard from "@/components/HydrationCard";
+import DaySummary from "@/components/DaySummary";
+import PartnerNudgeToast from "@/components/PartnerNudgeToast";
 import { useCycleSettings } from "@/components/useCycleSettings";
 import { useMealSwaps } from "@/components/useMealSwaps";
 import {
@@ -14,6 +17,16 @@ import {
   getCycleDayForDate,
   getCyclePhase,
 } from "@/lib/cycle";
+import { supabase } from "@/lib/supabase";
+import {
+  REMINDERS,
+  notificationPermissionState,
+  requestNotificationPermission,
+  scheduleLocalReminder,
+  showNotification,
+  recentlyDueReminders,
+  type NotifSettings,
+} from "@/lib/notifications";
 
 export default function TodayPage() {
   const { person } = useProfile();
@@ -21,12 +34,81 @@ export default function TodayPage() {
   const [currentDay, setCurrentDay] = useState(1);
   const [selectedDay, setSelectedDay] = useState(1);
   const { settings: cycleSettings } = useCycleSettings(person);
+  const [showNotifBanner, setShowNotifBanner] = useState(false);
+  const [recentlyDueText, setRecentlyDueText] = useState<string | null>(null);
+  const scheduledIds = useRef<number[]>([]);
 
   useEffect(() => {
     const d = getCurrentDay();
     setCurrentDay(d);
     setSelectedDay(d);
   }, []);
+
+  // First-visit notification permission banner
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    if (notificationPermissionState() !== "default") return;
+    if (localStorage.getItem("cut_tracker_notif_ack")) return;
+    setShowNotifBanner(true);
+  }, []);
+
+  // Schedule local reminders (and surface any missed-by-30-min ones).
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    let cancelled = false;
+
+    async function setup() {
+      // Clear any previously-scheduled timeouts
+      scheduledIds.current.forEach((id) => clearTimeout(id));
+      scheduledIds.current = [];
+
+      const { data } = await supabase
+        .from("notification_settings")
+        .select("*")
+        .eq("person", person)
+        .maybeSingle();
+      if (cancelled || !data) return;
+
+      const enabled = data as unknown as NotifSettings;
+      if (notificationPermissionState() === "granted") {
+        for (const r of REMINDERS) {
+          if (!enabled[r.key]) continue;
+          const id = scheduleLocalReminder(r.hour, r.minute, r.title, r.body);
+          if (id) scheduledIds.current.push(id);
+        }
+      }
+
+      // Show a banner for any reminders that fired in the last 30 minutes
+      // (e.g. user opened the app late). Only the most recent one.
+      const due = recentlyDueReminders(enabled);
+      if (due.length > 0) {
+        const last = due[due.length - 1];
+        setRecentlyDueText(`${last.title} — ${last.body}`);
+      }
+    }
+
+    setup();
+
+    return () => {
+      cancelled = true;
+      scheduledIds.current.forEach((id) => clearTimeout(id));
+      scheduledIds.current = [];
+    };
+  }, [person]);
+
+  async function enableNotifications() {
+    const ok = await requestNotificationPermission();
+    localStorage.setItem("cut_tracker_notif_ack", ok ? "granted" : "denied");
+    setShowNotifBanner(false);
+    if (ok) {
+      showNotification("Reminders on ✓", "You'll see daily nudges while the app is open.");
+    }
+  }
+
+  function dismissBanner() {
+    localStorage.setItem("cut_tracker_notif_ack", "dismissed");
+    setShowNotifBanner(false);
+  }
 
   const day = plan[selectedDay - 1];
   const { swaps: mealSwaps } = useMealSwaps(person, selectedDay);
@@ -41,6 +123,51 @@ export default function TodayPage() {
 
   return (
     <div>
+      <PartnerNudgeToast person={person} />
+
+      {showNotifBanner && (
+        <div className="bg-gold-light border-2 border-gold rounded-lg p-3 mb-3 flex items-center gap-3">
+          <div className="flex-1 text-sm text-navy">
+            <div className="font-semibold mb-0.5">Want reminders?</div>
+            <div className="text-xs text-navy/70">
+              Coffee, cardio, tea, workout, wind-down.
+            </div>
+          </div>
+          <button
+            onClick={enableNotifications}
+            className="tappable bg-navy text-gold font-semibold py-2 px-3 rounded-md text-xs flex-shrink-0"
+          >
+            Enable
+          </button>
+          <button
+            onClick={dismissBanner}
+            className="tappable text-navy/50 text-xs underline-offset-2 hover:underline flex-shrink-0"
+          >
+            Not now
+          </button>
+        </div>
+      )}
+
+      {recentlyDueText && (
+        <div className="bg-navy text-white border-2 border-gold rounded-lg p-3 mb-3 flex items-start justify-between gap-2">
+          <div className="text-sm">
+            <div className="text-[10px] tracking-widest text-gold font-bold mb-0.5">
+              REMINDER
+            </div>
+            <div>{recentlyDueText}</div>
+          </div>
+          <button
+            onClick={() => setRecentlyDueText(null)}
+            className="tappable text-white/60 text-xs"
+            aria-label="Dismiss"
+          >
+            ✕
+          </button>
+        </div>
+      )}
+
+      <DaySummary person={person} plan={plan} selectedDay={selectedDay} />
+
       <DaySelector currentDay={currentDay} selectedDay={selectedDay} onSelect={setSelectedDay} />
 
       {/* Day banner */}
@@ -82,6 +209,16 @@ export default function TodayPage() {
           itemKey="am_cardio"
           title="AM Cardio Complete"
           detail={day.amCardio}
+        />
+      </Section>
+
+      {/* Hydration */}
+      <Section title="Hydration">
+        <HydrationCard
+          person={person}
+          dayNum={day.day}
+          isoDate={day.isoDate}
+          totalDays={plan.length}
         />
       </Section>
 

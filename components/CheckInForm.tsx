@@ -16,6 +16,7 @@ type LogState = {
   sleep: string;
   energy: string;
   compliance: string;
+  steps: string;
   notes: string;
 };
 
@@ -25,6 +26,7 @@ const EMPTY: LogState = {
   sleep: "",
   energy: "",
   compliance: "",
+  steps: "",
   notes: "",
 };
 
@@ -59,6 +61,7 @@ export default function CheckInForm({ person, dayNum, isoDate }: Props) {
                 sleep: row.sleep?.toString() ?? "",
                 energy: row.energy?.toString() ?? "",
                 compliance: row.compliance?.toString() ?? "",
+                steps: row.steps?.toString() ?? "",
                 notes: row.notes ?? "",
               });
             }
@@ -89,6 +92,7 @@ export default function CheckInForm({ person, dayNum, isoDate }: Props) {
         sleep: data.sleep?.toString() ?? "",
         energy: data.energy?.toString() ?? "",
         compliance: data.compliance?.toString() ?? "",
+        steps: data.steps?.toString() ?? "",
         notes: data.notes ?? "",
       });
     } else {
@@ -108,6 +112,7 @@ export default function CheckInForm({ person, dayNum, isoDate }: Props) {
       sleep: state.sleep ? parseInt(state.sleep) : null,
       energy: state.energy ? parseInt(state.energy) : null,
       compliance: state.compliance ? parseInt(state.compliance) : null,
+      steps: state.steps ? parseInt(state.steps) : null,
       notes: state.notes || null,
       updated_at: new Date().toISOString(),
     };
@@ -157,16 +162,20 @@ export default function CheckInForm({ person, dayNum, isoDate }: Props) {
           min="1"
           max="10"
         />
-        <div className="col-span-2">
-          <Field
-            label="Compliance /10"
-            value={state.compliance}
-            onChange={(v) => setState({ ...state, compliance: v })}
-            inputMode="numeric"
-            min="1"
-            max="10"
-          />
-        </div>
+        <Field
+          label="Compliance /10"
+          value={state.compliance}
+          onChange={(v) => setState({ ...state, compliance: v })}
+          inputMode="numeric"
+          min="1"
+          max="10"
+        />
+        <Field
+          label="Steps"
+          value={state.steps}
+          onChange={(v) => setState({ ...state, steps: v })}
+          inputMode="numeric"
+        />
       </div>
       <div className="mb-3">
         <label className="text-xs text-gray-500 block mb-1">Notes / cravings / mood</label>

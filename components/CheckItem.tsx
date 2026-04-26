@@ -3,6 +3,7 @@
 import { useEffect, useState, useRef } from "react";
 import { supabase } from "@/lib/supabase";
 import type { Person } from "@/lib/plan-data";
+import { maybeNudgePartner } from "@/lib/partner-nudges";
 
 type Props = {
   person: Person;
@@ -92,6 +93,12 @@ export default function CheckItem({ person, dayNum, itemKey, title, subtitle, de
       },
       { onConflict: "person,day_num,item_key" }
     );
+
+    if (newVal) {
+      // Fire-and-forget partner nudge if applicable. Errors are swallowed
+      // inside the helper (e.g., pre-migration table-missing).
+      maybeNudgePartner(person, dayNum, itemKey);
+    }
   }
 
   return (
