@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState } from "react";
 import { supabase } from "@/lib/supabase";
 import type { Person } from "@/lib/plan-data";
 import { maybeNudgePartner } from "@/lib/partner-nudges";
@@ -17,13 +17,27 @@ type Props = {
 export default function CheckItem({ person, dayNum, itemKey, title, subtitle, detail }: Props) {
   const [checked, setChecked] = useState(false);
   const [animating, setAnimating] = useState(false);
-  const mountedRef = useRef(true);
 
   useEffect(() => {
-    mountedRef.current = true;
+    // Reset visual state immediately so we never flash the previous day's value
+    // while the fresh load is in flight.
+    setChecked(false);
+
+    let cancelled = false;
+
+    async function loadState() {
+      const { data } = await supabase
+        .from("completions")
+        .select("completed")
+        .eq("person", person)
+        .eq("day_num", dayNum)
+        .eq("item_key", itemKey)
+        .maybeSingle();
+      if (cancelled) return;
+      setChecked(!!data?.completed);
+    }
     loadState();
 
-    // Live subscription: listen for changes to this specific item
     const channel = supabase
       .channel(`completion_${person}_${dayNum}_${itemKey}`)
       .on(
@@ -35,7 +49,7 @@ export default function CheckItem({ person, dayNum, itemKey, title, subtitle, de
           filter: `person=eq.${person}`,
         },
         (payload) => {
-          if (!mountedRef.current) return;
+          if (cancelled) return;
           const newRow = (payload.new as any) || (payload.old as any);
           if (
             newRow &&
@@ -50,24 +64,10 @@ export default function CheckItem({ person, dayNum, itemKey, title, subtitle, de
       .subscribe();
 
     return () => {
-      mountedRef.current = false;
+      cancelled = true;
       supabase.removeChannel(channel);
     };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [person, dayNum, itemKey]);
-
-  async function loadState() {
-    const { data } = await supabase
-      .from("completions")
-      .select("completed")
-      .eq("person", person)
-      .eq("day_num", dayNum)
-      .eq("item_key", itemKey)
-      .maybeSingle();
-    if (mountedRef.current) {
-      setChecked(!!data?.completed);
-    }
-  }
 
   async function toggle() {
     const newVal = !checked;

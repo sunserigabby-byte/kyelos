@@ -30,6 +30,11 @@ export default function HydrationCard({ person, dayNum, isoDate, totalDays }: Pr
   const goalHitRef = useRef(false);
 
   useEffect(() => {
+    // Reset to 0 immediately so a previous day's value doesn't briefly show
+    // before the load resolves.
+    setWaterOz(0);
+    goalHitRef.current = false;
+
     let mounted = true;
 
     async function load() {

@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { supabase } from "@/lib/supabase";
 import type { Person } from "@/lib/plan-data";
 
@@ -34,10 +34,41 @@ export default function CheckInForm({ person, dayNum, isoDate }: Props) {
   const [state, setState] = useState<LogState>(EMPTY);
   const [saving, setSaving] = useState(false);
   const [saved, setSaved] = useState(false);
-  const mountedRef = useRef(true);
+  // Track our own save kicks so live events from our own upsert don't clobber
+  // in-progress edits. Read inside the realtime callback via .current so we
+  // see the up-to-date value rather than a stale closure.
+  const savingRef = useRef(false);
 
   useEffect(() => {
-    mountedRef.current = true;
+    // Reset to blank immediately when day or person changes so the previous
+    // day's values never bleed onto a new day's view before the load resolves.
+    setState(EMPTY);
+    setSaved(false);
+
+    let cancelled = false;
+
+    async function load() {
+      const { data } = await supabase
+        .from("daily_logs")
+        .select("*")
+        .eq("person", person)
+        .eq("day_num", dayNum)
+        .maybeSingle();
+      if (cancelled) return;
+      if (data) {
+        setState({
+          weight: data.weight?.toString() ?? "",
+          waist: data.waist?.toString() ?? "",
+          sleep: data.sleep?.toString() ?? "",
+          energy: data.energy?.toString() ?? "",
+          compliance: data.compliance?.toString() ?? "",
+          steps: data.steps?.toString() ?? "",
+          notes: data.notes ?? "",
+        });
+      } else {
+        setState(EMPTY);
+      }
+    }
     load();
 
     const channel = supabase
@@ -51,57 +82,32 @@ export default function CheckInForm({ person, dayNum, isoDate }: Props) {
           filter: `person=eq.${person}`,
         },
         (payload) => {
+          if (cancelled) return;
           const row = payload.new as any;
-          if (row && row.day_num === dayNum && mountedRef.current) {
-            // Only update if this isn't a save from our own form
-            if (!saving) {
-              setState({
-                weight: row.weight?.toString() ?? "",
-                waist: row.waist?.toString() ?? "",
-                sleep: row.sleep?.toString() ?? "",
-                energy: row.energy?.toString() ?? "",
-                compliance: row.compliance?.toString() ?? "",
-                steps: row.steps?.toString() ?? "",
-                notes: row.notes ?? "",
-              });
-            }
+          if (row && row.day_num === dayNum && !savingRef.current) {
+            setState({
+              weight: row.weight?.toString() ?? "",
+              waist: row.waist?.toString() ?? "",
+              sleep: row.sleep?.toString() ?? "",
+              energy: row.energy?.toString() ?? "",
+              compliance: row.compliance?.toString() ?? "",
+              steps: row.steps?.toString() ?? "",
+              notes: row.notes ?? "",
+            });
           }
         }
       )
       .subscribe();
 
     return () => {
-      mountedRef.current = false;
+      cancelled = true;
       supabase.removeChannel(channel);
     };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [person, dayNum]);
-
-  async function load() {
-    const { data } = await supabase
-      .from("daily_logs")
-      .select("*")
-      .eq("person", person)
-      .eq("day_num", dayNum)
-      .maybeSingle();
-    if (!mountedRef.current) return;
-    if (data) {
-      setState({
-        weight: data.weight?.toString() ?? "",
-        waist: data.waist?.toString() ?? "",
-        sleep: data.sleep?.toString() ?? "",
-        energy: data.energy?.toString() ?? "",
-        compliance: data.compliance?.toString() ?? "",
-        steps: data.steps?.toString() ?? "",
-        notes: data.notes ?? "",
-      });
-    } else {
-      setState(EMPTY);
-    }
-  }
 
   async function save() {
     setSaving(true);
+    savingRef.current = true;
     setSaved(false);
     const payload = {
       person,
@@ -120,6 +126,11 @@ export default function CheckInForm({ person, dayNum, isoDate }: Props) {
       .from("daily_logs")
       .upsert(payload, { onConflict: "person,day_num" });
     setSaving(false);
+    // Allow live events through again on the next tick so the upsert echo
+    // doesn't briefly overwrite the form mid-edit.
+    setTimeout(() => {
+      savingRef.current = false;
+    }, 500);
     if (!error) {
       setSaved(true);
       if (typeof window !== "undefined" && "vibrate" in navigator) {

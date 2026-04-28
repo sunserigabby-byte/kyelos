@@ -12,6 +12,11 @@ export function useMealSwaps(person: Person, dayNum: number) {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    // Clear stale day data immediately so the new day starts blank
+    // until the fresh load completes.
+    setSwaps({});
+    setLoading(true);
+
     let mounted = true;
 
     async function load() {
