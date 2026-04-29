@@ -1,48 +1,86 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { supabase } from "@/lib/supabase";
 import type { Person } from "@/lib/plan-data";
+
+export type CheckInPhase = "am" | "pm";
+
+// Module-scoped: when ANY CheckInForm (AM or PM) saves, both instances
+// ignore incoming realtime events for a brief window so the upsert echo
+// doesn't clobber whatever the user is typing in the other phase's card.
+let lastSaveAt = 0;
+const SAVE_ECHO_WINDOW_MS = 800;
 
 type Props = {
   person: Person;
   dayNum: number;
   isoDate: string;
+  phase: CheckInPhase;
 };
 
-type LogState = {
-  weight: string;
-  waist: string;
-  sleep: string;
-  energy: string;
-  compliance: string;
-  steps: string;
-  notes: string;
+// AM and PM each own their own form fields; a save in one phase reads the
+// existing row first so the other phase's fields are never overwritten.
+const AM_KEYS = ["weight", "waist", "sleep", "energy"] as const;
+const PM_KEYS = ["steps", "compliance", "notes"] as const;
+type AmKey = (typeof AM_KEYS)[number];
+type PmKey = (typeof PM_KEYS)[number];
+
+const FIELD_LABEL: Record<AmKey | PmKey, string> = {
+  weight: "Weight (AM)",
+  waist: "Waist",
+  sleep: "Sleep /10",
+  energy: "Energy /10",
+  steps: "Steps",
+  compliance: "Compliance /10",
+  notes: "Notes / cravings / mood",
 };
 
-const EMPTY: LogState = {
-  weight: "",
-  waist: "",
-  sleep: "",
-  energy: "",
-  compliance: "",
-  steps: "",
-  notes: "",
+const PHASE_TITLE: Record<CheckInPhase, string> = {
+  am: "Morning Check-In",
+  pm: "Evening Check-In",
 };
 
-export default function CheckInForm({ person, dayNum, isoDate }: Props) {
-  const [state, setState] = useState<LogState>(EMPTY);
+const PHASE_HINT: Record<CheckInPhase, string> = {
+  am: "Weight, waist, sleep, energy. Submit when you wake up.",
+  pm: "Steps, compliance, and notes. Submit at end of day.",
+};
+
+function emptyState(phase: CheckInPhase): Record<string, string> {
+  const keys = phase === "am" ? AM_KEYS : PM_KEYS;
+  return Object.fromEntries(keys.map((k) => [k, ""]));
+}
+
+function rowToState(row: any, phase: CheckInPhase): Record<string, string> {
+  const keys = phase === "am" ? AM_KEYS : PM_KEYS;
+  const out: Record<string, string> = {};
+  for (const k of keys) {
+    const v = row?.[k];
+    out[k] = v == null ? "" : String(v);
+  }
+  return out;
+}
+
+function parseField(key: AmKey | PmKey, raw: string): number | string | null {
+  const trimmed = raw.trim();
+  if (trimmed === "") return null;
+  if (key === "notes") return trimmed;
+  if (key === "weight" || key === "waist") {
+    const n = parseFloat(trimmed);
+    return Number.isFinite(n) ? n : null;
+  }
+  // sleep, energy, compliance, steps -> int
+  const n = parseInt(trimmed, 10);
+  return Number.isFinite(n) ? n : null;
+}
+
+export default function CheckInForm({ person, dayNum, isoDate, phase }: Props) {
+  const [state, setState] = useState<Record<string, string>>(() => emptyState(phase));
   const [saving, setSaving] = useState(false);
   const [saved, setSaved] = useState(false);
-  // Track our own save kicks so live events from our own upsert don't clobber
-  // in-progress edits. Read inside the realtime callback via .current so we
-  // see the up-to-date value rather than a stale closure.
-  const savingRef = useRef(false);
 
   useEffect(() => {
-    // Reset to blank immediately when day or person changes so the previous
-    // day's values never bleed onto a new day's view before the load resolves.
-    setState(EMPTY);
+    setState(emptyState(phase));
     setSaved(false);
 
     let cancelled = false;
@@ -55,24 +93,12 @@ export default function CheckInForm({ person, dayNum, isoDate }: Props) {
         .eq("day_num", dayNum)
         .maybeSingle();
       if (cancelled) return;
-      if (data) {
-        setState({
-          weight: data.weight?.toString() ?? "",
-          waist: data.waist?.toString() ?? "",
-          sleep: data.sleep?.toString() ?? "",
-          energy: data.energy?.toString() ?? "",
-          compliance: data.compliance?.toString() ?? "",
-          steps: data.steps?.toString() ?? "",
-          notes: data.notes ?? "",
-        });
-      } else {
-        setState(EMPTY);
-      }
+      setState(data ? rowToState(data, phase) : emptyState(phase));
     }
     load();
 
     const channel = supabase
-      .channel(`log_${person}_${dayNum}`)
+      .channel(`log_${phase}_${person}_${dayNum}`)
       .on(
         "postgres_changes",
         {
@@ -84,16 +110,12 @@ export default function CheckInForm({ person, dayNum, isoDate }: Props) {
         (payload) => {
           if (cancelled) return;
           const row = payload.new as any;
-          if (row && row.day_num === dayNum && !savingRef.current) {
-            setState({
-              weight: row.weight?.toString() ?? "",
-              waist: row.waist?.toString() ?? "",
-              sleep: row.sleep?.toString() ?? "",
-              energy: row.energy?.toString() ?? "",
-              compliance: row.compliance?.toString() ?? "",
-              steps: row.steps?.toString() ?? "",
-              notes: row.notes ?? "",
-            });
+          if (
+            row &&
+            row.day_num === dayNum &&
+            Date.now() - lastSaveAt > SAVE_ECHO_WINDOW_MS
+          ) {
+            setState(rowToState(row, phase));
           }
         }
       )
@@ -103,34 +125,54 @@ export default function CheckInForm({ person, dayNum, isoDate }: Props) {
       cancelled = true;
       supabase.removeChannel(channel);
     };
-  }, [person, dayNum]);
+  }, [person, dayNum, phase]);
 
   async function save() {
     setSaving(true);
-    savingRef.current = true;
+    lastSaveAt = Date.now();
     setSaved(false);
-    const payload = {
+
+    // Read the existing row so we can merge — saving AM must never null PM
+    // fields (or vice versa), and water_oz from HydrationCard must survive.
+    const { data: existing } = await supabase
+      .from("daily_logs")
+      .select(
+        "weight, waist, sleep, energy, compliance, steps, notes, water_oz"
+      )
+      .eq("person", person)
+      .eq("day_num", dayNum)
+      .maybeSingle();
+
+    const merged: Record<string, any> = {
       person,
       day_num: dayNum,
       date: isoDate,
-      weight: state.weight ? parseFloat(state.weight) : null,
-      waist: state.waist ? parseFloat(state.waist) : null,
-      sleep: state.sleep ? parseInt(state.sleep) : null,
-      energy: state.energy ? parseInt(state.energy) : null,
-      compliance: state.compliance ? parseInt(state.compliance) : null,
-      steps: state.steps ? parseInt(state.steps) : null,
-      notes: state.notes || null,
+      // Preserve every existing field; phase-specific fields are overwritten below.
+      weight: existing?.weight ?? null,
+      waist: existing?.waist ?? null,
+      sleep: existing?.sleep ?? null,
+      energy: existing?.energy ?? null,
+      compliance: existing?.compliance ?? null,
+      steps: existing?.steps ?? null,
+      notes: existing?.notes ?? null,
+      water_oz: existing?.water_oz ?? 0,
       updated_at: new Date().toISOString(),
     };
+
+    const keys = phase === "am" ? AM_KEYS : PM_KEYS;
+    for (const k of keys) {
+      merged[k] = parseField(k, state[k] ?? "");
+    }
+
     const { error } = await supabase
       .from("daily_logs")
-      .upsert(payload, { onConflict: "person,day_num" });
+      .upsert(merged, { onConflict: "person,day_num" });
+
     setSaving(false);
-    // Allow live events through again on the next tick so the upsert echo
-    // doesn't briefly overwrite the form mid-edit.
-    setTimeout(() => {
-      savingRef.current = false;
-    }, 500);
+    // Refresh the timestamp once more so the realtime echo from this very
+    // upsert (which arrives a moment after the request resolves) is also
+    // inside the ignore window.
+    lastSaveAt = Date.now();
     if (!error) {
       setSaved(true);
       if (typeof window !== "undefined" && "vibrate" in navigator) {
@@ -140,69 +182,92 @@ export default function CheckInForm({ person, dayNum, isoDate }: Props) {
     }
   }
 
+  const buttonLabel = saving
+    ? "Saving..."
+    : saved
+    ? "✓ Saved"
+    : phase === "am"
+    ? "Save Morning"
+    : "Save Evening";
+
   return (
-    <div className="bg-white rounded-lg p-4 border border-gray-200">
-      <div className="grid grid-cols-2 gap-3 mb-3">
-        <Field
-          label="Weight (AM)"
-          value={state.weight}
-          onChange={(v) => setState({ ...state, weight: v })}
-          inputMode="decimal"
-          step="0.1"
-        />
-        <Field
-          label="Waist"
-          value={state.waist}
-          onChange={(v) => setState({ ...state, waist: v })}
-          inputMode="decimal"
-          step="0.1"
-        />
-        <Field
-          label="Sleep /10"
-          value={state.sleep}
-          onChange={(v) => setState({ ...state, sleep: v })}
-          inputMode="numeric"
-          min="1"
-          max="10"
-        />
-        <Field
-          label="Energy /10"
-          value={state.energy}
-          onChange={(v) => setState({ ...state, energy: v })}
-          inputMode="numeric"
-          min="1"
-          max="10"
-        />
-        <Field
-          label="Compliance /10"
-          value={state.compliance}
-          onChange={(v) => setState({ ...state, compliance: v })}
-          inputMode="numeric"
-          min="1"
-          max="10"
-        />
-        <Field
-          label="Steps"
-          value={state.steps}
-          onChange={(v) => setState({ ...state, steps: v })}
-          inputMode="numeric"
-        />
-      </div>
+    <div className="bg-white rounded-lg p-4 border border-gray-200 mb-3">
       <div className="mb-3">
-        <label className="text-xs text-gray-500 block mb-1">Notes / cravings / mood</label>
-        <textarea
-          value={state.notes}
-          onChange={(e) => setState({ ...state, notes: e.target.value })}
-          rows={2}
-          className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:border-navy focus:outline-none"
-        />
+        <div className="text-navy font-semibold text-sm">{PHASE_TITLE[phase]}</div>
+        <div className="text-xs text-gray-500">{PHASE_HINT[phase]}</div>
       </div>
+
+      {phase === "am" ? (
+        <div className="grid grid-cols-2 gap-3 mb-3">
+          <Field
+            label={FIELD_LABEL.weight}
+            value={state.weight}
+            onChange={(v) => setState({ ...state, weight: v })}
+            inputMode="decimal"
+            step="0.1"
+          />
+          <Field
+            label={FIELD_LABEL.waist}
+            value={state.waist}
+            onChange={(v) => setState({ ...state, waist: v })}
+            inputMode="decimal"
+            step="0.1"
+          />
+          <Field
+            label={FIELD_LABEL.sleep}
+            value={state.sleep}
+            onChange={(v) => setState({ ...state, sleep: v })}
+            inputMode="numeric"
+            min="1"
+            max="10"
+          />
+          <Field
+            label={FIELD_LABEL.energy}
+            value={state.energy}
+            onChange={(v) => setState({ ...state, energy: v })}
+            inputMode="numeric"
+            min="1"
+            max="10"
+          />
+        </div>
+      ) : (
+        <div>
+          <div className="grid grid-cols-2 gap-3 mb-3">
+            <Field
+              label={FIELD_LABEL.steps}
+              value={state.steps}
+              onChange={(v) => setState({ ...state, steps: v })}
+              inputMode="numeric"
+            />
+            <Field
+              label={FIELD_LABEL.compliance}
+              value={state.compliance}
+              onChange={(v) => setState({ ...state, compliance: v })}
+              inputMode="numeric"
+              min="1"
+              max="10"
+            />
+          </div>
+          <div className="mb-3">
+            <label className="text-xs text-gray-500 block mb-1">
+              {FIELD_LABEL.notes}
+            </label>
+            <textarea
+              value={state.notes}
+              onChange={(e) => setState({ ...state, notes: e.target.value })}
+              rows={2}
+              className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:border-navy focus:outline-none"
+            />
+          </div>
+        </div>
+      )}
+
       <button
         onClick={save}
         disabled={saving}
         className="tappable w-full bg-navy text-white rounded-lg py-3 font-semibold hover:bg-navy-dark transition disabled:opacity-50"
       >
-        {saving ? "Saving..." : saved ? "✓ Saved" : "Save Check-In"}
+        {buttonLabel}
       </button>
     </div>
   );

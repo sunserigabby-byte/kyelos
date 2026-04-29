@@ -185,106 +185,128 @@ export default function TodayPage() {
         </div>
       )}
 
-      {/* Focus */}
-      <Section title="Today's Focus">
-        <p className="text-sm text-gray-700 leading-relaxed">{day.focus}</p>
-      </Section>
-
-      {/* Peak adjustments */}
-      {day.peakAdjustments && (
-        <Section title="Peak Week Adjustments">
-          <ul className="text-sm text-gray-700 space-y-1">
-            {day.peakAdjustments.map((a, i) => (
-              <li key={i}>• {a}</li>
-            ))}
-          </ul>
+      {/*
+        Day-scoped UI is wrapped in a keyed div so React fully unmounts and
+        remounts everything inside whenever person or selected day changes.
+        That guarantees CheckItems / HydrationCard / CheckInForm start with
+        fresh useState values rather than briefly flashing the previous
+        day's data while the new fetch is in flight.
+      */}
+      <div key={`${person}-${day.day}`}>
+        {/* Focus */}
+        <Section title="Today's Focus">
+          <p className="text-sm text-gray-700 leading-relaxed">{day.focus}</p>
         </Section>
-      )}
 
-      {/* AM Cardio */}
-      <Section title="AM Cardio">
-        <CheckItem
-          person={person}
-          dayNum={day.day}
-          itemKey="am_cardio"
-          title="AM Cardio Complete"
-          detail={day.amCardio}
-        />
-      </Section>
+        {/* Peak adjustments */}
+        {day.peakAdjustments && (
+          <Section title="Peak Week Adjustments">
+            <ul className="text-sm text-gray-700 space-y-1">
+              {day.peakAdjustments.map((a, i) => (
+                <li key={i}>• {a}</li>
+              ))}
+            </ul>
+          </Section>
+        )}
 
-      {/* Hydration */}
-      <Section title="Hydration">
-        <HydrationCard
-          person={person}
-          dayNum={day.day}
-          isoDate={day.isoDate}
-          totalDays={plan.length}
-        />
-      </Section>
-
-      {/* Meals */}
-      <Section title="Meals">
-        {day.meals.map((m) => (
-          <MealCard
-            key={m.key}
-            person={person}
-            dayNum={day.day}
-            meal={m}
-            swap={mealSwaps[m.key]}
-            currentDay={currentDay}
-            maxDay={plan.length}
-          />
-        ))}
-      </Section>
-
-      {/* Supplements */}
-      <Section title="Supplements & Tea">
-        {day.supplements.map((s) => (
+        {/* AM Cardio */}
+        <Section title="AM Cardio">
           <CheckItem
-            key={s.key}
             person={person}
             dayNum={day.day}
-            itemKey={s.key}
-            title={s.time}
-            detail={s.item}
+            itemKey="am_cardio"
+            title="AM Cardio Complete"
+            detail={day.amCardio}
           />
-        ))}
-      </Section>
+        </Section>
 
-      {/* Workout */}
-      <Section title="PM Workout">
-        {day.workout.circuitIntro && (
-          <p className="text-sm text-gray-700 mb-3 font-medium">{day.workout.circuitIntro}</p>
-        )}
-        {day.workout.circuit && (
-          <ul className="text-sm text-gray-700 space-y-1 mb-3 pl-4">
-            {day.workout.circuit.map((item, i) => (
-              <li key={i}>• {item}</li>
-            ))}
-          </ul>
-        )}
-        {day.workout.exercises && (
-          <div className="space-y-2 mb-3">
-            {day.workout.exercises.map((ex, i) => (
-              <div key={i} className="bg-navy-light rounded p-3">
-                <div className="font-semibold text-navy text-sm">{ex.name}</div>
-                <div className="text-sm text-gray-700 mt-1">{ex.prescription}</div>
-              </div>
-            ))}
-          </div>
-        )}
-        <CheckItem
-          person={person}
-          dayNum={day.day}
-          itemKey="workout_complete"
-          title="Workout Complete ✓"
-        />
-      </Section>
+        {/* Hydration */}
+        <Section title="Hydration">
+          <HydrationCard
+            person={person}
+            dayNum={day.day}
+            isoDate={day.isoDate}
+            totalDays={plan.length}
+          />
+        </Section>
 
-      {/* Check-in */}
-      <Section title="Daily Check-In">
-        <CheckInForm person={person} dayNum={day.day} isoDate={day.isoDate} />
-      </Section>
+        {/* Meals */}
+        <Section title="Meals">
+          {day.meals.map((m) => (
+            <MealCard
+              key={m.key}
+              person={person}
+              dayNum={day.day}
+              meal={m}
+              swap={mealSwaps[m.key]}
+              currentDay={currentDay}
+              maxDay={plan.length}
+            />
+          ))}
+        </Section>
+
+        {/* Supplements */}
+        <Section title="Supplements & Tea">
+          {day.supplements.map((s) => (
+            <CheckItem
+              key={s.key}
+              person={person}
+              dayNum={day.day}
+              itemKey={s.key}
+              title={s.time}
+              detail={s.item}
+            />
+          ))}
+        </Section>
+
+        {/* Workout */}
+        <Section title="PM Workout">
+          {day.workout.circuitIntro && (
+            <p className="text-sm text-gray-700 mb-3 font-medium">{day.workout.circuitIntro}</p>
+          )}
+          {day.workout.circuit && (
+            <ul className="text-sm text-gray-700 space-y-1 mb-3 pl-4">
+              {day.workout.circuit.map((item, i) => (
+                <li key={i}>• {item}</li>
+              ))}
+            </ul>
+          )}
+          {day.workout.exercises && (
+            <div className="space-y-2 mb-3">
+              {day.workout.exercises.map((ex, i) => (
+                <div key={i} className="bg-navy-light rounded p-3">
+                  <div className="font-semibold text-navy text-sm">{ex.name}</div>
+                  <div className="text-sm text-gray-700 mt-1">{ex.prescription}</div>
+                </div>
+              ))}
+            </div>
+          )}
+          <CheckItem
+            person={person}
+            dayNum={day.day}
+            itemKey="workout_complete"
+            title="Workout Complete ✓"
+          />
+        </Section>
+
+        {/* Check-in — split into AM and PM cards. Each save merges with
+            the existing daily_logs row so neither phase nulls the other's
+            fields, and HydrationCard's water_oz is also preserved. */}
+        <Section title="Daily Check-In">
+          <CheckInForm
+            person={person}
+            dayNum={day.day}
+            isoDate={day.isoDate}
+            phase="am"
+          />
+          <CheckInForm
+            person={person}
+            dayNum={day.day}
+            isoDate={day.isoDate}
+            phase="pm"
+          />
+        </Section>
+      </div>
     </div>
   );
 }
