@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { supabase } from "@/lib/supabase";
 import type { Person } from "@/lib/plan-data";
 import { maybeNudgePartner } from "@/lib/partner-nudges";
+import { usePhase } from "@/components/PhaseContext";
 
 type Props = {
   person: Person;
@@ -12,16 +13,22 @@ type Props = {
   title: string;
   subtitle?: string;
   detail?: string;
+  /** Override the phase to write to. Defaults to active phase from context. */
+  phaseId?: string;
+  /** When true, taps are ignored (used for archived phase views). */
+  readonly?: boolean;
 };
 
-export default function CheckItem({ person, dayNum, itemKey, title, subtitle, detail }: Props) {
+export default function CheckItem({ person, dayNum, itemKey, title, subtitle, detail, phaseId, readonly }: Props) {
+  const { activePhase } = usePhase();
+  const effectivePhaseId = phaseId ?? activePhase?.id ?? null;
+
   const [checked, setChecked] = useState(false);
   const [animating, setAnimating] = useState(false);
 
   useEffect(() => {
-    // Reset visual state immediately so we never flash the previous day's value
-    // while the fresh load is in flight.
     setChecked(false);
+    if (!effectivePhaseId) return;
 
     let cancelled = false;
 
@@ -32,6 +39,7 @@ export default function CheckItem({ person, dayNum, itemKey, title, subtitle, de
         .eq("person", person)
         .eq("day_num", dayNum)
         .eq("item_key", itemKey)
+        .eq("phase_id", effectivePhaseId)
         .maybeSingle();
       if (cancelled) return;
       setChecked(!!data?.completed);
@@ -39,7 +47,7 @@ export default function CheckItem({ person, dayNum, itemKey, title, subtitle, de
     loadState();
 
     const channel = supabase
-      .channel(`completion_${person}_${dayNum}_${itemKey}`)
+      .channel(`completion_${person}_${dayNum}_${itemKey}_${effectivePhaseId}`)
       .on(
         "postgres_changes",
         {
@@ -54,7 +62,8 @@ export default function CheckItem({ person, dayNum, itemKey, title, subtitle, de
           if (
             newRow &&
             newRow.day_num === dayNum &&
-            newRow.item_key === itemKey
+            newRow.item_key === itemKey &&
+            newRow.phase_id === effectivePhaseId
           ) {
             const newVal = (payload.new as any)?.completed ?? false;
             setChecked(newVal);
@@ -67,13 +76,15 @@ export default function CheckItem({ person, dayNum, itemKey, title, subtitle, de
       cancelled = true;
       supabase.removeChannel(channel);
     };
-  }, [person, dayNum, itemKey]);
+  }, [person, dayNum, itemKey, effectivePhaseId]);
 
   async function toggle() {
+    if (readonly) return;
+    if (!effectivePhaseId) return;
+
     const newVal = !checked;
     setChecked(newVal);
 
-    // Haptic feedback on mobile
     if (typeof window !== "undefined" && "vibrate" in navigator) {
       navigator.vibrate(newVal ? 10 : 5);
     }
@@ -88,15 +99,14 @@ export default function CheckItem({ person, dayNum, itemKey, title, subtitle, de
         person,
         day_num: dayNum,
         item_key: itemKey,
+        phase_id: effectivePhaseId,
         completed: newVal,
         updated_at: new Date().toISOString(),
       },
-      { onConflict: "person,day_num,item_key" }
+      { onConflict: "person,day_num,item_key,phase_id" }
     );
 
     if (newVal) {
-      // Fire-and-forget partner nudge if applicable. Errors are swallowed
-      // inside the helper (e.g., pre-migration table-missing).
       maybeNudgePartner(person, dayNum, itemKey);
     }
   }

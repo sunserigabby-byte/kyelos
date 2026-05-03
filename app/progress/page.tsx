@@ -2,9 +2,11 @@
 
 import { useEffect, useState, useRef } from "react";
 import { useProfile } from "@/components/ProfileContext";
+import { usePhase } from "@/components/PhaseContext";
 import { getPlan } from "@/lib/plan-data";
 import { supabase } from "@/lib/supabase";
 import PartnerView from "@/components/PartnerView";
+import VacationProgress from "@/components/VacationProgress";
 import { useCycleSettings } from "@/components/useCycleSettings";
 import { getCycleDayForDate, getCyclePhase } from "@/lib/cycle";
 
@@ -25,6 +27,17 @@ type Completion = {
 };
 
 export default function ProgressPage() {
+  const { activePhase, loading: phaseLoading } = usePhase();
+  if (phaseLoading) {
+    return <div className="text-center text-gray-500 py-8">Loading...</div>;
+  }
+  if (activePhase?.phase_type === "vacation") {
+    return <VacationProgress />;
+  }
+  return <CutProgressPage />;
+}
+
+function CutProgressPage() {
   const { person } = useProfile();
   const plan = getPlan(person);
   const [logs, setLogs] = useState<Log[]>([]);

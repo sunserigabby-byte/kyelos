@@ -156,3 +156,41 @@ create policy "public_read_nudge" on partner_nudges for select using (true);
 create policy "public_write_nudge" on partner_nudges for insert with check (true);
 create policy "public_update_nudge" on partner_nudges for update using (true);
 alter publication supabase_realtime add table partner_nudges;
+
+-- ============================================
+-- Phase system (Phase 2: PR Vacation onward)
+-- ============================================
+
+create table if not exists phases (
+  id uuid primary key default gen_random_uuid(),
+  person text not null check (person in ('gabby', 'jon')),
+  name text not null,
+  phase_type text not null,
+  start_date date not null,
+  end_date date not null,
+  is_active boolean default false,
+  created_at timestamptz default now(),
+  updated_at timestamptz default now()
+);
+
+alter table phases enable row level security;
+create policy "public_read_phases"  on phases for select using (true);
+create policy "public_write_phases" on phases for insert with check (true);
+create policy "public_update_phases" on phases for update using (true);
+alter publication supabase_realtime add table phases;
+
+insert into phases (person, name, phase_type, start_date, end_date, is_active) values
+  ('gabby', '10-Day Cut Protocol', 'cut',      '2026-04-23', '2026-05-02', false),
+  ('gabby', 'Puerto Rico Vacation', 'vacation', '2026-05-02', '2026-05-09', true),
+  ('jon',   '10-Day Cut Protocol', 'cut',      '2026-04-23', '2026-05-02', false),
+  ('jon',   'Puerto Rico Vacation', 'vacation', '2026-05-02', '2026-05-09', true);
+
+alter table daily_logs  add column if not exists phase_id        uuid references phases(id);
+alter table daily_logs  add column if not exists diet_sodas      int default 0;
+alter table daily_logs  add column if not exists recovery_mode   boolean default false;
+alter table daily_logs  add column if not exists protein_g       int default 0;
+alter table daily_logs  add column if not exists dandelion_count int default 0;
+alter table completions add column if not exists phase_id        uuid references phases(id);
+
+-- Note: unique constraints on daily_logs and completions are extended in
+-- migration 0004 to include phase_id, after backfilling existing rows.

@@ -3,7 +3,9 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useProfile } from "./ProfileContext";
+import { usePhase } from "./PhaseContext";
 import { useLiveStatus } from "./useLiveStatus";
+import { getCurrentPhaseDay } from "@/lib/phases";
 
 function GearIcon() {
   return (
@@ -21,17 +23,28 @@ function GearIcon() {
 
 export default function Nav() {
   const { person, setPerson } = useProfile();
+  const { activePhase } = usePhase();
   const pathname = usePathname();
   const { isConnected } = useLiveStatus();
+
+  const vacationPill =
+    activePhase?.phase_type === "vacation"
+      ? `🌴 PR Day ${getCurrentPhaseDay(activePhase, new Date())}`
+      : null;
 
   return (
     <div className="bg-navy text-white sticky top-0 z-50 shadow-md safe-top">
       <div className="max-w-2xl mx-auto px-4 pb-3 pt-2">
         <div className="flex items-center justify-between mb-3">
-          <div className="flex items-center gap-2">
-            <h1 className="text-gold font-bold tracking-widest text-xs">PR CUT TRACKER</h1>
+          <div className="flex items-center gap-2 min-w-0">
+            <h1 className="text-gold font-bold tracking-widest text-xs flex-shrink-0">PR CUT TRACKER</h1>
+            {vacationPill && (
+              <span className="bg-gold text-navy text-[10px] font-bold tracking-wide px-1.5 py-0.5 rounded-full flex-shrink-0">
+                {vacationPill}
+              </span>
+            )}
             {isConnected && (
-              <span className="live-pulse flex items-center gap-1 text-[10px] text-gold/80">
+              <span className="live-pulse flex items-center gap-1 text-[10px] text-gold/80 flex-shrink-0">
                 <span className="w-1.5 h-1.5 bg-green-400 rounded-full"></span>
                 LIVE
               </span>
@@ -82,6 +95,12 @@ export default function Nav() {
             className={`pb-1 transition ${pathname === "/progress" ? "border-b-2 border-gold text-white" : "text-white/60"}`}
           >
             Progress
+          </Link>
+          <Link
+            href="/phases"
+            className={`pb-1 transition ${pathname === "/phases" ? "border-b-2 border-gold text-white" : "text-white/60"}`}
+          >
+            History
           </Link>
           <Link
             href="/settings"

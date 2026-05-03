@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from "next";
 import "./globals.css";
 import Nav from "@/components/Nav";
 import { ProfileProvider } from "@/components/ProfileContext";
+import { PhaseProvider } from "@/components/PhaseContext";
 import ServiceWorkerRegister from "@/components/ServiceWorkerRegister";
 
 export const metadata: Metadata = {
@@ -40,11 +41,13 @@ export default function RootLayout({
     <html lang="en">
       <body>
         <ProfileProvider>
-          <ServiceWorkerRegister />
-          <Nav />
-          <main className="max-w-2xl mx-auto px-4 pb-24 pt-4 safe-padding">
-            {children}
-          </main>
+          <PhaseProvider>
+            <ServiceWorkerRegister />
+            <Nav />
+            <main className="max-w-2xl mx-auto px-4 pb-24 pt-4 safe-padding">
+              {children}
+            </main>
+          </PhaseProvider>
         </ProfileProvider>
       </body>
     </html>

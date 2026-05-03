@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import { useProfile } from "@/components/ProfileContext";
+import { usePhase } from "@/components/PhaseContext";
 import { getPlan, getCurrentDay } from "@/lib/plan-data";
 import CheckItem from "@/components/CheckItem";
 import CheckInForm from "@/components/CheckInForm";
@@ -10,6 +11,7 @@ import MealCard from "@/components/MealCard";
 import HydrationCard from "@/components/HydrationCard";
 import DaySummary from "@/components/DaySummary";
 import PartnerNudgeToast from "@/components/PartnerNudgeToast";
+import VacationToday from "@/components/VacationToday";
 import { useCycleSettings } from "@/components/useCycleSettings";
 import { useMealSwaps } from "@/components/useMealSwaps";
 import {
@@ -29,6 +31,17 @@ import {
 } from "@/lib/notifications";
 
 export default function TodayPage() {
+  const { activePhase, loading } = usePhase();
+  if (loading) {
+    return <div className="text-center text-gray-500 py-8">Loading...</div>;
+  }
+  if (activePhase?.phase_type === "vacation") {
+    return <VacationToday />;
+  }
+  return <CutTodayPage />;
+}
+
+function CutTodayPage() {
   const { person } = useProfile();
   const plan = getPlan(person);
   const [currentDay, setCurrentDay] = useState(1);

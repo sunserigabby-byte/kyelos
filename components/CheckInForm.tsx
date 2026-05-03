@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { supabase } from "@/lib/supabase";
 import type { Person } from "@/lib/plan-data";
+import { usePhase } from "@/components/PhaseContext";
 
 export type CheckInPhase = "am" | "pm";
 
@@ -107,6 +108,9 @@ function formatValue(key: FieldKey, raw: string): string {
 }
 
 export default function CheckInForm({ person, dayNum, isoDate, phase }: Props) {
+  const { activePhase } = usePhase();
+  const phaseId = activePhase?.id;
+
   const [state, setState] = useState<Record<string, string>>(() => emptyState(phase));
   const [saving, setSaving] = useState(false);
   const [editing, setEditing] = useState(true);
@@ -116,6 +120,7 @@ export default function CheckInForm({ person, dayNum, isoDate, phase }: Props) {
     setState(emptyState(phase));
     setEditing(true);
     setShowOverlay(false);
+    if (!phaseId) return;
 
     let cancelled = false;
 
@@ -125,6 +130,7 @@ export default function CheckInForm({ person, dayNum, isoDate, phase }: Props) {
         .select("*")
         .eq("person", person)
         .eq("day_num", dayNum)
+        .eq("phase_id", phaseId)
         .maybeSingle();
       if (cancelled) return;
       const next = data ? rowToState(data, phase) : emptyState(phase);
@@ -166,25 +172,28 @@ export default function CheckInForm({ person, dayNum, isoDate, phase }: Props) {
       cancelled = true;
       supabase.removeChannel(channel);
     };
-  }, [person, dayNum, phase]);
+  }, [person, dayNum, phase, phaseId]);
 
   async function save() {
+    if (!phaseId) return;
     setSaving(true);
     lastSaveAt = Date.now();
 
     const { data: existing } = await supabase
       .from("daily_logs")
       .select(
-        "weight, waist, sleep, energy, compliance, steps, notes, water_oz"
+        "weight, waist, sleep, energy, compliance, steps, notes, water_oz, protein_g, dandelion_count, diet_sodas, recovery_mode"
       )
       .eq("person", person)
       .eq("day_num", dayNum)
+      .eq("phase_id", phaseId)
       .maybeSingle();
 
     const merged: Record<string, any> = {
       person,
       day_num: dayNum,
       date: isoDate,
+      phase_id: phaseId,
       weight: existing?.weight ?? null,
       waist: existing?.waist ?? null,
       sleep: existing?.sleep ?? null,
@@ -193,6 +202,10 @@ export default function CheckInForm({ person, dayNum, isoDate, phase }: Props) {
       steps: existing?.steps ?? null,
       notes: existing?.notes ?? null,
       water_oz: existing?.water_oz ?? 0,
+      protein_g: existing?.protein_g ?? 0,
+      dandelion_count: existing?.dandelion_count ?? 0,
+      diet_sodas: existing?.diet_sodas ?? 0,
+      recovery_mode: existing?.recovery_mode ?? false,
       updated_at: new Date().toISOString(),
     };
 
@@ -203,7 +216,7 @@ export default function CheckInForm({ person, dayNum, isoDate, phase }: Props) {
 
     const { error } = await supabase
       .from("daily_logs")
-      .upsert(merged, { onConflict: "person,day_num" });
+      .upsert(merged, { onConflict: "person,day_num,phase_id" });
 
     setSaving(false);
     lastSaveAt = Date.now();

@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import { supabase } from "@/lib/supabase";
 import type { Person } from "@/lib/plan-data";
+import { usePhase } from "@/components/PhaseContext";
 
 type Props = {
   person: Person;
@@ -25,15 +26,17 @@ function vibrate(pattern: number | number[]) {
 }
 
 export default function HydrationCard({ person, dayNum, isoDate, totalDays }: Props) {
+  const { activePhase } = usePhase();
+  const phaseId = activePhase?.id;
+
   const [waterOz, setWaterOz] = useState(0);
   const target = targetForDay(person, dayNum, totalDays);
   const goalHitRef = useRef(false);
 
   useEffect(() => {
-    // Reset to 0 immediately so a previous day's value doesn't briefly show
-    // before the load resolves.
     setWaterOz(0);
     goalHitRef.current = false;
+    if (!phaseId) return;
 
     let mounted = true;
 
@@ -43,6 +46,7 @@ export default function HydrationCard({ person, dayNum, isoDate, totalDays }: Pr
         .select("water_oz")
         .eq("person", person)
         .eq("day_num", dayNum)
+        .eq("phase_id", phaseId)
         .maybeSingle();
       if (mounted) {
         const cur = (data as any)?.water_oz ?? 0;
@@ -53,7 +57,7 @@ export default function HydrationCard({ person, dayNum, isoDate, totalDays }: Pr
     load();
 
     const channel = supabase
-      .channel(`water_${person}_${dayNum}`)
+      .channel(`water_${person}_${dayNum}_${phaseId}`)
       .on(
         "postgres_changes",
         {
@@ -65,7 +69,7 @@ export default function HydrationCard({ person, dayNum, isoDate, totalDays }: Pr
         (payload) => {
           if (!mounted) return;
           const row: any = payload.new || payload.old;
-          if (row && row.day_num === dayNum) {
+          if (row && row.day_num === dayNum && row.phase_id === phaseId) {
             const newAmt = (payload.new as any)?.water_oz ?? 0;
             setWaterOz(newAmt);
           }
@@ -77,9 +81,10 @@ export default function HydrationCard({ person, dayNum, isoDate, totalDays }: Pr
       mounted = false;
       supabase.removeChannel(channel);
     };
-  }, [person, dayNum]);
+  }, [person, dayNum, phaseId, target]);
 
   async function adjust(delta: number) {
+    if (!phaseId) return;
     const next = Math.max(0, waterOz + delta);
     setWaterOz(next);
 
@@ -95,10 +100,11 @@ export default function HydrationCard({ person, dayNum, isoDate, totalDays }: Pr
         person,
         day_num: dayNum,
         date: isoDate,
+        phase_id: phaseId,
         water_oz: next,
         updated_at: new Date().toISOString(),
       },
-      { onConflict: "person,day_num" }
+      { onConflict: "person,day_num,phase_id" }
     );
   }
 
