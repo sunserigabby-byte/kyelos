@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import Link from "next/link";
 import { useProfile } from "@/components/ProfileContext";
 import { usePhase } from "@/components/PhaseContext";
 import { getAllPhases, setActivePhase, type Phase } from "@/lib/phases";
@@ -113,16 +114,22 @@ function PhaseCard({
           </div>
         </div>
       </div>
-      {!phase.is_active && (
-        <div className="flex gap-2">
+      <div className="flex gap-2">
+        <Link
+          href={`/phases/${phase.id}`}
+          className="tappable bg-white border border-navy/30 text-navy font-semibold py-2 px-3 rounded-md text-xs"
+        >
+          View
+        </Link>
+        {!phase.is_active && (
           <button
             onClick={onSetActive}
             className="tappable bg-navy text-gold font-semibold py-2 px-3 rounded-md text-xs"
           >
             Set Active
           </button>
-        </div>
-      )}
+        )}
+      </div>
     </div>
   );
 }

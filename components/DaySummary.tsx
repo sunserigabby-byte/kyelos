@@ -3,6 +3,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { supabase } from "@/lib/supabase";
 import type { DayPlan, Person } from "@/lib/plan-data";
+import { usePhase } from "@/components/PhaseContext";
 
 type Log = {
   day_num: number;
@@ -47,22 +48,33 @@ function isDayComplete(
 }
 
 export default function DaySummary({ person, plan, selectedDay }: Props) {
+  const { activePhase } = usePhase();
+  const phaseId = activePhase?.id ?? null;
+
   const [logs, setLogs] = useState<Log[]>([]);
   const [completions, setCompletions] = useState<Completion[]>([]);
   const [now, setNow] = useState<Date>(new Date());
 
   useEffect(() => {
-    // Refresh "now" once a minute so the after-8pm gate updates without a reload
     const id = setInterval(() => setNow(new Date()), 60_000);
     return () => clearInterval(id);
   }, []);
 
   useEffect(() => {
+    if (!phaseId) return;
     let mounted = true;
     async function load() {
       const [logsRes, compsRes] = await Promise.all([
-        supabase.from("daily_logs").select("day_num, weight, waist").eq("person", person),
-        supabase.from("completions").select("day_num, item_key, completed").eq("person", person),
+        supabase
+          .from("daily_logs")
+          .select("day_num, weight, waist")
+          .eq("person", person)
+          .eq("phase_id", phaseId),
+        supabase
+          .from("completions")
+          .select("day_num, item_key, completed")
+          .eq("person", person)
+          .eq("phase_id", phaseId),
       ]);
       if (!mounted) return;
       setLogs((logsRes.data as Log[]) || []);
@@ -70,7 +82,7 @@ export default function DaySummary({ person, plan, selectedDay }: Props) {
     }
     load();
     const channel = supabase
-      .channel(`summary_${person}`)
+      .channel(`summary_${person}_${phaseId}`)
       .on(
         "postgres_changes",
         { event: "*", schema: "public", table: "completions", filter: `person=eq.${person}` },
@@ -86,7 +98,7 @@ export default function DaySummary({ person, plan, selectedDay }: Props) {
       mounted = false;
       supabase.removeChannel(channel);
     };
-  }, [person]);
+  }, [person, phaseId]);
 
   const required = useMemo(() => requiredItemKeys(plan, selectedDay), [plan, selectedDay]);
   const doneToday = useMemo(

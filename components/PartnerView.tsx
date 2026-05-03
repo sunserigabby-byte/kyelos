@@ -15,9 +15,30 @@ type PersonStats = {
 async function fetchStats(person: Person, currentDay: number): Promise<PersonStats> {
   const plan = getPlan(person);
 
+  // PartnerView is rendered on the cut Progress page — scope to each person's
+  // cut phase so vacation rows don't pollute streaks/weight comparisons.
+  const { data: cutPhase } = await supabase
+    .from("phases")
+    .select("id")
+    .eq("person", person)
+    .eq("phase_type", "cut")
+    .maybeSingle();
+  const cutPhaseId = (cutPhase as { id: string } | null)?.id ?? null;
+
+  const baseLogs = supabase
+    .from("daily_logs")
+    .select("day_num, weight")
+    .eq("person", person)
+    .order("day_num");
+  const baseComps = supabase
+    .from("completions")
+    .select("day_num, completed")
+    .eq("person", person)
+    .eq("day_num", currentDay);
+
   const [logsRes, compsRes] = await Promise.all([
-    supabase.from("daily_logs").select("day_num, weight").eq("person", person).order("day_num"),
-    supabase.from("completions").select("day_num, completed").eq("person", person).eq("day_num", currentDay),
+    cutPhaseId ? baseLogs.eq("phase_id", cutPhaseId) : baseLogs,
+    cutPhaseId ? baseComps.eq("phase_id", cutPhaseId) : baseComps,
   ]);
 
   const logs = logsRes.data || [];
