@@ -4,13 +4,14 @@ type Props = {
   currentDay: number;
   selectedDay: number;
   onSelect: (day: number) => void;
+  totalDays?: number;
 };
 
-export default function DaySelector({ currentDay, selectedDay, onSelect }: Props) {
+export default function DaySelector({ currentDay, selectedDay, onSelect, totalDays = 7 }: Props) {
   return (
     <div className="overflow-x-auto no-scrollbar mb-4 -mx-4 px-4">
       <div className="flex gap-2">
-        {Array.from({ length: 7 }, (_, i) => i + 1).map((day) => {
+        {Array.from({ length: totalDays }, (_, i) => i + 1).map((day) => {
           const isToday = day === currentDay;
           const isSelected = day === selectedDay;
           return (

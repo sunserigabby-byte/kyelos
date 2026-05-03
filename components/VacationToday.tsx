@@ -11,6 +11,7 @@ import {
   type VacationDay,
 } from "@/lib/vacation-plan";
 import CheckItem from "@/components/CheckItem";
+import DaySelector from "@/components/DaySelector";
 
 type DailyLog = {
   protein_g: number | null;
@@ -41,15 +42,31 @@ export default function VacationToday() {
   const { activePhase } = usePhase();
   const plan = getVacationPlan(person);
 
-  const dayNum = activePhase
-    ? getCurrentPhaseDay(activePhase, new Date())
-    : 1;
-  const day = plan[dayNum - 1] ?? plan[0];
+  const todayDay = activePhase ? getCurrentPhaseDay(activePhase, new Date()) : 1;
+  const [selectedDay, setSelectedDay] = useState(todayDay);
+
+  // When phase or person changes, jump back to today's day so we don't strand
+  // the user on a day from a different scope.
+  useEffect(() => {
+    setSelectedDay(todayDay);
+  }, [todayDay, activePhase?.id, person]);
 
   if (!activePhase) return null;
+  const day = plan[selectedDay - 1] ?? plan[0];
+  const dayNum = day.day;
 
   return (
-    <div key={`${person}-${activePhase.id}-${dayNum}`}>
+    <div>
+      <DaySelector
+        currentDay={todayDay}
+        selectedDay={selectedDay}
+        onSelect={setSelectedDay}
+        totalDays={plan.length}
+      />
+
+      {/* Inner content remounts cleanly on day or phase change so the various
+          cards never flash a previous day's values. */}
+      <div key={`${person}-${activePhase.id}-${dayNum}`}>
       <VibeBanner day={day} dayNum={dayNum} totalDays={plan.length} />
 
       <DailyLogShell person={person} dayNum={dayNum} isoDate={day.isoDate}>
@@ -86,6 +103,7 @@ export default function VacationToday() {
           </>
         )}
       </DailyLogShell>
+      </div>
     </div>
   );
 }
