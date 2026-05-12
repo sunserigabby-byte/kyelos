@@ -14,6 +14,7 @@ import PartnerNudgeToast from "@/components/PartnerNudgeToast";
 import VacationToday from "@/components/VacationToday";
 import PRPToday from "@/components/PRPToday";
 import TournamentToday from "@/components/TournamentToday";
+import JonToday from "@/components/JonToday";
 import { useCycleSettings } from "@/components/useCycleSettings";
 import { useMealSwaps } from "@/components/useMealSwaps";
 import {
@@ -45,6 +46,9 @@ export default function TodayPage() {
   }
   if (activePhase?.phase_type === "tournament_peak") {
     return <TournamentToday />;
+  }
+  if (activePhase?.phase_type === "sustained_cut") {
+    return <JonToday />;
   }
   return <CutTodayPage />;
 }
