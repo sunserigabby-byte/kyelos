@@ -147,22 +147,22 @@ function CutTodayPage() {
       <PartnerNudgeToast person={person} />
 
       {showNotifBanner && (
-        <div className="bg-gold-light border-2 border-gold rounded-lg p-3 mb-3 flex items-center gap-3">
-          <div className="flex-1 text-sm text-navy">
+        <div className="bg-sage-pale border-2 border-terracotta rounded-lg p-3 mb-3 flex items-center gap-3">
+          <div className="flex-1 text-sm text-charcoal">
             <div className="font-semibold mb-0.5">Want reminders?</div>
-            <div className="text-xs text-navy/70">
+            <div className="text-xs text-charcoal/70">
               Coffee, cardio, tea, workout, wind-down.
             </div>
           </div>
           <button
             onClick={enableNotifications}
-            className="tappable bg-navy text-gold font-semibold py-2 px-3 rounded-md text-xs flex-shrink-0"
+            className="tappable bg-sage text-terracotta font-semibold py-2 px-3 rounded-md text-xs flex-shrink-0"
           >
             Enable
           </button>
           <button
             onClick={dismissBanner}
-            className="tappable text-navy/50 text-xs underline-offset-2 hover:underline flex-shrink-0"
+            className="tappable text-charcoal/50 text-xs underline-offset-2 hover:underline flex-shrink-0"
           >
             Not now
           </button>
@@ -170,9 +170,9 @@ function CutTodayPage() {
       )}
 
       {recentlyDueText && (
-        <div className="bg-navy text-white border-2 border-gold rounded-lg p-3 mb-3 flex items-start justify-between gap-2">
+        <div className="bg-sage text-white border-2 border-terracotta rounded-lg p-3 mb-3 flex items-start justify-between gap-2">
           <div className="text-sm">
-            <div className="text-[10px] tracking-widest text-gold font-bold mb-0.5">
+            <div className="text-[10px] tracking-widest text-terracotta font-bold mb-0.5">
               REMINDER
             </div>
             <div>{recentlyDueText}</div>
@@ -192,8 +192,8 @@ function CutTodayPage() {
       <DaySelector currentDay={currentDay} selectedDay={selectedDay} onSelect={setSelectedDay} />
 
       {/* Day banner */}
-      <div className="bg-navy text-white rounded-lg p-5 mb-2 border-t-4 border-b-4 border-gold">
-        <div className="text-gold text-xs font-bold tracking-widest mb-1">
+      <div className="bg-sage text-white rounded-lg p-5 mb-2 border-t-4 border-b-4 border-terracotta">
+        <div className="text-terracotta text-xs font-bold tracking-widest mb-1">
           DAY {day.day}  •  {day.date.toUpperCase()}
         </div>
         <div className="text-2xl font-bold mb-1">{day.title}</div>
@@ -201,7 +201,7 @@ function CutTodayPage() {
       </div>
 
       {cycleBadge && (
-        <div className="text-xs font-semibold tracking-wide mb-4 ml-1" style={{ color: "#A88A3F" }}>
+        <div className="text-xs font-semibold tracking-wide mb-4 ml-1" style={{ color: "#A85E40" }}>
           Cycle Day {cycleBadge.cycleDay} · {cycleBadge.phaseLabel}
         </div>
       )}
@@ -295,8 +295,8 @@ function CutTodayPage() {
           {day.workout.exercises && (
             <div className="space-y-2 mb-3">
               {day.workout.exercises.map((ex, i) => (
-                <div key={i} className="bg-navy-light rounded p-3">
-                  <div className="font-semibold text-navy text-sm">{ex.name}</div>
+                <div key={i} className="bg-cream rounded p-3">
+                  <div className="font-semibold text-charcoal text-sm">{ex.name}</div>
                   <div className="text-sm text-gray-700 mt-1">{ex.prescription}</div>
                 </div>
               ))}
@@ -335,7 +335,7 @@ function CutTodayPage() {
 function Section({ title, children }: { title: string; children: React.ReactNode }) {
   return (
     <div className="mb-6">
-      <div className="text-navy font-bold text-sm uppercase tracking-wider border-b-2 border-gold/60 pb-1 mb-3">
+      <div className="text-charcoal font-bold text-sm uppercase tracking-wider border-b-2 border-terracotta/60 pb-1 mb-3">
         {title}
       </div>
       {children}

@@ -124,17 +124,17 @@ function CutProgressPage() {
     <div>
       {/* Partner view — live both profiles */}
       <div className="mb-2">
-        <div className="text-xs font-bold tracking-widest text-navy/60 mb-2">
+        <div className="text-xs font-bold tracking-widest text-charcoal/60 mb-2">
           BOTH OF YOU — LIVE
         </div>
         <PartnerView />
       </div>
 
       {/* Your own summary */}
-      <div className="text-xs font-bold tracking-widest text-navy/60 mb-2">
+      <div className="text-xs font-bold tracking-widest text-charcoal/60 mb-2">
         YOUR 7-DAY PROGRESS
       </div>
-      <div className="bg-navy text-white rounded-lg p-5 mb-4 border-t-4 border-b-4 border-gold">
+      <div className="bg-sage text-white rounded-lg p-5 mb-4 border-t-4 border-b-4 border-terracotta">
         <div className="grid grid-cols-3 gap-3">
           <Stat
             label="Start"
@@ -155,7 +155,7 @@ function CutProgressPage() {
       {/* 7-day table */}
       <div className="bg-white rounded-lg border border-gray-200 overflow-hidden">
         <table className="w-full text-sm">
-          <thead className="bg-navy text-white">
+          <thead className="bg-sage text-white">
             <tr>
               <th className="p-3 text-left">Day</th>
               <th className="p-3 text-right">Wt</th>
@@ -173,17 +173,17 @@ function CutProgressPage() {
                 <tr
                   key={day.day}
                   className={`border-b border-gray-100 ${
-                    day.day % 2 === 0 ? "bg-navy-light/50" : ""
+                    day.day % 2 === 0 ? "bg-cream/50" : ""
                   }`}
                 >
                   <td className="p-3">
-                    <div className="font-semibold text-navy">Day {day.day}</div>
+                    <div className="font-semibold text-charcoal">Day {day.day}</div>
                     <div className="text-xs text-gray-500 flex items-center gap-1">
                       {day.date.split(", ")[1]}
                       {isLateLutealDay(day.isoDate) && (
                         <span
                           className="inline-block w-2 h-2 rounded-full"
-                          style={{ backgroundColor: "#A88A3F" }}
+                          style={{ backgroundColor: "#A85E40" }}
                           aria-label="late luteal phase"
                         />
                       )}
@@ -199,7 +199,7 @@ function CutProgressPage() {
                         pct === 100
                           ? "text-green-700"
                           : pct > 0
-                          ? "text-navy"
+                          ? "text-charcoal"
                           : "text-gray-400"
                       }`}
                     >
@@ -217,7 +217,7 @@ function CutProgressPage() {
         <p className="text-xs text-gray-500 mt-2 ml-1 flex items-center gap-1">
           <span
             className="inline-block w-2 h-2 rounded-full"
-            style={{ backgroundColor: "#A88A3F" }}
+            style={{ backgroundColor: "#A85E40" }}
           />
           = late luteal phase (expect water retention)
         </p>
@@ -225,7 +225,7 @@ function CutProgressPage() {
 
       {/* Notes summary */}
       <div className="mt-6">
-        <div className="text-navy font-bold text-sm uppercase tracking-wider border-b-2 border-gold/60 pb-1 mb-3">
+        <div className="text-charcoal font-bold text-sm uppercase tracking-wider border-b-2 border-terracotta/60 pb-1 mb-3">
           Notes
         </div>
         {logs.filter((l) => l.notes).length === 0 ? (
@@ -238,7 +238,7 @@ function CutProgressPage() {
                 key={l.day_num}
                 className="bg-white border border-gray-200 rounded-lg p-3 mb-2"
               >
-                <div className="text-xs font-semibold text-navy mb-1">
+                <div className="text-xs font-semibold text-charcoal mb-1">
                   Day {l.day_num}
                 </div>
                 <div className="text-sm text-gray-700">{l.notes}</div>
@@ -261,10 +261,10 @@ function Stat({
 }) {
   return (
     <div>
-      <div className="text-xs text-gold/80 font-semibold tracking-wider">
+      <div className="text-xs text-terracotta/80 font-semibold tracking-wider">
         {label}
       </div>
-      <div className={`text-xl font-bold ${accent ? "text-gold" : "text-white"}`}>
+      <div className={`text-xl font-bold ${accent ? "text-terracotta" : "text-white"}`}>
         {value}
       </div>
     </div>

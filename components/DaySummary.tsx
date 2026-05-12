@@ -139,15 +139,15 @@ export default function DaySummary({ person, plan, selectedDay }: Props) {
 
   return (
     <div
-      className="rounded-lg p-4 mb-4 border-2 border-gold shadow-sm fade-in"
+      className="rounded-lg p-4 mb-4 border-2 border-terracotta shadow-sm fade-in"
       style={{
-        background: "linear-gradient(135deg, #FFFBEC 0%, #F5EDD6 100%)",
+        background: "linear-gradient(135deg, #F7F2E8 0%, #DCE3D6 100%)",
       }}
     >
       <div className="flex items-baseline justify-between mb-2">
-        <div className="text-navy font-bold text-base">Day {selectedDay} Summary</div>
+        <div className="text-charcoal font-bold text-base">Day {selectedDay} Summary</div>
         {streak > 1 && (
-          <div className="text-sm font-semibold" style={{ color: "#A88A3F" }}>
+          <div className="text-sm font-semibold" style={{ color: "#A85E40" }}>
             🔥 {streak} {streak === 1 ? "day" : "days"} at 100%
           </div>
         )}
@@ -155,10 +155,10 @@ export default function DaySummary({ person, plan, selectedDay }: Props) {
 
       <div className="grid grid-cols-2 gap-3 mb-2">
         <div className="bg-white/60 rounded p-2">
-          <div className="text-[10px] uppercase tracking-wider text-navy/60 font-semibold">
+          <div className="text-[10px] uppercase tracking-wider text-charcoal/60 font-semibold">
             Items
           </div>
-          <div className="text-lg font-bold text-navy">
+          <div className="text-lg font-bold text-charcoal">
             {doneCount}/{totalCount}
             <span className="text-xs text-gray-500 ml-1">
               {allDone ? "✓ all done" : ""}
@@ -166,10 +166,10 @@ export default function DaySummary({ person, plan, selectedDay }: Props) {
           </div>
         </div>
         <div className="bg-white/60 rounded p-2">
-          <div className="text-[10px] uppercase tracking-wider text-navy/60 font-semibold">
+          <div className="text-[10px] uppercase tracking-wider text-charcoal/60 font-semibold">
             Weight / Waist
           </div>
-          <div className="text-lg font-bold text-navy">
+          <div className="text-lg font-bold text-charcoal">
             {todayLog?.weight != null ? `${todayLog.weight} lb` : "—"}
             <span className="text-xs text-gray-500 ml-1">
               {todayLog?.waist != null ? `/ ${todayLog.waist}"` : ""}
@@ -179,7 +179,7 @@ export default function DaySummary({ person, plan, selectedDay }: Props) {
       </div>
 
       {(weightVsDay1 != null || waistVsDay1 != null || weightVsYesterday != null) && (
-        <div className="text-xs text-navy/80 space-y-0.5 mt-2">
+        <div className="text-xs text-charcoal/80 space-y-0.5 mt-2">
           {weightVsDay1 != null && (
             <div>
               vs Day 1:

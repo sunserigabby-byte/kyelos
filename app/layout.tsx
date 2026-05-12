@@ -1,30 +1,42 @@
 import type { Metadata, Viewport } from "next";
+import { Manrope, Inter } from "next/font/google";
 import "./globals.css";
 import Nav from "@/components/Nav";
 import { ProfileProvider } from "@/components/ProfileContext";
 import { PhaseProvider } from "@/components/PhaseContext";
 import ServiceWorkerRegister from "@/components/ServiceWorkerRegister";
 
+const manrope = Manrope({
+  subsets: ["latin"],
+  weight: ["400", "500", "600"],
+  variable: "--font-display",
+  display: "swap",
+});
+
+const inter = Inter({
+  subsets: ["latin"],
+  weight: ["400", "500"],
+  variable: "--font-body",
+  display: "swap",
+});
+
 export const metadata: Metadata = {
-  title: "PR Cut Tracker",
-  description: "Puerto Rico 7-Day Cut Protocol Tracker",
+  title: "Tandem",
+  description: "Athletic. Together. — A personal training companion.",
   manifest: "/manifest.json",
   appleWebApp: {
     capable: true,
-    statusBarStyle: "black-translucent",
-    title: "PR Cut",
+    statusBarStyle: "default",
+    title: "Tandem",
   },
   icons: {
-    icon: [
-      { url: "/icons/icon-192.png", sizes: "192x192", type: "image/png" },
-      { url: "/icons/icon-512.png", sizes: "512x512", type: "image/png" },
-    ],
-    apple: "/icons/apple-touch-icon.png",
+    icon: "/favicon.ico",
+    apple: "/apple-touch-icon.png",
   },
 };
 
 export const viewport: Viewport = {
-  themeColor: "#0D2550",
+  themeColor: "#9DAA92",
   width: "device-width",
   initialScale: 1,
   maximumScale: 1,
@@ -38,7 +50,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en">
+    <html lang="en" className={`${manrope.variable} ${inter.variable}`}>
       <body>
         <ProfileProvider>
           <PhaseProvider>

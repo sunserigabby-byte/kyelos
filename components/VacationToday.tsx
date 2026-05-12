@@ -73,7 +73,7 @@ export default function VacationToday() {
         {(log, update) => (
           <>
             {log.recovery_mode && (
-              <div className="bg-gold-light border border-gold/60 rounded-md px-3 py-2 mb-3 text-sm text-navy">
+              <div className="bg-sage-pale border border-terracotta/60 rounded-md px-3 py-2 mb-3 text-sm text-charcoal">
                 🚰 Recovery Mode — extra water + dandelion today
               </div>
             )}
@@ -220,8 +220,8 @@ function VibeBanner({
   totalDays: number;
 }) {
   return (
-    <div className="bg-navy text-white rounded-lg p-5 mb-4 border-t-4 border-b-4 border-gold">
-      <div className="text-gold text-xs font-bold tracking-widest mb-1">
+    <div className="bg-sage text-white rounded-lg p-5 mb-4 border-t-4 border-b-4 border-terracotta">
+      <div className="text-terracotta text-xs font-bold tracking-widest mb-1">
         🌴 PR DAY {dayNum} OF {totalDays}
       </div>
       <div className="text-2xl font-bold mb-1">{day.vibe}</div>
@@ -256,7 +256,7 @@ function DailyTargetsCard({
 
   return (
     <div className="bg-white border border-gray-200 rounded-lg p-4 mb-3">
-      <div className="text-navy font-bold text-sm mb-3">Today's Targets</div>
+      <div className="text-charcoal font-bold text-sm mb-3">Today's Targets</div>
 
       {/* Protein */}
       <TargetRow
@@ -267,7 +267,7 @@ function DailyTargetsCard({
       >
         <button
           onClick={() => setProteinModalOpen(true)}
-          className="tappable bg-navy text-gold font-semibold py-1.5 px-3 rounded-md text-xs"
+          className="tappable bg-sage text-terracotta font-semibold py-1.5 px-3 rounded-md text-xs"
         >
           + Add
         </button>
@@ -288,7 +288,7 @@ function DailyTargetsCard({
                 vibrate(8);
                 update({ water_oz: water + d });
               }}
-              className="tappable bg-navy text-gold font-semibold py-1.5 px-2 rounded-md text-xs"
+              className="tappable bg-sage text-terracotta font-semibold py-1.5 px-2 rounded-md text-xs"
             >
               +{d}
             </button>
@@ -320,7 +320,7 @@ function DailyTargetsCard({
             value={stepsInput}
             onChange={(e) => setStepsInput(e.target.value.replace(/[^\d]/g, ""))}
             placeholder={String(steps || 0)}
-            className="w-20 border border-gray-300 rounded-md px-2 py-1 text-sm text-right focus:border-navy focus:outline-none"
+            className="w-20 border border-gray-300 rounded-md px-2 py-1 text-sm text-right focus:border-sage focus:outline-none"
           />
           <button
             onClick={() => {
@@ -331,7 +331,7 @@ function DailyTargetsCard({
                 setStepsInput("");
               }
             }}
-            className="tappable bg-navy text-gold font-semibold py-1.5 px-2 rounded-md text-xs"
+            className="tappable bg-sage text-terracotta font-semibold py-1.5 px-2 rounded-md text-xs"
           >
             Set
           </button>
@@ -373,15 +373,15 @@ function TargetRow({
   return (
     <div className="mb-3 last:mb-0">
       <div className="flex items-baseline justify-between mb-1">
-        <div className="text-sm font-semibold text-navy">{label}</div>
-        <div className="text-xs text-navy">
+        <div className="text-sm font-semibold text-charcoal">{label}</div>
+        <div className="text-xs text-charcoal">
           <span className="font-bold">{fmt(current)}</span>
           <span className="text-gray-500"> / {fmt(target)}{unit}</span>
         </div>
       </div>
-      <div className="h-2 bg-navy/10 rounded-full overflow-hidden mb-2">
+      <div className="h-2 bg-sage/10 rounded-full overflow-hidden mb-2">
         <div
-          className="h-full bg-gold transition-all duration-300"
+          className="h-full bg-terracotta transition-all duration-300"
           style={{ width: `${pct}%` }}
         />
       </div>
@@ -409,16 +409,16 @@ function ProteinQuickAdd({
         className="bg-white w-full sm:max-w-md sm:rounded-xl rounded-t-2xl p-5 fade-in"
         onClick={(e) => e.stopPropagation()}
       >
-        <div className="font-bold text-navy text-lg mb-1">Add Protein</div>
+        <div className="font-bold text-charcoal text-lg mb-1">Add Protein</div>
         <div className="text-sm text-gray-500 mb-4">
-          Currently at <span className="font-semibold text-navy">{current}g</span>
+          Currently at <span className="font-semibold text-charcoal">{current}g</span>
         </div>
         <div className="grid grid-cols-3 gap-2 mb-3">
           {[15, 25, 40].map((g) => (
             <button
               key={g}
               onClick={() => onAdd(g)}
-              className="tappable bg-navy text-gold font-semibold py-3 rounded-md text-sm"
+              className="tappable bg-sage text-terracotta font-semibold py-3 rounded-md text-sm"
             >
               + {g}g
             </button>
@@ -431,14 +431,14 @@ function ProteinQuickAdd({
             value={custom}
             onChange={(e) => setCustom(e.target.value.replace(/[^\d]/g, ""))}
             placeholder="Custom grams"
-            className="flex-1 border border-gray-300 rounded-md px-3 py-2 text-base focus:border-navy focus:outline-none"
+            className="flex-1 border border-gray-300 rounded-md px-3 py-2 text-base focus:border-sage focus:outline-none"
           />
           <button
             onClick={() => {
               const n = parseInt(custom, 10);
               if (Number.isFinite(n) && n > 0) onAdd(n);
             }}
-            className="tappable bg-navy text-gold font-semibold py-2 px-4 rounded-md text-sm"
+            className="tappable bg-sage text-terracotta font-semibold py-2 px-4 rounded-md text-sm"
           >
             Add
           </button>
@@ -466,7 +466,7 @@ function BeachWorkoutCard({ day, dayNum }: { day: VacationDay; dayNum: number })
   return (
     <div className="bg-white border border-gray-200 rounded-lg p-4 mb-3">
       <div className="flex items-baseline justify-between mb-1">
-        <div className="font-bold text-navy text-base">{day.beachWorkout.title}</div>
+        <div className="font-bold text-charcoal text-base">{day.beachWorkout.title}</div>
         <div className="text-xs text-gray-500">{day.beachWorkout.duration}</div>
       </div>
 
@@ -474,13 +474,13 @@ function BeachWorkoutCard({ day, dayNum }: { day: VacationDay; dayNum: number })
         <>
           <button
             onClick={() => setExpanded((v) => !v)}
-            className="tappable text-xs font-semibold text-navy underline-offset-2 hover:underline mb-2"
+            className="tappable text-xs font-semibold text-charcoal underline-offset-2 hover:underline mb-2"
           >
             {expanded ? "Hide workout ↑" : "Show workout ↓"}
           </button>
 
           {expanded && (
-            <div className="bg-navy-light/40 rounded-md p-3 mb-3">
+            <div className="bg-cream/40 rounded-md p-3 mb-3">
               <p className="text-xs text-gray-700 mb-2 italic">
                 {day.beachWorkout.intro}
               </p>
@@ -503,7 +503,7 @@ function BeachWorkoutCard({ day, dayNum }: { day: VacationDay; dayNum: number })
             </div>
             <button
               onClick={() => setRestDay(true)}
-              className="tappable bg-gold-light border border-gold/60 text-navy font-semibold rounded-lg px-3 py-3 text-sm"
+              className="tappable bg-sage-pale border border-terracotta/60 text-charcoal font-semibold rounded-lg px-3 py-3 text-sm"
             >
               🌊 Rest Day
             </button>
@@ -513,7 +513,7 @@ function BeachWorkoutCard({ day, dayNum }: { day: VacationDay; dayNum: number })
 
       {restDay && (
         <div>
-          <p className="text-sm text-navy/80 italic mb-2">
+          <p className="text-sm text-charcoal/80 italic mb-2">
             Active recovery today — {day.beachWorkout.restDayMessage}
           </p>
           <CheckItem
@@ -524,7 +524,7 @@ function BeachWorkoutCard({ day, dayNum }: { day: VacationDay; dayNum: number })
           />
           <button
             onClick={() => setRestDay(false)}
-            className="tappable text-xs text-navy/60 underline-offset-2 hover:underline mt-1"
+            className="tappable text-xs text-charcoal/60 underline-offset-2 hover:underline mt-1"
           >
             Switch back to workout
           </button>
@@ -552,7 +552,7 @@ function SmartMealsCard({ day, dayNum }: { day: VacationDay; dayNum: number }) {
 
   return (
     <div className="bg-white border border-gray-200 rounded-lg p-4 mb-3">
-      <div className="text-navy font-bold text-sm mb-2">Smart Meals</div>
+      <div className="text-charcoal font-bold text-sm mb-2">Smart Meals</div>
       {meals.map((m) => (
         <CheckItem
           key={m.key}
@@ -586,7 +586,7 @@ function SupplementsCard({
   const dandelionGoal = recoveryMode ? 2 : 1;
   return (
     <div className="bg-white border border-gray-200 rounded-lg p-4 mb-3">
-      <div className="text-navy font-bold text-sm mb-2">Supplements</div>
+      <div className="text-charcoal font-bold text-sm mb-2">Supplements</div>
       <CheckItem
         person={person}
         dayNum={dayNum}
@@ -603,7 +603,7 @@ function SupplementsCard({
       {/* Dandelion counter */}
       <div className="bg-white border border-gray-200 rounded-lg p-3 mb-2 flex items-center justify-between">
         <div>
-          <div className="font-semibold text-navy text-sm">🍵 Dandelion tea</div>
+          <div className="font-semibold text-charcoal text-sm">🍵 Dandelion tea</div>
           <div className="text-xs text-gray-500">
             {dandelionCount} of {dandelionGoal}
           </div>
@@ -619,13 +619,13 @@ function SupplementsCard({
           >
             −
           </button>
-          <span className="font-bold text-navy w-6 text-center">{dandelionCount}</span>
+          <span className="font-bold text-charcoal w-6 text-center">{dandelionCount}</span>
           <button
             onClick={() => {
               vibrate(8);
               onDandelion(dandelionCount + 1);
             }}
-            className="tappable bg-navy text-gold w-8 h-8 rounded-md font-bold"
+            className="tappable bg-sage text-terracotta w-8 h-8 rounded-md font-bold"
             aria-label="One more dandelion tea"
           >
             +
@@ -657,7 +657,7 @@ function DietSodaCard({
   return (
     <div className="bg-white border border-gray-200 rounded-lg p-4 mb-3">
       <div className="flex items-center justify-between">
-        <div className="text-navy font-semibold text-sm">Diet sodas today</div>
+        <div className="text-charcoal font-semibold text-sm">Diet sodas today</div>
         <div className="flex gap-2 items-center">
           <button
             onClick={() => {
@@ -669,13 +669,13 @@ function DietSodaCard({
           >
             −
           </button>
-          <span className="font-bold text-navy w-6 text-center">{count}</span>
+          <span className="font-bold text-charcoal w-6 text-center">{count}</span>
           <button
             onClick={() => {
               vibrate(8);
               onChange(count + 1);
             }}
-            className="tappable bg-navy text-gold w-8 h-8 rounded-md font-bold"
+            className="tappable bg-sage text-terracotta w-8 h-8 rounded-md font-bold"
             aria-label="One more diet soda"
           >
             +
@@ -683,7 +683,7 @@ function DietSodaCard({
         </div>
       </div>
       {count >= 3 && (
-        <div className="bg-gold-light/60 border border-gold/40 rounded-md px-3 py-2 mt-3 text-xs text-navy">
+        <div className="bg-sage-pale/60 border border-terracotta/40 rounded-md px-3 py-2 mt-3 text-xs text-charcoal">
           Heads up — artificial sweeteners can cause bloat. Consider swapping for sparkling water.
         </div>
       )}
@@ -711,14 +711,14 @@ function RecoveryToggleCard({
       className="tappable w-full bg-white border border-gray-200 rounded-lg p-4 mb-3 flex items-center justify-between text-left"
     >
       <div className="min-w-0 pr-3">
-        <div className="font-semibold text-navy text-sm">Had a heavy night?</div>
+        <div className="font-semibold text-charcoal text-sm">Had a heavy night?</div>
         <div className="text-xs text-gray-500">
           Tap on to bump water + dandelion targets and add a banner reminder.
         </div>
       </div>
       <div
         className={`relative w-11 h-6 rounded-full transition-colors flex-shrink-0 ${
-          on ? "bg-navy" : "bg-gray-300"
+          on ? "bg-sage" : "bg-gray-300"
         }`}
       >
         <div

@@ -86,7 +86,7 @@ export default function WorkoutHistoryPage() {
 
   return (
     <div>
-      <h1 className="text-2xl font-bold text-navy mb-1">Workout History</h1>
+      <h1 className="text-2xl font-bold text-charcoal mb-1">Workout History</h1>
       <p className="text-sm text-gray-500 mb-4">All logged sets across all phases.</p>
 
       {loading ? (
@@ -109,7 +109,7 @@ export default function WorkoutHistoryPage() {
           {exercise && filtered.length > 0 && (
             <div className="bg-white rounded-lg border border-gray-200 overflow-hidden">
               <table className="w-full text-sm">
-                <thead className="bg-navy text-white">
+                <thead className="bg-sage text-white">
                   <tr>
                     <th className="p-2 text-left">Date</th>
                     <th className="p-2 text-left">Set</th>
@@ -124,18 +124,18 @@ export default function WorkoutHistoryPage() {
                     const val = s.weight ?? s.reps ?? 0;
                     const isPR = val === prByType[s.set_type] && val > 0;
                     return (
-                      <tr key={s.id} className={`border-b border-gray-100 ${isPR ? "bg-gold-light/50" : ""}`}>
+                      <tr key={s.id} className={`border-b border-gray-100 ${isPR ? "bg-sage-pale/50" : ""}`}>
                         <td className="p-2 text-xs">
-                          <div className="font-semibold text-navy">{session?.workout_date ?? "—"}</div>
+                          <div className="font-semibold text-charcoal">{session?.workout_date ?? "—"}</div>
                           <div className="text-gray-500">Day {session?.day_num ?? "?"}</div>
                         </td>
                         <td className="p-2 text-xs text-gray-600">
                           #{s.set_number}
-                          <div className="text-[10px] uppercase tracking-wider text-navy/60">{s.set_type}</div>
+                          <div className="text-[10px] uppercase tracking-wider text-charcoal/60">{s.set_type}</div>
                         </td>
                         <td className="p-2 text-right text-sm font-semibold">
                           {s.weight ?? "—"}
-                          {isPR && <span className="ml-1 text-gold">★</span>}
+                          {isPR && <span className="ml-1 text-terracotta">★</span>}
                         </td>
                         <td className="p-2 text-right text-sm">{s.reps ?? "—"}</td>
                         <td className="p-2 text-right text-sm">{s.rpe ?? "—"}</td>
@@ -154,7 +154,7 @@ export default function WorkoutHistoryPage() {
       )}
 
       <p className="text-xs text-gray-400 italic mt-4">
-        Line charts coming in a future update. For now: gold-tinted rows are PRs by set type.
+        Line charts coming in a future update. For now: sage-tinted rows are PRs by set type.
       </p>
     </div>
   );

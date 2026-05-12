@@ -20,7 +20,7 @@ export default function RightLegRehab({ exercises, sessionId, currentDay, unlock
     return (
       <div className="bg-white border border-gray-200 rounded-lg p-4 mb-3">
         <div className="flex items-baseline justify-between mb-1">
-          <div className="font-bold text-navy text-sm">Right-Leg Rehab — Daily</div>
+          <div className="font-bold text-charcoal text-sm">Right-Leg Rehab — Daily</div>
           <span className="text-[10px] font-bold tracking-widest text-gray-500 bg-gray-100 px-2 py-0.5 rounded">
             🔒 LOCKED
           </span>
@@ -36,10 +36,10 @@ export default function RightLegRehab({ exercises, sessionId, currentDay, unlock
     <div className="bg-white border border-gray-200 rounded-lg p-3 mb-3">
       <button onClick={() => setOpen((v) => !v)} className="tappable w-full text-left flex items-center justify-between">
         <div>
-          <div className="font-bold text-navy text-sm">Right-Leg Rehab — Daily</div>
+          <div className="font-bold text-charcoal text-sm">Right-Leg Rehab — Daily</div>
           <div className="text-xs text-gray-500">{open ? "Tap to collapse" : "Tap to show exercises"}</div>
         </div>
-        <div className="text-navy/40 text-xs">{open ? "▲" : "▼"}</div>
+        <div className="text-charcoal/40 text-xs">{open ? "▲" : "▼"}</div>
       </button>
       {open && (
         <div className="mt-2">

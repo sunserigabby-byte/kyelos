@@ -21,6 +21,16 @@ function GearIcon() {
   );
 }
 
+function TandemMark() {
+  // Two interlocked rings — Gabby + Jon training in tandem.
+  return (
+    <svg width="28" height="15" viewBox="0 0 40 22" className="text-cream flex-shrink-0" aria-hidden="true">
+      <circle cx="13" cy="11" r="9" fill="none" stroke="currentColor" strokeWidth="2" />
+      <circle cx="27" cy="11" r="9" fill="none" stroke="currentColor" strokeWidth="2" />
+    </svg>
+  );
+}
+
 export default function Nav() {
   const { person, setPerson } = useProfile();
   const { activePhase } = usePhase();
@@ -33,28 +43,31 @@ export default function Nav() {
       : null;
 
   return (
-    <div className="bg-navy text-white sticky top-0 z-50 shadow-md safe-top">
+    <header className="bg-sage text-cream sticky top-0 z-50 shadow-md safe-top">
       <div className="max-w-2xl mx-auto px-4 pb-3 pt-2">
         <div className="flex items-center justify-between mb-3">
           <div className="flex items-center gap-2 min-w-0">
-            <h1 className="text-gold font-bold tracking-widest text-xs flex-shrink-0">PR CUT TRACKER</h1>
+            <TandemMark />
+            <span className="font-display text-xl font-medium tracking-tight flex-shrink-0">
+              Tandem
+            </span>
             {vacationPill && (
-              <span className="bg-gold text-navy text-[10px] font-bold tracking-wide px-1.5 py-0.5 rounded-full flex-shrink-0">
+              <span className="bg-terracotta text-cream text-[10px] font-bold tracking-wide px-1.5 py-0.5 rounded-full flex-shrink-0">
                 {vacationPill}
               </span>
             )}
             {isConnected && (
-              <span className="live-pulse flex items-center gap-1 text-[10px] text-gold/80 flex-shrink-0">
-                <span className="w-1.5 h-1.5 bg-green-400 rounded-full"></span>
+              <span className="live-pulse flex items-center gap-1 text-[10px] text-cream/70 flex-shrink-0">
+                <span className="w-1.5 h-1.5 bg-cream rounded-full"></span>
                 LIVE
               </span>
             )}
           </div>
-          <div className="flex gap-1 bg-navy-dark rounded-full p-1">
+          <div className="flex gap-1 bg-sage-dark rounded-full p-1">
             <button
               onClick={() => setPerson("gabby")}
               className={`tappable px-4 py-1.5 text-sm rounded-full transition ${
-                person === "gabby" ? "bg-gold text-navy font-semibold" : "text-white/70"
+                person === "gabby" ? "bg-terracotta text-cream font-medium" : "text-cream/70"
               }`}
             >
               Gabby
@@ -62,61 +75,61 @@ export default function Nav() {
             <button
               onClick={() => setPerson("jon")}
               className={`tappable px-4 py-1.5 text-sm rounded-full transition ${
-                person === "jon" ? "bg-gold text-navy font-semibold" : "text-white/70"
+                person === "jon" ? "bg-terracotta text-cream font-medium" : "text-cream/70"
               }`}
             >
               Jon
             </button>
           </div>
         </div>
-        <div className="flex gap-5 text-sm">
+        <nav className="flex gap-5 text-sm">
           <Link
             href="/"
-            className={`pb-1 transition ${pathname === "/" ? "border-b-2 border-gold text-white" : "text-white/60"}`}
+            className={`pb-1 transition ${pathname === "/" ? "border-b-2 border-terracotta text-cream" : "text-cream/60"}`}
           >
             Today
           </Link>
           <Link
             href="/food"
-            className={`pb-1 transition ${pathname === "/food" ? "border-b-2 border-gold text-white" : "text-white/60"}`}
+            className={`pb-1 transition ${pathname === "/food" ? "border-b-2 border-terracotta text-cream" : "text-cream/60"}`}
           >
             Food
           </Link>
           {person === "gabby" && (
             <Link
               href="/cycle"
-              className={`pb-1 transition ${pathname === "/cycle" ? "border-b-2 border-gold text-white" : "text-white/60"}`}
+              className={`pb-1 transition ${pathname === "/cycle" ? "border-b-2 border-terracotta text-cream" : "text-cream/60"}`}
             >
               Cycle
             </Link>
           )}
           <Link
             href="/progress"
-            className={`pb-1 transition ${pathname === "/progress" ? "border-b-2 border-gold text-white" : "text-white/60"}`}
+            className={`pb-1 transition ${pathname === "/progress" ? "border-b-2 border-terracotta text-cream" : "text-cream/60"}`}
           >
             Progress
           </Link>
           <Link
             href="/workout-history"
-            className={`pb-1 transition ${pathname === "/workout-history" ? "border-b-2 border-gold text-white" : "text-white/60"}`}
+            className={`pb-1 transition ${pathname === "/workout-history" ? "border-b-2 border-terracotta text-cream" : "text-cream/60"}`}
           >
             Lifts
           </Link>
           <Link
             href="/phases"
-            className={`pb-1 transition ${pathname === "/phases" ? "border-b-2 border-gold text-white" : "text-white/60"}`}
+            className={`pb-1 transition ${pathname === "/phases" ? "border-b-2 border-terracotta text-cream" : "text-cream/60"}`}
           >
             Phases
           </Link>
           <Link
             href="/settings"
-            className={`pb-1 transition ml-auto ${pathname === "/settings" ? "border-b-2 border-gold text-white" : "text-white/60"}`}
+            className={`pb-1 transition ml-auto ${pathname === "/settings" ? "border-b-2 border-terracotta text-cream" : "text-cream/60"}`}
             aria-label="Settings"
           >
             <GearIcon />
           </Link>
-        </div>
+        </nav>
       </div>
-    </div>
+    </header>
   );
 }

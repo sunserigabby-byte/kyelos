@@ -52,7 +52,7 @@ export default function PhasesPage() {
 
   return (
     <div>
-      <h1 className="text-2xl font-bold text-navy mb-1">Phase History</h1>
+      <h1 className="text-2xl font-bold text-charcoal mb-1">Phase History</h1>
       <p className="text-sm text-gray-500 mb-6">
         Switch active phase or view past phases.
       </p>
@@ -93,7 +93,7 @@ function PhaseCard({
     <div
       className={`rounded-lg p-4 mb-3 ${
         phase.is_active
-          ? "bg-white border-2 border-gold"
+          ? "bg-white border-2 border-terracotta"
           : "bg-white/70 border border-gray-200"
       }`}
     >
@@ -101,15 +101,15 @@ function PhaseCard({
         <div className="min-w-0 flex-1">
           <div className="flex items-center gap-2 mb-0.5">
             <span className="text-xl flex-shrink-0">{icon}</span>
-            <div className="font-bold text-navy truncate">{phase.name}</div>
+            <div className="font-bold text-charcoal truncate">{phase.name}</div>
             {phase.is_active && (
-              <span className="text-[10px] font-bold tracking-widest text-gold bg-navy px-1.5 py-0.5 rounded">
+              <span className="text-[10px] font-bold tracking-widest text-terracotta bg-sage px-1.5 py-0.5 rounded">
                 ACTIVE
               </span>
             )}
           </div>
           <div className="text-xs text-gray-500">{dateRange}</div>
-          <div className="text-[10px] uppercase tracking-wider text-navy/50 mt-1">
+          <div className="text-[10px] uppercase tracking-wider text-charcoal/50 mt-1">
             {phase.phase_type}
           </div>
         </div>
@@ -117,14 +117,14 @@ function PhaseCard({
       <div className="flex gap-2">
         <Link
           href={`/phases/${phase.id}`}
-          className="tappable bg-white border border-navy/30 text-navy font-semibold py-2 px-3 rounded-md text-xs"
+          className="tappable bg-white border border-sage/30 text-charcoal font-semibold py-2 px-3 rounded-md text-xs"
         >
           View
         </Link>
         {!phase.is_active && (
           <button
             onClick={onSetActive}
-            className="tappable bg-navy text-gold font-semibold py-2 px-3 rounded-md text-xs"
+            className="tappable bg-sage text-terracotta font-semibold py-2 px-3 rounded-md text-xs"
           >
             Set Active
           </button>
@@ -152,7 +152,7 @@ function ConfirmModal({
         className="bg-white rounded-xl p-5 max-w-md w-full fade-in"
         onClick={(e) => e.stopPropagation()}
       >
-        <div className="text-lg font-bold text-navy mb-1">Switch active phase?</div>
+        <div className="text-lg font-bold text-charcoal mb-1">Switch active phase?</div>
         <p className="text-sm text-gray-600 mb-4">
           Set <span className="font-semibold">{phase.name}</span> as your active phase?
           This will switch your Today and Progress views to that phase's data.
@@ -166,7 +166,7 @@ function ConfirmModal({
           </button>
           <button
             onClick={onConfirm}
-            className="tappable flex-1 bg-navy text-gold font-semibold py-2.5 rounded-md text-sm"
+            className="tappable flex-1 bg-sage text-terracotta font-semibold py-2.5 rounded-md text-sm"
           >
             Set Active
           </button>

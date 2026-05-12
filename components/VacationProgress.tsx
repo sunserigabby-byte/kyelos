@@ -127,8 +127,8 @@ export default function VacationProgress() {
   return (
     <div>
       {/* Trip overview */}
-      <div className="bg-navy text-white rounded-lg p-5 mb-4 border-t-4 border-b-4 border-gold">
-        <div className="text-gold text-xs font-bold tracking-widest mb-1">
+      <div className="bg-sage text-white rounded-lg p-5 mb-4 border-t-4 border-b-4 border-terracotta">
+        <div className="text-terracotta text-xs font-bold tracking-widest mb-1">
           🌴 PUERTO RICO
         </div>
         <div className="text-2xl font-bold mb-1">
@@ -152,7 +152,7 @@ export default function VacationProgress() {
       </div>
 
       {/* 8-day grid */}
-      <div className="text-navy font-bold text-sm uppercase tracking-wider border-b-2 border-gold/60 pb-1 mb-3">
+      <div className="text-charcoal font-bold text-sm uppercase tracking-wider border-b-2 border-terracotta/60 pb-1 mb-3">
         Trip Days
       </div>
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 mb-6">
@@ -163,18 +163,18 @@ export default function VacationProgress() {
             <div
               key={d.day}
               className={`bg-white rounded-lg p-3 ${
-                isToday ? "border-2 border-gold" : "border border-gray-200"
+                isToday ? "border-2 border-terracotta" : "border border-gray-200"
               }`}
             >
               <div className="flex items-baseline justify-between mb-1">
-                <div className="text-xs font-bold text-navy">Day {d.day}</div>
+                <div className="text-xs font-bold text-charcoal">Day {d.day}</div>
                 {pct >= 80 && d.day < currentDay && (
                   <div className="text-xs text-green-700">✓</div>
                 )}
               </div>
               <div className="text-[10px] text-gray-500 truncate">{d.date}</div>
-              <div className="text-xs text-navy mt-1 truncate">{d.vibe}</div>
-              <div className="text-xs font-semibold text-gold mt-1">{pct}%</div>
+              <div className="text-xs text-charcoal mt-1 truncate">{d.vibe}</div>
+              <div className="text-xs font-semibold text-terracotta mt-1">{pct}%</div>
             </div>
           );
         })}
@@ -195,10 +195,10 @@ function WinCard({
   return (
     <div className="bg-white border border-gray-200 rounded-lg p-3">
       <div className="text-xl mb-1">{icon}</div>
-      <div className="text-[10px] uppercase tracking-wider text-navy/60 font-semibold">
+      <div className="text-[10px] uppercase tracking-wider text-charcoal/60 font-semibold">
         {label}
       </div>
-      <div className="text-lg font-bold text-navy">{value}</div>
+      <div className="text-lg font-bold text-charcoal">{value}</div>
     </div>
   );
 }

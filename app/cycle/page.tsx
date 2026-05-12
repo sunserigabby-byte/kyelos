@@ -42,8 +42,8 @@ export default function CyclePage() {
   return (
     <div>
       {/* Hero card */}
-      <div className="bg-navy text-white rounded-lg p-5 mb-4 border-t-4 border-b-4 border-gold">
-        <div className="text-gold text-xs font-bold tracking-widest mb-1">
+      <div className="bg-sage text-white rounded-lg p-5 mb-4 border-t-4 border-b-4 border-terracotta">
+        <div className="text-terracotta text-xs font-bold tracking-widest mb-1">
           CYCLE DAY {cycleDay} OF {settings.cycle_length}
         </div>
         <div className="text-2xl font-bold mb-1">{PHASE_LABEL[phase]}</div>
@@ -58,7 +58,7 @@ export default function CyclePage() {
 
       {/* Guidance */}
       <div className="mb-6">
-        <div className="text-navy font-bold text-sm uppercase tracking-wider border-b-2 border-gold/60 pb-1 mb-3">
+        <div className="text-charcoal font-bold text-sm uppercase tracking-wider border-b-2 border-terracotta/60 pb-1 mb-3">
           What this means today
         </div>
         <div className="bg-white border border-gray-200 rounded-lg p-4">
@@ -126,23 +126,23 @@ function SettingsForm({
 
   return (
     <div>
-      <div className="text-navy font-bold text-sm uppercase tracking-wider border-b-2 border-gold/60 pb-1 mb-3">
+      <div className="text-charcoal font-bold text-sm uppercase tracking-wider border-b-2 border-terracotta/60 pb-1 mb-3">
         Settings
       </div>
       <div className="bg-white border border-gray-200 rounded-lg p-4 space-y-4">
         <div>
-          <label className="block text-xs font-semibold text-navy/70 uppercase tracking-wider mb-1">
+          <label className="block text-xs font-semibold text-charcoal/70 uppercase tracking-wider mb-1">
             Last period start
           </label>
           <input
             type="date"
             value={lastPeriod}
             onChange={(e) => setLastPeriod(e.target.value)}
-            className="w-full bg-white border border-gray-300 rounded-md px-3 py-2 text-base text-navy focus:outline-none focus:border-gold"
+            className="w-full bg-white border border-gray-300 rounded-md px-3 py-2 text-base text-charcoal focus:outline-none focus:border-terracotta"
           />
         </div>
         <div>
-          <label className="block text-xs font-semibold text-navy/70 uppercase tracking-wider mb-1">
+          <label className="block text-xs font-semibold text-charcoal/70 uppercase tracking-wider mb-1">
             Cycle length (days)
           </label>
           <input
@@ -151,7 +151,7 @@ function SettingsForm({
             max={45}
             value={cycleLength}
             onChange={(e) => setCycleLength(e.target.value)}
-            className="w-full bg-white border border-gray-300 rounded-md px-3 py-2 text-base text-navy focus:outline-none focus:border-gold"
+            className="w-full bg-white border border-gray-300 rounded-md px-3 py-2 text-base text-charcoal focus:outline-none focus:border-terracotta"
           />
           <p className="text-xs text-gray-500 mt-1">
             Average is 28. Range 21–45.
@@ -161,7 +161,7 @@ function SettingsForm({
         <button
           onClick={save}
           disabled={saving}
-          className="tappable w-full bg-navy text-gold font-semibold py-3 rounded-md disabled:opacity-50"
+          className="tappable w-full bg-sage text-terracotta font-semibold py-3 rounded-md disabled:opacity-50"
         >
           {saving ? "Saving..." : savedAt ? "Saved ✓" : "Save"}
         </button>

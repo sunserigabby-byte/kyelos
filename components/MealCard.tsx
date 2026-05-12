@@ -57,7 +57,7 @@ export default function MealCard({
   if (meal.note && !meal.protein && !meal.carb && !meal.fat && !meal.veggie) {
     return (
       <div className="mb-2">
-        <div className="text-xs font-semibold text-navy/70 uppercase tracking-wider mb-1 ml-1">
+        <div className="text-xs font-semibold text-charcoal/70 uppercase tracking-wider mb-1 ml-1">
           {meal.label} — {meal.time}
         </div>
         <CheckItem
@@ -87,13 +87,13 @@ export default function MealCard({
       {/* Header */}
       <div className="px-4 pt-3 pb-2 border-b border-gray-100 flex items-baseline justify-between">
         <div>
-          <div className="font-semibold text-navy text-base">{meal.label}</div>
+          <div className="font-semibold text-charcoal text-base">{meal.label}</div>
           <div className="text-xs text-gray-500">{meal.time}</div>
         </div>
         {hasAnySwap && (
           <button
             onClick={resetToDefault}
-            className="tappable text-xs text-navy/60 hover:text-navy underline-offset-2 hover:underline"
+            className="tappable text-xs text-charcoal/60 hover:text-charcoal underline-offset-2 hover:underline"
           >
             ↺ reset to default
           </button>
@@ -200,14 +200,14 @@ function ComponentRow({
       <span className="text-xl flex-shrink-0">{COMPONENT_EMOJI[category]}</span>
       <div className="flex-1 min-w-0">
         <div className="flex items-baseline justify-between gap-2">
-          <span className="text-sm font-medium text-navy truncate">{food}</span>
+          <span className="text-sm font-medium text-charcoal truncate">{food}</span>
           <span className="text-xs text-gray-600 flex-shrink-0">{serving}</span>
         </div>
         <div className="text-[11px] text-gray-500 mt-0.5">
           {COMPONENT_LABEL[category]}
           {component.targetGrams > 0 ? ` · ${component.targetGrams}g target` : ""}
           {isSwapped && (
-            <span className="ml-2 text-[10px] uppercase tracking-wider text-navy bg-gold-light px-1.5 py-0.5 rounded">
+            <span className="ml-2 text-[10px] uppercase tracking-wider text-charcoal bg-sage-pale px-1.5 py-0.5 rounded">
               swapped
             </span>
           )}

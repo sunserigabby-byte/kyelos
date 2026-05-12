@@ -44,20 +44,20 @@ export default function TournamentToday() {
       {TOURNAMENT_PHOTO_DAYS.has(selectedDay) && <PhotoPrompt dayNum={selectedDay} />}
 
       {peakWeek && (
-        <div className="bg-gold-light border-2 border-gold rounded-lg p-3 mb-3 text-sm text-navy">
+        <div className="bg-sage-pale border-2 border-terracotta rounded-lg p-3 mb-3 text-sm text-charcoal">
           <div className="font-bold mb-0.5">🌊 Peak Week — Day {selectedDay}</div>
           <div className="text-xs">Water + sodium manipulation active. Trust the protocol; you've earned this taper.</div>
         </div>
       )}
 
       <div className="bg-white border border-gray-200 rounded-lg p-4 mb-3">
-        <div className="text-gold text-[10px] font-bold tracking-widest mb-1">
+        <div className="text-terracotta text-[10px] font-bold tracking-widest mb-1">
           {day.dayOfWeek.toUpperCase()} · {day.workoutName}
         </div>
-        <div className="text-lg font-bold text-navy mb-1">{day.focus}</div>
+        <div className="text-lg font-bold text-charcoal mb-1">{day.focus}</div>
         <p className="text-sm text-gray-700 leading-relaxed">{day.intro}</p>
         <div className="mt-3 pt-3 border-t border-gray-100 text-xs text-gray-600">
-          <span className="font-semibold text-navy">Note:</span> {day.progressionNote}
+          <span className="font-semibold text-charcoal">Note:</span> {day.progressionNote}
         </div>
       </div>
 
@@ -67,7 +67,7 @@ export default function TournamentToday() {
 
       <SupplementsCard dayNum={selectedDay} />
 
-      <div className="text-navy font-bold text-sm uppercase tracking-wider border-b-2 border-gold/60 pb-1 mb-3 mt-6">
+      <div className="text-charcoal font-bold text-sm uppercase tracking-wider border-b-2 border-terracotta/60 pb-1 mb-3 mt-6">
         Meals
       </div>
       {gabbyMealSlots.map((slot) => (
@@ -83,15 +83,15 @@ function TournamentWorkout({ day, selectedDay }: { day: any; selectedDay: number
   return (
     <>
       {day.swingPrep && (
-        <div className="bg-gold-light/30 border-l-4 border-gold rounded-r-md p-3 mb-3">
-          <div className="font-bold text-navy text-sm mb-2">🏐 Swing Prep — 5 min</div>
+        <div className="bg-sage-pale/30 border-l-4 border-terracotta rounded-r-md p-3 mb-3">
+          <div className="font-bold text-charcoal text-sm mb-2">🏐 Swing Prep — 5 min</div>
           {day.swingPrep.map((ex: any) => (
             <WorkoutTracker key={ex.name} exercise={ex} sessionId={sessionId} dayNum={selectedDay} />
           ))}
         </div>
       )}
 
-      <div className="text-navy font-bold text-sm uppercase tracking-wider border-b-2 border-gold/60 pb-1 mb-3 mt-6">
+      <div className="text-charcoal font-bold text-sm uppercase tracking-wider border-b-2 border-terracotta/60 pb-1 mb-3 mt-6">
         Workout
       </div>
       {day.exercises.map((ex: any) => (
@@ -105,7 +105,7 @@ function SupplementsCard({ dayNum }: { dayNum: number }) {
   const { person } = useProfile();
   return (
     <div className="bg-white border border-gray-200 rounded-lg p-3 mb-3">
-      <div className="text-navy font-bold text-sm mb-2">Supplements</div>
+      <div className="text-charcoal font-bold text-sm mb-2">Supplements</div>
       <CheckItem person={person} dayNum={dayNum} itemKey="tournament_supp_creatine" title="Creatine 5g" />
       <CheckItem person={person} dayNum={dayNum} itemKey="tournament_supp_fishoil"  title="Fish oil 2-3g" />
       <CheckItem person={person} dayNum={dayNum} itemKey="tournament_supp_mag"      title="Magnesium 400mg PM" />

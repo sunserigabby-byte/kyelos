@@ -83,7 +83,7 @@ export default function PRPToday() {
 
       <KneePainCard person={person} dayNum={selectedDay} isoDate={day.isoDate} />
 
-      <div className="text-navy font-bold text-sm uppercase tracking-wider border-b-2 border-gold/60 pb-1 mb-3 mt-6">
+      <div className="text-charcoal font-bold text-sm uppercase tracking-wider border-b-2 border-terracotta/60 pb-1 mb-3 mt-6">
         Meals
       </div>
       {gabbyMealSlots.map((slot) => (
@@ -96,14 +96,14 @@ export default function PRPToday() {
 function DayHeader({ day }: { day: any }) {
   return (
     <div className="bg-white border border-gray-200 rounded-lg p-4 mb-3">
-      <div className="text-gold text-[10px] font-bold tracking-widest mb-1">
+      <div className="text-terracotta text-[10px] font-bold tracking-widest mb-1">
         {day.dayOfWeek.toUpperCase()} · WEEK {day.weekNum}
       </div>
-      <div className="text-xl font-bold text-navy">{day.workoutName}</div>
-      <div className="text-sm text-navy/70 italic mb-2">{day.focus}</div>
+      <div className="text-xl font-bold text-charcoal">{day.workoutName}</div>
+      <div className="text-sm text-charcoal/70 italic mb-2">{day.focus}</div>
       <p className="text-sm text-gray-700 leading-relaxed">{day.intro}</p>
       <div className="mt-3 pt-3 border-t border-gray-100 text-xs text-gray-600">
-        <span className="font-semibold text-navy">Week {day.weekNum} note:</span> {day.progressionNote}
+        <span className="font-semibold text-charcoal">Week {day.weekNum} note:</span> {day.progressionNote}
       </div>
     </div>
   );
@@ -118,7 +118,7 @@ function WorkoutBlock({ day, selectedDay }: { day: any; selectedDay: number }) {
         <SwingPrepCard exercises={day.swingPrep} sessionId={sessionId} dayNum={selectedDay} />
       )}
 
-      <div className="text-navy font-bold text-sm uppercase tracking-wider border-b-2 border-gold/60 pb-1 mb-3 mt-6">
+      <div className="text-charcoal font-bold text-sm uppercase tracking-wider border-b-2 border-terracotta/60 pb-1 mb-3 mt-6">
         Workout
       </div>
       {day.exercises.map((ex: any) => (
@@ -139,13 +139,13 @@ function WorkoutBlock({ day, selectedDay }: { day: any; selectedDay: number }) {
 function SwingPrepCard({ exercises, sessionId, dayNum }: { exercises: any[]; sessionId: string | null; dayNum: number }) {
   const [open, setOpen] = useState(true);
   return (
-    <div className="bg-gold-light/30 border-l-4 border-gold rounded-r-md p-3 mb-3">
+    <div className="bg-sage-pale/30 border-l-4 border-terracotta rounded-r-md p-3 mb-3">
       <button onClick={() => setOpen((v) => !v)} className="tappable w-full text-left flex items-center justify-between">
         <div>
-          <div className="font-bold text-navy text-sm">🏐 Swing Prep — 5 min</div>
-          <div className="text-xs text-navy/70">Mandatory shoulder warm-up before any lifting</div>
+          <div className="font-bold text-charcoal text-sm">🏐 Swing Prep — 5 min</div>
+          <div className="text-xs text-charcoal/70">Mandatory shoulder warm-up before any lifting</div>
         </div>
-        <div className="text-navy/40 text-xs">{open ? "▲" : "▼"}</div>
+        <div className="text-charcoal/40 text-xs">{open ? "▲" : "▼"}</div>
       </button>
       {open && (
         <div className="mt-2 space-y-1">
@@ -248,12 +248,12 @@ function DailyMetricsCard({ person, dayNum, isoDate }: { person: "gabby" | "jon"
 
   return (
     <div className="bg-white border border-gray-200 rounded-lg p-3 mb-3">
-      <div className="text-navy font-bold text-sm mb-3">Today's Targets</div>
+      <div className="text-charcoal font-bold text-sm mb-3">Today's Targets</div>
 
       <Bar label="🥩 Protein" current={m.protein_g} target={PROTEIN_TARGET} unit="g">
         <div className="flex gap-1">
           {[20, 30, 40].map((g) => (
-            <button key={g} onClick={() => { vibrate(8); save({ protein_g: m.protein_g + g }); }} className="tappable bg-navy text-gold font-semibold py-1 px-2 rounded text-[11px]">+{g}</button>
+            <button key={g} onClick={() => { vibrate(8); save({ protein_g: m.protein_g + g }); }} className="tappable bg-sage text-terracotta font-semibold py-1 px-2 rounded text-[11px]">+{g}</button>
           ))}
         </div>
       </Bar>
@@ -261,7 +261,7 @@ function DailyMetricsCard({ person, dayNum, isoDate }: { person: "gabby" | "jon"
       <Bar label="💧 Water" current={m.water_oz} target={WATER_TARGET} unit="oz">
         <div className="flex gap-1">
           {[8, 12, 16].map((d) => (
-            <button key={d} onClick={() => { vibrate(8); save({ water_oz: m.water_oz + d }); }} className="tappable bg-navy text-gold font-semibold py-1 px-2 rounded text-[11px]">+{d}</button>
+            <button key={d} onClick={() => { vibrate(8); save({ water_oz: m.water_oz + d }); }} className="tappable bg-sage text-terracotta font-semibold py-1 px-2 rounded text-[11px]">+{d}</button>
           ))}
           <button onClick={() => { vibrate(5); save({ water_oz: Math.max(0, m.water_oz - 8) }); }} className="tappable bg-white border border-gray-300 text-gray-600 font-semibold py-1 px-2 rounded text-[11px]">−8</button>
         </div>
@@ -282,7 +282,7 @@ function DailyMetricsCard({ person, dayNum, isoDate }: { person: "gabby" | "jon"
               const n = parseInt(stepsInput, 10);
               if (Number.isFinite(n)) { vibrate(8); save({ steps: n }); setStepsInput(""); }
             }}
-            className="tappable bg-navy text-gold font-semibold py-1 px-2 rounded text-[11px]"
+            className="tappable bg-sage text-terracotta font-semibold py-1 px-2 rounded text-[11px]"
           >Set</button>
         </div>
       </Bar>
@@ -303,11 +303,11 @@ function Bar({ label, current, target, unit, children, format }: { label: string
   return (
     <div className="mb-2 last:mb-0">
       <div className="flex items-baseline justify-between mb-1">
-        <div className="text-sm font-semibold text-navy">{label}</div>
-        <div className="text-xs text-navy"><span className="font-bold">{fmt(current)}</span><span className="text-gray-500"> / {fmt(target)}{unit}</span></div>
+        <div className="text-sm font-semibold text-charcoal">{label}</div>
+        <div className="text-xs text-charcoal"><span className="font-bold">{fmt(current)}</span><span className="text-gray-500"> / {fmt(target)}{unit}</span></div>
       </div>
-      <div className="h-2 bg-navy/10 rounded-full overflow-hidden mb-1">
-        <div className="h-full bg-gold transition-all duration-300" style={{ width: `${pct}%` }} />
+      <div className="h-2 bg-sage/10 rounded-full overflow-hidden mb-1">
+        <div className="h-full bg-terracotta transition-all duration-300" style={{ width: `${pct}%` }} />
       </div>
       <div className="flex justify-end">{children}</div>
     </div>
@@ -318,7 +318,7 @@ function SupplementsCard({ dayNum }: { dayNum: number }) {
   const { person } = useProfile();
   return (
     <div className="bg-white border border-gray-200 rounded-lg p-3 mb-3">
-      <div className="text-navy font-bold text-sm mb-2">Supplements</div>
+      <div className="text-charcoal font-bold text-sm mb-2">Supplements</div>
       <CheckItem person={person} dayNum={dayNum} itemKey="prp_supp_collagen"   title="Collagen 15-20g" detail="With vitamin C" />
       <CheckItem person={person} dayNum={dayNum} itemKey="prp_supp_creatine"   title="Creatine 5g" />
       <CheckItem person={person} dayNum={dayNum} itemKey="prp_supp_fishoil"    title="Fish oil 2-3g" detail="With dinner" />
@@ -362,14 +362,14 @@ function KneePainCard({ person, dayNum, isoDate }: { person: "gabby" | "jon"; da
 
   return (
     <div className="bg-white border border-gray-200 rounded-lg p-3 mb-3">
-      <div className="font-bold text-navy text-sm mb-1">Knee Pain (0-10)</div>
+      <div className="font-bold text-charcoal text-sm mb-1">Knee Pain (0-10)</div>
       <div className="text-xs text-gray-500 mb-2">0 = no pain, 10 = unbearable</div>
       <div className="flex gap-1 flex-wrap">
         {Array.from({ length: 11 }, (_, i) => i).map((n) => (
           <button
             key={n}
             onClick={() => save(n)}
-            className={`tappable w-8 h-8 rounded text-xs font-bold ${pain === n ? "bg-navy text-gold" : "bg-white border border-gray-300 text-gray-700"}`}
+            className={`tappable w-8 h-8 rounded text-xs font-bold ${pain === n ? "bg-sage text-terracotta" : "bg-white border border-gray-300 text-gray-700"}`}
           >{n}</button>
         ))}
       </div>

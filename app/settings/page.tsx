@@ -102,14 +102,14 @@ export default function SettingsPage() {
 
   return (
     <div>
-      <h1 className="text-2xl font-bold text-navy mb-1">Settings</h1>
+      <h1 className="text-2xl font-bold text-charcoal mb-1">Settings</h1>
       <p className="text-sm text-gray-500 mb-6">
         Reminders fire while the app is open. Partner nudges sync via the database.
       </p>
 
       {/* Permission */}
       <div className="bg-white border border-gray-200 rounded-lg p-4 mb-6">
-        <div className="font-semibold text-navy mb-1">Browser notifications</div>
+        <div className="font-semibold text-charcoal mb-1">Browser notifications</div>
         <div className="text-sm text-gray-600 mb-3">
           Status:{" "}
           <span className="font-semibold">
@@ -125,7 +125,7 @@ export default function SettingsPage() {
         {permission === "default" && (
           <button
             onClick={enableNotifications}
-            className="tappable bg-navy text-gold font-semibold py-2.5 px-5 rounded-md text-sm"
+            className="tappable bg-sage text-terracotta font-semibold py-2.5 px-5 rounded-md text-sm"
           >
             Enable notifications
           </button>
@@ -166,7 +166,7 @@ export default function SettingsPage() {
 function Section({ title, children }: { title: string; children: React.ReactNode }) {
   return (
     <div className="mb-6">
-      <div className="text-navy font-bold text-sm uppercase tracking-wider border-b-2 border-gold/60 pb-1 mb-3">
+      <div className="text-charcoal font-bold text-sm uppercase tracking-wider border-b-2 border-terracotta/60 pb-1 mb-3">
         {title}
       </div>
       <div className="bg-white border border-gray-200 rounded-lg overflow-hidden divide-y divide-gray-100">
@@ -196,12 +196,12 @@ function ToggleRow({
       className="tappable w-full flex items-center justify-between p-3 hover:bg-gray-50 active:bg-gray-100"
     >
       <div className="text-left">
-        <div className="text-sm font-semibold text-navy">{label}</div>
+        <div className="text-sm font-semibold text-charcoal">{label}</div>
         <div className="text-xs text-gray-500">{sub}</div>
       </div>
       <div
         className={`relative w-11 h-6 rounded-full transition-colors flex-shrink-0 ${
-          checked ? "bg-navy" : "bg-gray-300"
+          checked ? "bg-sage" : "bg-gray-300"
         }`}
       >
         <div

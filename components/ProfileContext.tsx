@@ -28,7 +28,7 @@ export function ProfileProvider({ children }: { children: React.ReactNode }) {
   };
 
   if (!hydrated) {
-    return <div className="flex items-center justify-center min-h-screen text-navy">Loading...</div>;
+    return <div className="flex items-center justify-center min-h-screen text-charcoal">Loading...</div>;
   }
 
   return (

@@ -83,7 +83,7 @@ export default function ArchivedPhasePage() {
     return (
       <div>
         <p className="text-gray-500">Phase not found.</p>
-        <Link href="/phases" className="text-navy underline-offset-2 underline text-sm">
+        <Link href="/phases" className="text-charcoal underline-offset-2 underline text-sm">
           ← Back to History
         </Link>
       </div>
@@ -139,8 +139,8 @@ export default function ArchivedPhasePage() {
   return (
     <div>
       {/* Banner */}
-      <div className="bg-gold-light border border-gold/60 rounded-md px-4 py-3 mb-4">
-        <div className="text-sm text-navy">
+      <div className="bg-sage-pale border border-terracotta/60 rounded-md px-4 py-3 mb-4">
+        <div className="text-sm text-charcoal">
           <span className="font-semibold">Viewing archived phase</span> — {phase.name}
           {phase.is_active ? "" : `. Switch to active to log new data.`}
         </div>
@@ -151,7 +151,7 @@ export default function ArchivedPhasePage() {
 
       <Link
         href="/phases"
-        className="inline-block text-xs text-navy underline-offset-2 hover:underline mb-4"
+        className="inline-block text-xs text-charcoal underline-offset-2 hover:underline mb-4"
       >
         ← Back to History
       </Link>
@@ -159,7 +159,7 @@ export default function ArchivedPhasePage() {
       {/* Per-day rows */}
       <div className="bg-white rounded-lg border border-gray-200 overflow-hidden mb-4">
         <table className="w-full text-sm">
-          <thead className="bg-navy text-white">
+          <thead className="bg-sage text-white">
             <tr>
               <th className="p-2 text-left">Day</th>
               {isCut && <th className="p-2 text-right">Wt</th>}
@@ -177,9 +177,9 @@ export default function ArchivedPhasePage() {
               return (
                 <tr
                   key={d}
-                  className={`border-b border-gray-100 ${d % 2 === 0 ? "bg-navy-light/30" : ""}`}
+                  className={`border-b border-gray-100 ${d % 2 === 0 ? "bg-cream/30" : ""}`}
                 >
-                  <td className="p-2 font-semibold text-navy">{d}</td>
+                  <td className="p-2 font-semibold text-charcoal">{d}</td>
                   {isCut && <td className="p-2 text-right">{log?.weight ?? "—"}</td>}
                   {isCut && <td className="p-2 text-right">{log?.waist ?? "—"}</td>}
                   {isVacation && <td className="p-2 text-right">{log?.protein_g ?? 0}</td>}
@@ -190,7 +190,7 @@ export default function ArchivedPhasePage() {
                   <td className="p-2 text-right">
                     <span
                       className={`font-semibold ${
-                        pct === 100 ? "text-green-700" : pct > 0 ? "text-navy" : "text-gray-400"
+                        pct === 100 ? "text-green-700" : pct > 0 ? "text-charcoal" : "text-gray-400"
                       }`}
                     >
                       {pct}%
@@ -206,7 +206,7 @@ export default function ArchivedPhasePage() {
       {/* Notes summary (cut only) */}
       {isCut && (
         <div>
-          <div className="text-navy font-bold text-sm uppercase tracking-wider border-b-2 border-gold/60 pb-1 mb-3">
+          <div className="text-charcoal font-bold text-sm uppercase tracking-wider border-b-2 border-terracotta/60 pb-1 mb-3">
             Notes
           </div>
           {logs.filter((l) => l.notes).length === 0 ? (
@@ -219,7 +219,7 @@ export default function ArchivedPhasePage() {
                   key={l.day_num}
                   className="bg-white border border-gray-200 rounded-lg p-3 mb-2"
                 >
-                  <div className="text-xs font-semibold text-navy mb-1">Day {l.day_num}</div>
+                  <div className="text-xs font-semibold text-charcoal mb-1">Day {l.day_num}</div>
                   <div className="text-sm text-gray-700">{l.notes}</div>
                 </div>
               ))

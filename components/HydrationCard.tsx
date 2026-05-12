@@ -115,17 +115,17 @@ export default function HydrationCard({ person, dayNum, isoDate, totalDays }: Pr
   return (
     <div className="bg-white border border-gray-200 rounded-lg p-4 mb-2">
       <div className="flex items-baseline justify-between mb-2">
-        <div className="font-bold text-navy text-base">💧 Hydration</div>
-        <div className="text-sm text-navy">
+        <div className="font-bold text-charcoal text-base">💧 Hydration</div>
+        <div className="text-sm text-charcoal">
           <span className="font-bold">{waterOz}</span>
           <span className="text-gray-500"> / {target} oz</span>
         </div>
       </div>
 
       {/* Progress bar */}
-      <div className="h-3 bg-navy/10 rounded-full overflow-hidden mb-3">
+      <div className="h-3 bg-sage/10 rounded-full overflow-hidden mb-3">
         <div
-          className="h-full bg-gold transition-all duration-300"
+          className="h-full bg-terracotta transition-all duration-300"
           style={{ width: `${pct}%` }}
         />
       </div>
@@ -134,19 +134,19 @@ export default function HydrationCard({ person, dayNum, isoDate, totalDays }: Pr
       <div className="flex gap-2">
         <button
           onClick={() => adjust(8)}
-          className="tappable flex-1 bg-navy text-gold font-semibold py-2.5 rounded-md text-sm"
+          className="tappable flex-1 bg-sage text-terracotta font-semibold py-2.5 rounded-md text-sm"
         >
           +8 oz
         </button>
         <button
           onClick={() => adjust(12)}
-          className="tappable flex-1 bg-navy text-gold font-semibold py-2.5 rounded-md text-sm"
+          className="tappable flex-1 bg-sage text-terracotta font-semibold py-2.5 rounded-md text-sm"
         >
           +12 oz
         </button>
         <button
           onClick={() => adjust(16)}
-          className="tappable flex-1 bg-navy text-gold font-semibold py-2.5 rounded-md text-sm"
+          className="tappable flex-1 bg-sage text-terracotta font-semibold py-2.5 rounded-md text-sm"
         >
           +16 oz
         </button>

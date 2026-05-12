@@ -114,10 +114,10 @@ export default function MealSelector({ slot, dayNum }: { slot: MealSlot; dayNum:
   return (
     <div className="bg-white border border-gray-200 rounded-lg p-3 mb-2">
       <div className="flex items-baseline justify-between mb-1">
-        <div className="font-semibold text-navy text-sm">{slot.label}</div>
+        <div className="font-semibold text-charcoal text-sm">{slot.label}</div>
         <div className="text-[11px] text-gray-500">{slot.time}</div>
       </div>
-      <div className="text-[10px] uppercase tracking-wider text-navy/60 font-semibold mb-2">
+      <div className="text-[10px] uppercase tracking-wider text-charcoal/60 font-semibold mb-2">
         Target: {slot.targetMacros.protein}P · {slot.targetMacros.carbs}C · {slot.targetMacros.fat}F
       </div>
 
@@ -154,7 +154,7 @@ function Row({ label, current, serving, onChange, disabled }: { label: string; c
     <div className="flex items-center justify-between py-1.5 border-b border-gray-100 last:border-b-0">
       <div className="min-w-0 flex-1 pr-2">
         <div className="text-[10px] uppercase tracking-wider text-gray-500">{label}</div>
-        <div className={`text-sm font-semibold ${current ? "text-navy" : "text-gray-400"} truncate`}>
+        <div className={`text-sm font-semibold ${current ? "text-charcoal" : "text-gray-400"} truncate`}>
           {current ?? "Tap to choose"}
         </div>
         {serving && <div className="text-[11px] text-gray-500">{serving}</div>}
@@ -162,7 +162,7 @@ function Row({ label, current, serving, onChange, disabled }: { label: string; c
       <button
         onClick={onChange}
         disabled={disabled}
-        className="tappable text-xs font-semibold text-navy underline-offset-2 hover:underline disabled:text-gray-400 disabled:no-underline"
+        className="tappable text-xs font-semibold text-charcoal underline-offset-2 hover:underline disabled:text-gray-400 disabled:no-underline"
       >
         {current ? "Change" : "Choose"}
       </button>
@@ -175,7 +175,7 @@ function PickerModal({ title, options, onPick, onClose }: { title: string; optio
     <div className="fixed inset-0 z-[60] flex items-end sm:items-center justify-center bg-black/40" onClick={onClose}>
       <div className="bg-white w-full sm:max-w-md sm:rounded-xl rounded-t-2xl max-h-[80vh] flex flex-col fade-in" onClick={(e) => e.stopPropagation()}>
         <div className="px-4 pt-4 pb-2 border-b border-gray-200 flex items-start justify-between">
-          <div className="font-bold text-navy">{title}</div>
+          <div className="font-bold text-charcoal">{title}</div>
           <button onClick={onClose} className="tappable text-gray-400 px-2">✕</button>
         </div>
         <ul className="flex-1 overflow-y-auto divide-y divide-gray-100">
@@ -183,7 +183,7 @@ function PickerModal({ title, options, onPick, onClose }: { title: string; optio
             <li key={opt.id}>
               <button onClick={() => onPick(opt)} className="tappable w-full text-left px-4 py-3 hover:bg-gray-50">
                 <div className="flex items-baseline justify-between gap-3">
-                  <div className="font-semibold text-navy text-sm">
+                  <div className="font-semibold text-charcoal text-sm">
                     {opt.name}
                     {opt.fatHeavy && (
                       <span className="ml-2 text-[10px] uppercase tracking-wider text-amber-700 bg-amber-50 px-1.5 py-0.5 rounded">fatty</span>

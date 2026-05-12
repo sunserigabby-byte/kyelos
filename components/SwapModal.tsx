@@ -99,12 +99,12 @@ export default function SwapModal({
       >
         <div className="px-5 pt-5 pb-3 border-b border-gray-200 flex items-start justify-between">
           <div>
-            <h2 className="text-xl font-bold text-navy">
+            <h2 className="text-xl font-bold text-charcoal">
               Swap {CATEGORY_LABEL[category]}
             </h2>
             {category !== "veggie" && (
               <p className="text-sm text-gray-500 mt-0.5">
-                Need: <span className="font-semibold text-navy">{targetGrams}{CATEGORY_UNIT[category] ? " " + CATEGORY_UNIT[category] : ""}</span>
+                Need: <span className="font-semibold text-charcoal">{targetGrams}{CATEGORY_UNIT[category] ? " " + CATEGORY_UNIT[category] : ""}</span>
               </p>
             )}
           </div>
@@ -135,7 +135,7 @@ export default function SwapModal({
                   className="tappable w-full text-left px-5 py-3 hover:bg-gray-50 active:bg-gray-100 disabled:opacity-50"
                 >
                   <div className="flex items-baseline justify-between gap-3">
-                    <div className="font-semibold text-navy text-sm">
+                    <div className="font-semibold text-charcoal text-sm">
                       {opt.name}
                       {opt.fattyProtein && (
                         <span className="ml-2 text-[10px] uppercase tracking-wider text-amber-700 bg-amber-50 px-1.5 py-0.5 rounded">
@@ -168,7 +168,7 @@ export default function SwapModal({
               type="checkbox"
               checked={applyToFuture}
               onChange={(e) => setApplyToFuture(e.target.checked)}
-              className="w-4 h-4 accent-navy"
+              className="w-4 h-4 accent-sage-dark"
             />
             <span className="text-sm text-gray-700">
               Apply to all remaining days (Day {Math.max(currentDay, dayNum) + 1}–{maxDay})

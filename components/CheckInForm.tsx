@@ -238,7 +238,7 @@ export default function CheckInForm({ person, dayNum, isoDate, phase }: Props) {
   const keys = phase === "am" ? AM_KEYS : PM_KEYS;
   const isSaved = !editing && hasAnyValue(state);
   const containerBorder = isSaved
-    ? "border-2 border-gold/60"
+    ? "border-2 border-terracotta/60"
     : "border border-gray-200";
 
   return (
@@ -247,7 +247,7 @@ export default function CheckInForm({ person, dayNum, isoDate, phase }: Props) {
     >
       <div className="mb-3 flex items-start justify-between gap-3">
         <div className="min-w-0">
-          <div className="text-navy font-semibold text-sm flex items-center gap-2">
+          <div className="text-charcoal font-semibold text-sm flex items-center gap-2">
             {PHASE_TITLE[phase]}
             {isSaved && (
               <span
@@ -265,7 +265,7 @@ export default function CheckInForm({ person, dayNum, isoDate, phase }: Props) {
         {isSaved && (
           <button
             onClick={startEdit}
-            className="tappable text-xs font-semibold text-navy hover:text-navy-dark underline-offset-2 hover:underline flex-shrink-0"
+            className="tappable text-xs font-semibold text-charcoal hover:text-sage-dark underline-offset-2 hover:underline flex-shrink-0"
           >
             Edit
           </button>
@@ -282,7 +282,7 @@ export default function CheckInForm({ person, dayNum, isoDate, phase }: Props) {
         <button
           onClick={save}
           disabled={saving}
-          className="tappable w-full bg-navy text-white rounded-lg py-3 font-semibold hover:bg-navy-dark transition disabled:opacity-50"
+          className="tappable w-full bg-sage text-white rounded-lg py-3 font-semibold hover:bg-sage-dark transition disabled:opacity-50"
         >
           {saving ? "Saving..." : phase === "am" ? "Save Morning" : "Save Evening"}
         </button>
@@ -292,18 +292,18 @@ export default function CheckInForm({ person, dayNum, isoDate, phase }: Props) {
       {showOverlay && (
         <div className="absolute inset-0 flex items-center justify-center submit-overlay z-10">
           <div className="text-center">
-            <div className="w-16 h-16 rounded-full bg-gold flex items-center justify-center mb-2 mx-auto shadow-lg pop-in">
+            <div className="w-16 h-16 rounded-full bg-terracotta flex items-center justify-center mb-2 mx-auto shadow-lg pop-in">
               <svg width="32" height="32" viewBox="0 0 24 24" fill="none">
                 <path
                   d="M5 12l5 5 9-11"
-                  stroke="#0D2550"
+                  stroke="#2A2A28"
                   strokeWidth="3"
                   strokeLinecap="round"
                   strokeLinejoin="round"
                 />
               </svg>
             </div>
-            <div className="font-bold text-navy text-lg">Submitted!</div>
+            <div className="font-bold text-charcoal text-lg">Submitted!</div>
           </div>
         </div>
       )}
@@ -417,7 +417,7 @@ function FormFields({
           value={state.notes}
           onChange={(e) => setState({ ...state, notes: e.target.value })}
           rows={2}
-          className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:border-navy focus:outline-none"
+          className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:border-sage focus:outline-none"
         />
       </div>
     </div>
@@ -443,12 +443,12 @@ function SummaryView({
       <dl className="divide-y divide-gray-100 mb-2">
         {metricKeys.map((k) => (
           <div key={k} className="flex items-baseline justify-between py-2">
-            <dt className="text-xs uppercase tracking-wider text-navy/60 font-semibold">
+            <dt className="text-xs uppercase tracking-wider text-charcoal/60 font-semibold">
               {SUMMARY_LABEL[k]}
             </dt>
             <dd
               className={`text-base font-semibold ${
-                state[k]?.trim() ? "text-navy" : "text-gray-300"
+                state[k]?.trim() ? "text-charcoal" : "text-gray-300"
               }`}
             >
               {formatValue(k, state[k] ?? "")}
@@ -457,12 +457,12 @@ function SummaryView({
         ))}
       </dl>
       {showNotes && (
-        <div className="bg-gold-light/40 rounded-md px-3 py-2 mt-2">
-          <div className="text-[10px] uppercase tracking-wider text-navy/60 font-semibold mb-1">
+        <div className="bg-sage-pale/40 rounded-md px-3 py-2 mt-2">
+          <div className="text-[10px] uppercase tracking-wider text-charcoal/60 font-semibold mb-1">
             {SUMMARY_LABEL.notes}
           </div>
           {noteText ? (
-            <div className="text-sm text-navy whitespace-pre-wrap">{noteText}</div>
+            <div className="text-sm text-charcoal whitespace-pre-wrap">{noteText}</div>
           ) : (
             <div className="text-sm text-gray-400 italic">No notes</div>
           )}
@@ -500,7 +500,7 @@ function Field({
         step={step}
         min={min}
         max={max}
-        className="w-full border border-gray-300 rounded-lg px-3 py-2.5 text-base focus:border-navy focus:outline-none"
+        className="w-full border border-gray-300 rounded-lg px-3 py-2.5 text-base focus:border-sage focus:outline-none"
       />
     </div>
   );

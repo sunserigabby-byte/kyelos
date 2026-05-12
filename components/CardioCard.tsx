@@ -66,7 +66,7 @@ export default function CardioCard({ dayNum }: Props) {
 
   return (
     <div className="bg-white border border-gray-200 rounded-lg p-3 mb-3">
-      <div className="font-bold text-navy text-sm mb-1">Daily Cardio</div>
+      <div className="font-bold text-charcoal text-sm mb-1">Daily Cardio</div>
       {restingDays ? (
         <p className="text-xs text-amber-700 italic mb-2">
           Optional — let knee settle first. Walk only if comfortable.
@@ -102,7 +102,7 @@ export default function CardioCard({ dayNum }: Props) {
           save({ completed: nv });
           if (nv && typeof navigator !== "undefined" && "vibrate" in navigator) navigator.vibrate(10);
         }}
-        className={`tappable w-full font-semibold py-2 rounded text-sm ${done ? "bg-navy-light border border-navy/30 text-navy line-through" : "bg-navy text-gold"}`}
+        className={`tappable w-full font-semibold py-2 rounded text-sm ${done ? "bg-cream border border-sage/30 text-charcoal line-through" : "bg-sage text-terracotta"}`}
       >
         {done ? "Cardio done ✓" : "Mark cardio done"}
       </button>

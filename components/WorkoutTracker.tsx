@@ -91,7 +91,7 @@ export default function WorkoutTracker({ exercise, sessionId, dayNum }: Props) {
     setSaving((s) => ({ ...s, [set.setNumber]: false }));
   }
 
-  const badge = TYPE_BADGE[exercise.exerciseType] ?? { label: exercise.exerciseType.toUpperCase(), color: "bg-navy text-gold" };
+  const badge = TYPE_BADGE[exercise.exerciseType] ?? { label: exercise.exerciseType.toUpperCase(), color: "bg-sage text-terracotta" };
 
   return (
     <div className="bg-white border border-gray-200 rounded-lg mb-2 overflow-hidden">
@@ -101,7 +101,7 @@ export default function WorkoutTracker({ exercise, sessionId, dayNum }: Props) {
       >
         <div className="flex-1 min-w-0">
           <div className="flex items-center gap-2 mb-0.5 flex-wrap">
-            <span className="font-semibold text-navy text-sm">{exercise.name}</span>
+            <span className="font-semibold text-charcoal text-sm">{exercise.name}</span>
             <span className={`text-[9px] font-bold tracking-widest px-1.5 py-0.5 rounded ${badge.color}`}>
               {badge.label}
             </span>
@@ -116,7 +116,7 @@ export default function WorkoutTracker({ exercise, sessionId, dayNum }: Props) {
             <div className="text-[11px] text-gray-500 italic mt-1 line-clamp-2">{exercise.notes}</div>
           )}
         </div>
-        <div className="text-navy/40 text-xs flex-shrink-0">{open ? "▲" : "▼"}</div>
+        <div className="text-charcoal/40 text-xs flex-shrink-0">{open ? "▲" : "▼"}</div>
       </button>
 
       {open && (
@@ -125,7 +125,7 @@ export default function WorkoutTracker({ exercise, sessionId, dayNum }: Props) {
             <div className="text-xs text-gray-600 italic my-2">{exercise.notes}</div>
           )}
           {exercise.volleyballNote && (
-            <div className="border-l-4 border-gold bg-gold-light/40 px-3 py-2 my-2 text-xs text-navy">
+            <div className="border-l-4 border-terracotta bg-sage-pale/40 px-3 py-2 my-2 text-xs text-charcoal">
               🏐 <span className="font-semibold">Volleyball:</span> {exercise.volleyballNote}
             </div>
           )}
@@ -148,17 +148,17 @@ export default function WorkoutTracker({ exercise, sessionId, dayNum }: Props) {
 }
 
 const TYPE_BADGE: Record<string, { label: string; color: string }> = {
-  ramp_top: { label: "RAMP+TOP", color: "bg-navy text-gold" },
-  volume: { label: "VOLUME", color: "bg-navy text-gold" },
-  accessory: { label: "ACCESSORY", color: "bg-gray-200 text-navy" },
+  ramp_top: { label: "RAMP+TOP", color: "bg-sage text-terracotta" },
+  volume: { label: "VOLUME", color: "bg-sage text-terracotta" },
+  accessory: { label: "ACCESSORY", color: "bg-gray-200 text-charcoal" },
   power_throw: { label: "POWER", color: "bg-amber-500 text-white" },
   power_plyo: { label: "PLYO", color: "bg-amber-500 text-white" },
   tantrum: { label: "TANTRUM", color: "bg-amber-500 text-white" },
-  core: { label: "CORE", color: "bg-navy text-gold" },
-  conditioning: { label: "CONDITIONING", color: "bg-gray-200 text-navy" },
-  mobility: { label: "MOBILITY", color: "bg-gray-200 text-navy" },
-  swing_prep: { label: "SWING PREP", color: "bg-gold-light text-navy" },
-  single_leg: { label: "SINGLE-LEG", color: "bg-gray-200 text-navy" },
+  core: { label: "CORE", color: "bg-sage text-terracotta" },
+  conditioning: { label: "CONDITIONING", color: "bg-gray-200 text-charcoal" },
+  mobility: { label: "MOBILITY", color: "bg-gray-200 text-charcoal" },
+  swing_prep: { label: "SWING PREP", color: "bg-sage-pale text-charcoal" },
+  single_leg: { label: "SINGLE-LEG", color: "bg-gray-200 text-charcoal" },
   rehab: { label: "REHAB", color: "bg-green-100 text-green-800" },
 };
 
@@ -178,13 +178,13 @@ function SetRow({
   return (
     <div className="bg-gray-50 rounded-md p-2">
       <div className="flex items-baseline justify-between mb-1">
-        <div className="text-xs font-semibold text-navy">
+        <div className="text-xs font-semibold text-charcoal">
           Set {set.setNumber}
           <span className="text-gray-500 font-normal ml-1.5">[{set.setType}]</span>
         </div>
         <div className="text-[11px] text-gray-500 text-right">
           {set.targetReps} · {set.targetIntensity}
-          {saving && <span className="ml-1 text-gold">saving...</span>}
+          {saving && <span className="ml-1 text-terracotta">saving...</span>}
           {!saving && logged?.id && <span className="ml-1 text-green-700">✓</span>}
         </div>
       </div>
@@ -235,7 +235,7 @@ function NumInput({ label, value, onCommit, placeholder }: { label: string; valu
         onChange={(e) => setLocal(e.target.value)}
         onBlur={() => { if (local !== value) onCommit(local); }}
         placeholder={placeholder}
-        className="w-full bg-white border border-gray-300 rounded px-2 py-1.5 text-sm text-navy focus:border-navy focus:outline-none"
+        className="w-full bg-white border border-gray-300 rounded px-2 py-1.5 text-sm text-charcoal focus:border-sage focus:outline-none"
       />
     </div>
   );
@@ -250,7 +250,7 @@ function IntentToggle({ value, onChange }: { value: string | undefined; onChange
           <button
             key={opt}
             onClick={() => onChange(opt)}
-            className={`tappable flex-1 text-[11px] py-1.5 rounded ${value === opt ? "bg-navy text-gold font-semibold" : "bg-white border border-gray-300 text-gray-600"}`}
+            className={`tappable flex-1 text-[11px] py-1.5 rounded ${value === opt ? "bg-sage text-terracotta font-semibold" : "bg-white border border-gray-300 text-gray-600"}`}
           >
             {opt === "sub_max" ? "Sub-max" : "Max"}
           </button>
@@ -293,11 +293,11 @@ function Timer({ seconds, done, onComplete }: { seconds: number; done: boolean; 
 
   return (
     <div className="flex items-center gap-2">
-      <div className="text-2xl font-bold text-navy tabular-nums w-12">{remaining}s</div>
+      <div className="text-2xl font-bold text-charcoal tabular-nums w-12">{remaining}s</div>
       {!running ? (
         <button
           onClick={start}
-          className="tappable bg-navy text-gold font-semibold py-1.5 px-3 rounded text-xs"
+          className="tappable bg-sage text-terracotta font-semibold py-1.5 px-3 rounded text-xs"
         >
           {done ? "Restart" : "Start"}
         </button>

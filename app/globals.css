@@ -2,22 +2,34 @@
 @tailwind components;
 @tailwind utilities;
 
+:root {
+  --color-sage: #9DAA92;
+  --color-sage-dark: #4A5A40;
+  --color-sage-pale: #DCE3D6;
+  --color-cream: #F7F2E8;
+  --color-terracotta: #C7785A;
+  --color-terracotta-dark: #A85E40;
+  --color-charcoal: #2A2A28;
+}
+
 html {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  /* Prevent text sizing adjust on iOS rotation */
   -webkit-text-size-adjust: 100%;
-  /* Fix mobile viewport height issues */
   height: 100%;
 }
 
 body {
-  background: #F9F9F5;
+  background-color: var(--color-cream);
+  color: var(--color-charcoal);
+  font-family: var(--font-body, "Inter"), sans-serif;
   min-height: 100%;
-  /* Prevent overscroll bounce on iOS */
   overscroll-behavior-y: none;
-  /* Better font rendering on mobile */
   -webkit-tap-highlight-color: transparent;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-display, "Manrope"), sans-serif;
 }
 
 /* iOS notch / safe area */

@@ -124,26 +124,26 @@ function PartnerCard({ name, stats }: { name: string; stats: PersonStats | null 
   }
   const deltaPositive = stats.delta != null && stats.delta < 0;
   return (
-    <div className="bg-white rounded-lg p-4 border-2 border-navy/20 fade-in">
+    <div className="bg-white rounded-lg p-4 border-2 border-sage/20 fade-in">
       <div className="flex items-center justify-between mb-2">
-        <div className="font-bold text-navy">{name}</div>
+        <div className="font-bold text-charcoal">{name}</div>
         <div className="text-xs text-gray-500">Day {stats.currentDay}</div>
       </div>
       <div className="mb-3">
         <div className="flex items-center justify-between text-xs text-gray-500 mb-1">
           <span>Today</span>
-          <span className="font-semibold text-navy">{stats.todayCompletionPct}%</span>
+          <span className="font-semibold text-charcoal">{stats.todayCompletionPct}%</span>
         </div>
         <div className="h-2 bg-gray-100 rounded-full overflow-hidden">
           <div
-            className="h-full bg-gold transition-all duration-500"
+            className="h-full bg-terracotta transition-all duration-500"
             style={{ width: `${stats.todayCompletionPct}%` }}
           ></div>
         </div>
       </div>
       <div className="flex items-baseline justify-between">
         <div>
-          <div className="text-lg font-bold text-navy">
+          <div className="text-lg font-bold text-charcoal">
             {stats.latestWeight != null ? `${stats.latestWeight}` : "—"}
             <span className="text-xs text-gray-500 ml-1">lb</span>
           </div>
