@@ -97,10 +97,16 @@ export default function Nav() {
             Progress
           </Link>
           <Link
+            href="/workout-history"
+            className={`pb-1 transition ${pathname === "/workout-history" ? "border-b-2 border-gold text-white" : "text-white/60"}`}
+          >
+            Lifts
+          </Link>
+          <Link
             href="/phases"
             className={`pb-1 transition ${pathname === "/phases" ? "border-b-2 border-gold text-white" : "text-white/60"}`}
           >
-            History
+            Phases
           </Link>
           <Link
             href="/settings"

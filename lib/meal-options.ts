@@ -1,0 +1,137 @@
+import type { MealSlot } from "./training-types";
+
+export const gabbyMealSlots: MealSlot[] = [
+  {
+    key: "meal_1",
+    label: "Breakfast",
+    time: "7:00 AM",
+    targetMacros: { protein: 38, carbs: 35, fat: 17 },
+    showVeggies: false,
+    options: {
+      proteins: [
+        { id: "eggs_mix", name: "3 whole eggs + 4 egg whites", serving: "3 whole + 4 whites", macros: { protein: 35, fat: 15 }, fatHeavy: true },
+        { id: "eggs_whites", name: "Egg whites + 1 whole", serving: "6 whites + 1 whole", macros: { protein: 30, fat: 5 } },
+        { id: "greek_yogurt", name: "0% Greek yogurt + whey", serving: "1.5 cups + 1/2 scoop", macros: { protein: 40, carbs: 12 } },
+        { id: "cottage_cheese", name: "Low-fat cottage cheese", serving: "1.5 cups", macros: { protein: 36, fat: 4 } },
+        { id: "protein_oats", name: "Whey + oats blend", serving: "1.5 scoops + 1/2 cup oats", macros: { protein: 38, carbs: 27, fat: 4 } },
+      ],
+      carbs: [
+        { id: "oats", name: "Rolled oats (dry)", serving: "1/2 cup", macros: { carbs: 27 } },
+        { id: "berries_oats", name: "Oats + berries", serving: "1/3 cup + 1/2 cup", macros: { carbs: 28 } },
+        { id: "banana_oats", name: "Oats + 1/2 banana", serving: "1/3 cup + 1/2 banana", macros: { carbs: 30 } },
+        { id: "ezekiel", name: "Ezekiel bread", serving: "2 slices", macros: { carbs: 30 } },
+        { id: "fruit_only", name: "Berries only", serving: "1.5 cups", macros: { carbs: 24 } },
+      ],
+      fats: [
+        { id: "auto", name: "Covered by eggs (no extra fat)", serving: "none needed", macros: { fat: 0 } },
+        { id: "almond_butter", name: "Almond butter", serving: "1 tbsp", macros: { fat: 9 } },
+        { id: "avocado_quarter", name: "Avocado", serving: "1/4 fruit", macros: { fat: 8 } },
+        { id: "almonds", name: "Almonds", serving: "10 nuts", macros: { fat: 7 } },
+      ],
+    },
+  },
+  {
+    key: "meal_2",
+    label: "Lunch",
+    time: "12:00 PM",
+    targetMacros: { protein: 48, carbs: 50, fat: 14 },
+    showVeggies: true,
+    options: {
+      proteins: [
+        { id: "chicken_breast", name: "Chicken breast", serving: "6 oz cooked", macros: { protein: 48 } },
+        { id: "turkey_breast", name: "Turkey breast", serving: "6 oz cooked", macros: { protein: 48 } },
+        { id: "white_fish", name: "White fish (cod/tilapia/halibut)", serving: "7 oz cooked", macros: { protein: 46 } },
+        { id: "shrimp", name: "Shrimp", serving: "7 oz cooked", macros: { protein: 48 } },
+        { id: "lean_beef", name: "93/7 ground beef", serving: "5 oz cooked", macros: { protein: 35, fat: 10 } },
+        { id: "tuna", name: "Canned tuna in water", serving: "1.5 cans", macros: { protein: 46 } },
+        { id: "chicken_thigh", name: "Chicken thigh (skinless)", serving: "6 oz cooked", macros: { protein: 38, fat: 14 }, fatHeavy: true },
+        { id: "salmon", name: "Salmon", serving: "5 oz cooked", macros: { protein: 32, fat: 13 }, fatHeavy: true },
+      ],
+      carbs: [
+        { id: "jasmine_rice", name: "Jasmine rice (cooked)", serving: "1 cup", macros: { carbs: 45 } },
+        { id: "basmati", name: "Basmati rice", serving: "1 cup", macros: { carbs: 45 } },
+        { id: "sweet_potato", name: "Sweet potato (baked)", serving: "1 medium (8 oz)", macros: { carbs: 40 } },
+        { id: "quinoa", name: "Quinoa", serving: "1 cup cooked", macros: { carbs: 40 } },
+        { id: "rice_cakes", name: "Rice cakes + banana", serving: "4 cakes + small banana", macros: { carbs: 50 } },
+        { id: "potato", name: "White potato (baked)", serving: "1 medium", macros: { carbs: 36 } },
+      ],
+      fats: [
+        { id: "auto", name: "Covered by fatty protein (none needed)", serving: "none", macros: { fat: 0 } },
+        { id: "olive_oil", name: "Olive oil", serving: "1 tbsp", macros: { fat: 14 } },
+        { id: "avocado_half", name: "Avocado", serving: "1/2 fruit", macros: { fat: 15 } },
+        { id: "almonds", name: "Almonds", serving: "15 nuts", macros: { fat: 12 } },
+      ],
+      veggies: [
+        { id: "greens", name: "Spinach/arugula/mixed greens", serving: "2 cups", macros: {} },
+        { id: "broccoli", name: "Broccoli", serving: "1.5 cups", macros: {} },
+        { id: "asparagus", name: "Asparagus", serving: "1.5 cups", macros: {} },
+        { id: "mixed_roasted", name: "Roasted vegetable mix", serving: "2 cups", macros: {} },
+        { id: "cauliflower", name: "Cauliflower", serving: "1.5 cups", macros: {} },
+        { id: "peppers", name: "Bell peppers", serving: "1.5 cups", macros: {} },
+      ],
+    },
+  },
+  {
+    key: "meal_3",
+    label: "Snack",
+    time: "3:30 PM",
+    targetMacros: { protein: 28, carbs: 25, fat: 4 },
+    showVeggies: false,
+    options: {
+      proteins: [
+        { id: "whey_banana", name: "Whey + small banana", serving: "1 scoop + small", macros: { protein: 25, carbs: 23 } },
+        { id: "whey_only", name: "Whey isolate (in water)", serving: "1.5 scoops", macros: { protein: 37 } },
+        { id: "greek_yogurt_berries", name: "Greek yogurt + berries", serving: "1 cup + 3/4 cup", macros: { protein: 25, carbs: 15 } },
+        { id: "cottage_fruit", name: "Cottage cheese + apple", serving: "1 cup + 1 small", macros: { protein: 26, carbs: 22 } },
+        { id: "tuna_rice_cakes", name: "Tuna + rice cakes", serving: "1 can + 3 cakes", macros: { protein: 30, carbs: 21 } },
+      ],
+      carbs: [
+        { id: "auto", name: "Included in protein choice", serving: "covered", macros: { carbs: 0 } },
+        { id: "banana_small", name: "Small banana", serving: "1 small", macros: { carbs: 23 } },
+        { id: "apple", name: "Apple", serving: "1 small", macros: { carbs: 20 } },
+        { id: "rice_cakes_2", name: "Rice cakes", serving: "3 cakes", macros: { carbs: 21 } },
+      ],
+      fats: [
+        { id: "none", name: "No added fat", serving: "none", macros: { fat: 0 } },
+        { id: "almond_butter_small", name: "Almond butter (small)", serving: "1 tsp", macros: { fat: 3 } },
+      ],
+    },
+  },
+  {
+    key: "meal_4",
+    label: "Dinner",
+    time: "7:30 PM",
+    targetMacros: { protein: 40, carbs: 30, fat: 8 },
+    showVeggies: true,
+    options: {
+      proteins: [
+        { id: "white_fish", name: "White fish", serving: "6 oz cooked", macros: { protein: 40 } },
+        { id: "chicken_breast", name: "Chicken breast", serving: "5 oz cooked", macros: { protein: 40 } },
+        { id: "turkey_breast", name: "Turkey breast", serving: "5 oz cooked", macros: { protein: 40 } },
+        { id: "shrimp", name: "Shrimp", serving: "6 oz cooked", macros: { protein: 36 } },
+        { id: "lean_beef", name: "93/7 ground beef", serving: "4 oz cooked", macros: { protein: 28, fat: 8 }, fatHeavy: true },
+        { id: "salmon", name: "Salmon", serving: "4 oz cooked", macros: { protein: 25, fat: 10 }, fatHeavy: true },
+        { id: "eggs", name: "Eggs (omelette/scramble)", serving: "3 whole + 3 whites", macros: { protein: 30, fat: 15 }, fatHeavy: true },
+      ],
+      carbs: [
+        { id: "sweet_potato_half", name: "Sweet potato", serving: "1/2 medium", macros: { carbs: 20 } },
+        { id: "jasmine_rice_half", name: "Jasmine rice", serving: "1/2 cup cooked", macros: { carbs: 22 } },
+        { id: "potato_half", name: "White potato", serving: "1/2 medium", macros: { carbs: 18 } },
+        { id: "quinoa_half", name: "Quinoa", serving: "1/2 cup cooked", macros: { carbs: 20 } },
+        { id: "no_carb", name: "Skip starch (extra veggies)", serving: "extra veggies", macros: { carbs: 0 } },
+      ],
+      fats: [
+        { id: "auto", name: "Covered by fatty protein", serving: "none needed", macros: { fat: 0 } },
+        { id: "olive_oil_half", name: "Olive oil", serving: "1/2 tbsp", macros: { fat: 7 } },
+        { id: "avocado_quarter", name: "Avocado", serving: "1/4 fruit", macros: { fat: 8 } },
+      ],
+      veggies: [
+        { id: "roasted_mix", name: "Roasted vegetable mix", serving: "1.5 cups", macros: {} },
+        { id: "broccoli", name: "Broccoli", serving: "1.5 cups", macros: {} },
+        { id: "asparagus_zucchini", name: "Asparagus + zucchini", serving: "1.5 cups", macros: {} },
+        { id: "green_beans", name: "Green beans", serving: "1.5 cups", macros: {} },
+        { id: "brussels", name: "Brussels sprouts", serving: "1.5 cups", macros: {} },
+      ],
+    },
+  },
+];

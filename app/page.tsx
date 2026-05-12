@@ -12,6 +12,8 @@ import HydrationCard from "@/components/HydrationCard";
 import DaySummary from "@/components/DaySummary";
 import PartnerNudgeToast from "@/components/PartnerNudgeToast";
 import VacationToday from "@/components/VacationToday";
+import PRPToday from "@/components/PRPToday";
+import TournamentToday from "@/components/TournamentToday";
 import { useCycleSettings } from "@/components/useCycleSettings";
 import { useMealSwaps } from "@/components/useMealSwaps";
 import {
@@ -37,6 +39,12 @@ export default function TodayPage() {
   }
   if (activePhase?.phase_type === "vacation") {
     return <VacationToday />;
+  }
+  if (activePhase?.phase_type === "recovery_cut") {
+    return <PRPToday />;
+  }
+  if (activePhase?.phase_type === "tournament_peak") {
+    return <TournamentToday />;
   }
   return <CutTodayPage />;
 }
