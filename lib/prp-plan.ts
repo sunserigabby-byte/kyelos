@@ -2,13 +2,15 @@ import type { Exercise, WorkoutDay } from "./training-types";
 import { rightLegRehab, singleLegLeft, swingPrep, tantrumFull } from "./exercises-common";
 
 // ============================================
-// Date math: Day 1 = Tuesday May 12, 2026
-// Weekly cycle: Tue/Wed/Thu/Fri/Sat/Sun/Mon
-// Phase 3 runs 39 days through Friday June 19
+// Date math: Day 1 = Wednesday May 13, 2026
+// (May 12 was the PRP injection rest day — not in the plan.)
+// Weekly cycle is calendar-driven (Mon..Sun), so day-of-week content
+// stays anchored: Tuesdays = Cycling+Core, Wednesdays = Heavy Pull, etc.
+// Phase 3 runs 38 days through Friday June 19.
 // ============================================
 
-const START_ISO = "2026-05-12";
-const TOTAL_DAYS = 39;
+const START_ISO = "2026-05-13";
+const TOTAL_DAYS = 38;
 
 const DAY_NAMES = ["Tue", "Wed", "Thu", "Fri", "Sat", "Sun", "Mon"];
 const FULL_DAY_NAMES = ["Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday", "Monday"];
