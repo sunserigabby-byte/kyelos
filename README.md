@@ -1,10 +1,12 @@
-# PR Cut Tracker 🌴
+# Kyelos
 
-A shared Next.js app to track the Puerto Rico 7-Day Cut Protocol for Gabby and Jon. Installs as a PWA on mobile, live syncs across devices, and lets you see each other's progress in real time.
+> Every day. On purpose.
 
-**Live:** https://cut-tracker-six.vercel.app
+A shared Next.js + Supabase training companion for Gabby and Jon. Phase-based plans (cut, vacation, PRP recovery, tournament peak, sustained cut), per-meal swaps, treat budgeting, cycle tracking, real-time partner sync. Installs as a PWA on iPhone/Android.
 
-**Protocol runs April 26 → May 2, 2026.**
+**Live:** https://kyelos-six.vercel.app
+
+Name: Kyelos (KYE-los) — Greek portmanteau of *Kairos* (right moment) + *Telos* (ultimate purpose).
 
 ## Features
 
