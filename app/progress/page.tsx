@@ -134,7 +134,7 @@ function CutProgressPage() {
       <div className="text-xs font-bold tracking-widest text-charcoal/60 mb-2">
         YOUR 7-DAY PROGRESS
       </div>
-      <div className="bg-sage text-white rounded-lg p-5 mb-4 border-t-4 border-b-4 border-terracotta">
+      <div className="bg-forest text-white rounded-lg p-5 mb-4 border-t-4 border-b-4 border-terracotta">
         <div className="grid grid-cols-3 gap-3">
           <Stat
             label="Start"
@@ -155,7 +155,7 @@ function CutProgressPage() {
       {/* 7-day table */}
       <div className="bg-white rounded-lg border border-gray-200 overflow-hidden">
         <table className="w-full text-sm">
-          <thead className="bg-sage text-white">
+          <thead className="bg-forest text-white">
             <tr>
               <th className="p-3 text-left">Day</th>
               <th className="p-3 text-right">Wt</th>

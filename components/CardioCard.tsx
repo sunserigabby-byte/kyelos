@@ -102,7 +102,7 @@ export default function CardioCard({ dayNum }: Props) {
           save({ completed: nv });
           if (nv && typeof navigator !== "undefined" && "vibrate" in navigator) navigator.vibrate(10);
         }}
-        className={`tappable w-full font-semibold py-2 rounded text-sm ${done ? "bg-cream border border-sage/30 text-charcoal line-through" : "bg-sage text-terracotta"}`}
+        className={`tappable w-full font-semibold py-2 rounded text-sm ${done ? "bg-cream border border-forest/30 text-charcoal line-through" : "bg-forest text-terracotta"}`}
       >
         {done ? "Cardio done ✓" : "Mark cardio done"}
       </button>

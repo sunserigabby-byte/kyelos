@@ -91,7 +91,7 @@ export default function WorkoutTracker({ exercise, sessionId, dayNum }: Props) {
     setSaving((s) => ({ ...s, [set.setNumber]: false }));
   }
 
-  const badge = TYPE_BADGE[exercise.exerciseType] ?? { label: exercise.exerciseType.toUpperCase(), color: "bg-sage text-terracotta" };
+  const badge = TYPE_BADGE[exercise.exerciseType] ?? { label: exercise.exerciseType.toUpperCase(), color: "bg-forest text-terracotta" };
 
   return (
     <div className="bg-white border border-gray-200 rounded-lg mb-2 overflow-hidden">
@@ -125,7 +125,7 @@ export default function WorkoutTracker({ exercise, sessionId, dayNum }: Props) {
             <div className="text-xs text-gray-600 italic my-2">{exercise.notes}</div>
           )}
           {exercise.volleyballNote && (
-            <div className="border-l-4 border-terracotta bg-sage-pale/40 px-3 py-2 my-2 text-xs text-charcoal">
+            <div className="border-l-4 border-terracotta bg-forest-pale/40 px-3 py-2 my-2 text-xs text-charcoal">
               🏐 <span className="font-semibold">Volleyball:</span> {exercise.volleyballNote}
             </div>
           )}
@@ -148,16 +148,16 @@ export default function WorkoutTracker({ exercise, sessionId, dayNum }: Props) {
 }
 
 const TYPE_BADGE: Record<string, { label: string; color: string }> = {
-  ramp_top: { label: "RAMP+TOP", color: "bg-sage text-terracotta" },
-  volume: { label: "VOLUME", color: "bg-sage text-terracotta" },
+  ramp_top: { label: "RAMP+TOP", color: "bg-forest text-terracotta" },
+  volume: { label: "VOLUME", color: "bg-forest text-terracotta" },
   accessory: { label: "ACCESSORY", color: "bg-gray-200 text-charcoal" },
   power_throw: { label: "POWER", color: "bg-amber-500 text-white" },
   power_plyo: { label: "PLYO", color: "bg-amber-500 text-white" },
   tantrum: { label: "TANTRUM", color: "bg-amber-500 text-white" },
-  core: { label: "CORE", color: "bg-sage text-terracotta" },
+  core: { label: "CORE", color: "bg-forest text-terracotta" },
   conditioning: { label: "CONDITIONING", color: "bg-gray-200 text-charcoal" },
   mobility: { label: "MOBILITY", color: "bg-gray-200 text-charcoal" },
-  swing_prep: { label: "SWING PREP", color: "bg-sage-pale text-charcoal" },
+  swing_prep: { label: "SWING PREP", color: "bg-forest-pale text-charcoal" },
   single_leg: { label: "SINGLE-LEG", color: "bg-gray-200 text-charcoal" },
   rehab: { label: "REHAB", color: "bg-green-100 text-green-800" },
 };
@@ -235,7 +235,7 @@ function NumInput({ label, value, onCommit, placeholder }: { label: string; valu
         onChange={(e) => setLocal(e.target.value)}
         onBlur={() => { if (local !== value) onCommit(local); }}
         placeholder={placeholder}
-        className="w-full bg-white border border-gray-300 rounded px-2 py-1.5 text-sm text-charcoal focus:border-sage focus:outline-none"
+        className="w-full bg-white border border-gray-300 rounded px-2 py-1.5 text-sm text-charcoal focus:border-forest focus:outline-none"
       />
     </div>
   );
@@ -250,7 +250,7 @@ function IntentToggle({ value, onChange }: { value: string | undefined; onChange
           <button
             key={opt}
             onClick={() => onChange(opt)}
-            className={`tappable flex-1 text-[11px] py-1.5 rounded ${value === opt ? "bg-sage text-terracotta font-semibold" : "bg-white border border-gray-300 text-gray-600"}`}
+            className={`tappable flex-1 text-[11px] py-1.5 rounded ${value === opt ? "bg-forest text-terracotta font-semibold" : "bg-white border border-gray-300 text-gray-600"}`}
           >
             {opt === "sub_max" ? "Sub-max" : "Max"}
           </button>
@@ -297,7 +297,7 @@ function Timer({ seconds, done, onComplete }: { seconds: number; done: boolean; 
       {!running ? (
         <button
           onClick={start}
-          className="tappable bg-sage text-terracotta font-semibold py-1.5 px-3 rounded text-xs"
+          className="tappable bg-forest text-terracotta font-semibold py-1.5 px-3 rounded text-xs"
         >
           {done ? "Restart" : "Start"}
         </button>

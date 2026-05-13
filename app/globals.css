@@ -3,12 +3,14 @@
 @tailwind utilities;
 
 :root {
-  --color-sage: #9DAA92;
-  --color-sage-dark: #4A5A40;
-  --color-sage-pale: #DCE3D6;
-  --color-cream: #F7F2E8;
+  --color-forest: #1F2D24;
+  --color-forest-light: #2C3D32;
+  --color-forest-pale: #DCE3D6;
+  --color-cream: #F4EDE0;
+  --color-cream-light: #FAF6EE;
   --color-terracotta: #C7785A;
   --color-terracotta-dark: #A85E40;
+  --color-gold: #C9A961;
   --color-charcoal: #2A2A28;
 }
 
@@ -29,34 +31,30 @@ body {
 }
 
 h1, h2, h3, h4, h5, h6 {
-  font-family: var(--font-display, "Manrope"), sans-serif;
+  font-family: var(--font-display, "Cormorant Garamond"), Georgia, serif;
 }
 
-/* iOS notch / safe area */
 .safe-padding {
   padding-left: max(1rem, env(safe-area-inset-left));
   padding-right: max(1rem, env(safe-area-inset-right));
   padding-bottom: max(6rem, calc(env(safe-area-inset-bottom) + 5rem));
 }
 
-/* Nav safe area for top */
 .safe-top {
   padding-top: max(0.75rem, env(safe-area-inset-top));
 }
 
-/* Tappable items — larger touch target + tap feedback */
 .tappable {
   cursor: pointer;
   -webkit-user-select: none;
   user-select: none;
-  min-height: 44px; /* Apple's minimum */
+  min-height: 44px;
   transition: transform 0.08s ease, background-color 0.15s ease, border-color 0.15s ease;
 }
 .tappable:active {
   transform: scale(0.98);
 }
 
-/* Checkbox pop animation */
 @keyframes checkPop {
   0% { transform: scale(0.5); opacity: 0; }
   60% { transform: scale(1.15); opacity: 1; }
@@ -66,7 +64,6 @@ h1, h2, h3, h4, h5, h6 {
   animation: checkPop 0.2s ease-out;
 }
 
-/* Fade-in for newly loaded content */
 @keyframes fadeIn {
   from { opacity: 0; transform: translateY(4px); }
   to { opacity: 1; transform: translateY(0); }
@@ -75,7 +72,6 @@ h1, h2, h3, h4, h5, h6 {
   animation: fadeIn 0.2s ease-out;
 }
 
-/* Hide scroll bars on horizontal scrollers */
 .no-scrollbar::-webkit-scrollbar {
   display: none;
 }
@@ -84,7 +80,6 @@ h1, h2, h3, h4, h5, h6 {
   scrollbar-width: none;
 }
 
-/* Pulse indicator for live sync */
 @keyframes livePulse {
   0%, 100% { opacity: 0.5; }
   50% { opacity: 1; }

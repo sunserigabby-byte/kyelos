@@ -141,7 +141,7 @@ export default function DaySummary({ person, plan, selectedDay }: Props) {
     <div
       className="rounded-lg p-4 mb-4 border-2 border-terracotta shadow-sm fade-in"
       style={{
-        background: "linear-gradient(135deg, #F7F2E8 0%, #DCE3D6 100%)",
+        background: "linear-gradient(135deg, #F4EDE0 0%, #DCE3D6 100%)",
       }}
     >
       <div className="flex items-baseline justify-between mb-2">

@@ -265,7 +265,7 @@ export default function CheckInForm({ person, dayNum, isoDate, phase }: Props) {
         {isSaved && (
           <button
             onClick={startEdit}
-            className="tappable text-xs font-semibold text-charcoal hover:text-sage-dark underline-offset-2 hover:underline flex-shrink-0"
+            className="tappable text-xs font-semibold text-charcoal hover:text-forest-light underline-offset-2 hover:underline flex-shrink-0"
           >
             Edit
           </button>
@@ -282,7 +282,7 @@ export default function CheckInForm({ person, dayNum, isoDate, phase }: Props) {
         <button
           onClick={save}
           disabled={saving}
-          className="tappable w-full bg-sage text-white rounded-lg py-3 font-semibold hover:bg-sage-dark transition disabled:opacity-50"
+          className="tappable w-full bg-forest text-white rounded-lg py-3 font-semibold hover:bg-forest-light transition disabled:opacity-50"
         >
           {saving ? "Saving..." : phase === "am" ? "Save Morning" : "Save Evening"}
         </button>
@@ -417,7 +417,7 @@ function FormFields({
           value={state.notes}
           onChange={(e) => setState({ ...state, notes: e.target.value })}
           rows={2}
-          className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:border-sage focus:outline-none"
+          className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:border-forest focus:outline-none"
         />
       </div>
     </div>
@@ -457,7 +457,7 @@ function SummaryView({
         ))}
       </dl>
       {showNotes && (
-        <div className="bg-sage-pale/40 rounded-md px-3 py-2 mt-2">
+        <div className="bg-forest-pale/40 rounded-md px-3 py-2 mt-2">
           <div className="text-[10px] uppercase tracking-wider text-charcoal/60 font-semibold mb-1">
             {SUMMARY_LABEL.notes}
           </div>
@@ -500,7 +500,7 @@ function Field({
         step={step}
         min={min}
         max={max}
-        className="w-full border border-gray-300 rounded-lg px-3 py-2.5 text-base focus:border-sage focus:outline-none"
+        className="w-full border border-gray-300 rounded-lg px-3 py-2.5 text-base focus:border-forest focus:outline-none"
       />
     </div>
   );

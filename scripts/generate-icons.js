@@ -14,7 +14,7 @@ const svg = fs.readFileSync(svgPath);
   await sharp(svg).resize(32, 32).png().toFile(path.join(publicDir, "favicon-32.png"));
   await sharp(svg).resize(16, 16).png().toFile(path.join(publicDir, "favicon-16.png"));
   fs.copyFileSync(path.join(publicDir, "favicon-32.png"), path.join(publicDir, "favicon.ico"));
-  console.log("Tandem icons generated.");
+  console.log("Kyelos icons generated.");
 })().catch((e) => {
   console.error(e);
   process.exit(1);

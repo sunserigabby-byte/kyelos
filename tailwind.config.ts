@@ -8,34 +8,39 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
-        // ===== Tandem brand palette =====
-        sage: {
-          DEFAULT: "#9DAA92",
-          dark: "#4A5A40",
+        // ===== Kyelos brand palette =====
+        forest: {
+          DEFAULT: "#1F2D24",
+          light: "#2C3D32",
           pale: "#DCE3D6",
         },
-        cream: "#F7F2E8",
+        cream: {
+          DEFAULT: "#F4EDE0",
+          light: "#FAF6EE",
+        },
         terracotta: {
           DEFAULT: "#C7785A",
           dark: "#A85E40",
         },
+        gold: "#C9A961",
         charcoal: "#2A2A28",
 
-        // ===== Legacy aliases (mapped to new palette) =====
-        // Any remaining navy/gold class names from before the rebrand still
-        // render in the new palette. New code should use sage/cream/terracotta.
-        navy: {
-          DEFAULT: "#9DAA92",   // sage (primary surface)
-          light: "#F7F2E8",     // cream (subtle bg)
-          dark: "#4A5A40",      // sage-dark (hover/deep)
+        // ===== Legacy aliases (Tandem + PR Cut → mapped to Kyelos) =====
+        // Existing class names render in the new palette even if missed by sed.
+        sage: {
+          DEFAULT: "#1F2D24",   // forest
+          light: "#FAF6EE",     // cream-light
+          dark: "#2C3D32",      // forest-light
+          pale: "#DCE3D6",      // forest-pale
         },
-        gold: {
-          DEFAULT: "#C7785A",   // terracotta
-          light: "#DCE3D6",     // sage-pale
+        navy: {
+          DEFAULT: "#1F2D24",
+          light: "#F4EDE0",
+          dark: "#2C3D32",
         },
       },
       fontFamily: {
-        display: ["var(--font-display)", "Manrope", "sans-serif"],
+        display: ["var(--font-display)", "Cormorant Garamond", "Georgia", "serif"],
         body: ["var(--font-body)", "Inter", "sans-serif"],
         sans: ["var(--font-body)", "Inter", "-apple-system", "BlinkMacSystemFont", "Segoe UI", "Roboto", "sans-serif"],
       },

@@ -103,7 +103,7 @@ function PhaseCard({
             <span className="text-xl flex-shrink-0">{icon}</span>
             <div className="font-bold text-charcoal truncate">{phase.name}</div>
             {phase.is_active && (
-              <span className="text-[10px] font-bold tracking-widest text-terracotta bg-sage px-1.5 py-0.5 rounded">
+              <span className="text-[10px] font-bold tracking-widest text-terracotta bg-forest px-1.5 py-0.5 rounded">
                 ACTIVE
               </span>
             )}
@@ -117,14 +117,14 @@ function PhaseCard({
       <div className="flex gap-2">
         <Link
           href={`/phases/${phase.id}`}
-          className="tappable bg-white border border-sage/30 text-charcoal font-semibold py-2 px-3 rounded-md text-xs"
+          className="tappable bg-white border border-forest/30 text-charcoal font-semibold py-2 px-3 rounded-md text-xs"
         >
           View
         </Link>
         {!phase.is_active && (
           <button
             onClick={onSetActive}
-            className="tappable bg-sage text-terracotta font-semibold py-2 px-3 rounded-md text-xs"
+            className="tappable bg-forest text-terracotta font-semibold py-2 px-3 rounded-md text-xs"
           >
             Set Active
           </button>
@@ -166,7 +166,7 @@ function ConfirmModal({
           </button>
           <button
             onClick={onConfirm}
-            className="tappable flex-1 bg-sage text-terracotta font-semibold py-2.5 rounded-md text-sm"
+            className="tappable flex-1 bg-forest text-terracotta font-semibold py-2.5 rounded-md text-sm"
           >
             Set Active
           </button>

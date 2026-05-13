@@ -81,7 +81,7 @@ export default function PartnerNudgeToast({ person }: Props) {
   return (
     <div className="fixed top-2 left-1/2 -translate-x-1/2 z-[70] w-[92%] max-w-md pointer-events-none">
       <div
-        className="bg-sage text-white border-2 border-terracotta rounded-lg shadow-lg p-3 nudge-slide pointer-events-auto cursor-pointer"
+        className="bg-forest text-white border-2 border-terracotta rounded-lg shadow-lg p-3 nudge-slide pointer-events-auto cursor-pointer"
         onClick={() => setActive(null)}
       >
         <div className="text-[10px] tracking-widest text-terracotta font-bold mb-0.5">

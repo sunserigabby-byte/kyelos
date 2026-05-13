@@ -24,7 +24,7 @@ export default function PhaseBanner({ phase, phaseNumber, dayNum, totalDays }: P
   return (
     <button
       onClick={() => setOpen((v) => !v)}
-      className="tappable w-full text-left bg-sage text-white rounded-lg p-4 mb-3 border-t-4 border-b-4 border-terracotta"
+      className="tappable w-full text-left bg-forest text-white rounded-lg p-4 mb-3 border-t-4 border-b-4 border-terracotta"
     >
       <div className="text-terracotta text-[10px] font-bold tracking-widest mb-1">
         PHASE {phaseNumber} · DAY {dayNum} OF {totalDays}{focusLabel ? ` · ${focusLabel.toUpperCase()}` : ""}

@@ -7,7 +7,7 @@ type Props = { dayNum: number };
 export default function PhotoPrompt({ dayNum }: Props) {
   const [expanded, setExpanded] = useState(false);
   return (
-    <div className="bg-sage-pale border-2 border-terracotta rounded-lg p-3 mb-3">
+    <div className="bg-forest-pale border-2 border-terracotta rounded-lg p-3 mb-3">
       <button onClick={() => setExpanded((v) => !v)} className="tappable w-full text-left">
         <div className="font-bold text-charcoal text-sm">📸 Photo Day — Day {dayNum}</div>
         <div className="text-xs text-charcoal/70 mt-0.5">

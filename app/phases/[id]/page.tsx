@@ -139,7 +139,7 @@ export default function ArchivedPhasePage() {
   return (
     <div>
       {/* Banner */}
-      <div className="bg-sage-pale border border-terracotta/60 rounded-md px-4 py-3 mb-4">
+      <div className="bg-forest-pale border border-terracotta/60 rounded-md px-4 py-3 mb-4">
         <div className="text-sm text-charcoal">
           <span className="font-semibold">Viewing archived phase</span> — {phase.name}
           {phase.is_active ? "" : `. Switch to active to log new data.`}
@@ -159,7 +159,7 @@ export default function ArchivedPhasePage() {
       {/* Per-day rows */}
       <div className="bg-white rounded-lg border border-gray-200 overflow-hidden mb-4">
         <table className="w-full text-sm">
-          <thead className="bg-sage text-white">
+          <thead className="bg-forest text-white">
             <tr>
               <th className="p-2 text-left">Day</th>
               {isCut && <th className="p-2 text-right">Wt</th>}

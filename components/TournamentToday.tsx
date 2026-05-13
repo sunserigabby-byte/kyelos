@@ -44,7 +44,7 @@ export default function TournamentToday() {
       {TOURNAMENT_PHOTO_DAYS.has(selectedDay) && <PhotoPrompt dayNum={selectedDay} />}
 
       {peakWeek && (
-        <div className="bg-sage-pale border-2 border-terracotta rounded-lg p-3 mb-3 text-sm text-charcoal">
+        <div className="bg-forest-pale border-2 border-terracotta rounded-lg p-3 mb-3 text-sm text-charcoal">
           <div className="font-bold mb-0.5">🌊 Peak Week — Day {selectedDay}</div>
           <div className="text-xs">Water + sodium manipulation active. Trust the protocol; you've earned this taper.</div>
         </div>
@@ -83,7 +83,7 @@ function TournamentWorkout({ day, selectedDay }: { day: any; selectedDay: number
   return (
     <>
       {day.swingPrep && (
-        <div className="bg-sage-pale/30 border-l-4 border-terracotta rounded-r-md p-3 mb-3">
+        <div className="bg-forest-pale/30 border-l-4 border-terracotta rounded-r-md p-3 mb-3">
           <div className="font-bold text-charcoal text-sm mb-2">🏐 Swing Prep — 5 min</div>
           {day.swingPrep.map((ex: any) => (
             <WorkoutTracker key={ex.name} exercise={ex} sessionId={sessionId} dayNum={selectedDay} />

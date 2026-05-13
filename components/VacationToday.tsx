@@ -73,7 +73,7 @@ export default function VacationToday() {
         {(log, update) => (
           <>
             {log.recovery_mode && (
-              <div className="bg-sage-pale border border-terracotta/60 rounded-md px-3 py-2 mb-3 text-sm text-charcoal">
+              <div className="bg-forest-pale border border-terracotta/60 rounded-md px-3 py-2 mb-3 text-sm text-charcoal">
                 🚰 Recovery Mode — extra water + dandelion today
               </div>
             )}
@@ -220,7 +220,7 @@ function VibeBanner({
   totalDays: number;
 }) {
   return (
-    <div className="bg-sage text-white rounded-lg p-5 mb-4 border-t-4 border-b-4 border-terracotta">
+    <div className="bg-forest text-white rounded-lg p-5 mb-4 border-t-4 border-b-4 border-terracotta">
       <div className="text-terracotta text-xs font-bold tracking-widest mb-1">
         🌴 PR DAY {dayNum} OF {totalDays}
       </div>
@@ -267,7 +267,7 @@ function DailyTargetsCard({
       >
         <button
           onClick={() => setProteinModalOpen(true)}
-          className="tappable bg-sage text-terracotta font-semibold py-1.5 px-3 rounded-md text-xs"
+          className="tappable bg-forest text-terracotta font-semibold py-1.5 px-3 rounded-md text-xs"
         >
           + Add
         </button>
@@ -288,7 +288,7 @@ function DailyTargetsCard({
                 vibrate(8);
                 update({ water_oz: water + d });
               }}
-              className="tappable bg-sage text-terracotta font-semibold py-1.5 px-2 rounded-md text-xs"
+              className="tappable bg-forest text-terracotta font-semibold py-1.5 px-2 rounded-md text-xs"
             >
               +{d}
             </button>
@@ -320,7 +320,7 @@ function DailyTargetsCard({
             value={stepsInput}
             onChange={(e) => setStepsInput(e.target.value.replace(/[^\d]/g, ""))}
             placeholder={String(steps || 0)}
-            className="w-20 border border-gray-300 rounded-md px-2 py-1 text-sm text-right focus:border-sage focus:outline-none"
+            className="w-20 border border-gray-300 rounded-md px-2 py-1 text-sm text-right focus:border-forest focus:outline-none"
           />
           <button
             onClick={() => {
@@ -331,7 +331,7 @@ function DailyTargetsCard({
                 setStepsInput("");
               }
             }}
-            className="tappable bg-sage text-terracotta font-semibold py-1.5 px-2 rounded-md text-xs"
+            className="tappable bg-forest text-terracotta font-semibold py-1.5 px-2 rounded-md text-xs"
           >
             Set
           </button>
@@ -379,7 +379,7 @@ function TargetRow({
           <span className="text-gray-500"> / {fmt(target)}{unit}</span>
         </div>
       </div>
-      <div className="h-2 bg-sage/10 rounded-full overflow-hidden mb-2">
+      <div className="h-2 bg-forest/10 rounded-full overflow-hidden mb-2">
         <div
           className="h-full bg-terracotta transition-all duration-300"
           style={{ width: `${pct}%` }}
@@ -418,7 +418,7 @@ function ProteinQuickAdd({
             <button
               key={g}
               onClick={() => onAdd(g)}
-              className="tappable bg-sage text-terracotta font-semibold py-3 rounded-md text-sm"
+              className="tappable bg-forest text-terracotta font-semibold py-3 rounded-md text-sm"
             >
               + {g}g
             </button>
@@ -431,14 +431,14 @@ function ProteinQuickAdd({
             value={custom}
             onChange={(e) => setCustom(e.target.value.replace(/[^\d]/g, ""))}
             placeholder="Custom grams"
-            className="flex-1 border border-gray-300 rounded-md px-3 py-2 text-base focus:border-sage focus:outline-none"
+            className="flex-1 border border-gray-300 rounded-md px-3 py-2 text-base focus:border-forest focus:outline-none"
           />
           <button
             onClick={() => {
               const n = parseInt(custom, 10);
               if (Number.isFinite(n) && n > 0) onAdd(n);
             }}
-            className="tappable bg-sage text-terracotta font-semibold py-2 px-4 rounded-md text-sm"
+            className="tappable bg-forest text-terracotta font-semibold py-2 px-4 rounded-md text-sm"
           >
             Add
           </button>
@@ -503,7 +503,7 @@ function BeachWorkoutCard({ day, dayNum }: { day: VacationDay; dayNum: number })
             </div>
             <button
               onClick={() => setRestDay(true)}
-              className="tappable bg-sage-pale border border-terracotta/60 text-charcoal font-semibold rounded-lg px-3 py-3 text-sm"
+              className="tappable bg-forest-pale border border-terracotta/60 text-charcoal font-semibold rounded-lg px-3 py-3 text-sm"
             >
               🌊 Rest Day
             </button>
@@ -625,7 +625,7 @@ function SupplementsCard({
               vibrate(8);
               onDandelion(dandelionCount + 1);
             }}
-            className="tappable bg-sage text-terracotta w-8 h-8 rounded-md font-bold"
+            className="tappable bg-forest text-terracotta w-8 h-8 rounded-md font-bold"
             aria-label="One more dandelion tea"
           >
             +
@@ -675,7 +675,7 @@ function DietSodaCard({
               vibrate(8);
               onChange(count + 1);
             }}
-            className="tappable bg-sage text-terracotta w-8 h-8 rounded-md font-bold"
+            className="tappable bg-forest text-terracotta w-8 h-8 rounded-md font-bold"
             aria-label="One more diet soda"
           >
             +
@@ -683,7 +683,7 @@ function DietSodaCard({
         </div>
       </div>
       {count >= 3 && (
-        <div className="bg-sage-pale/60 border border-terracotta/40 rounded-md px-3 py-2 mt-3 text-xs text-charcoal">
+        <div className="bg-forest-pale/60 border border-terracotta/40 rounded-md px-3 py-2 mt-3 text-xs text-charcoal">
           Heads up — artificial sweeteners can cause bloat. Consider swapping for sparkling water.
         </div>
       )}
@@ -718,7 +718,7 @@ function RecoveryToggleCard({
       </div>
       <div
         className={`relative w-11 h-6 rounded-full transition-colors flex-shrink-0 ${
-          on ? "bg-sage" : "bg-gray-300"
+          on ? "bg-forest" : "bg-gray-300"
         }`}
       >
         <div

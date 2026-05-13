@@ -109,7 +109,7 @@ export default function WorkoutHistoryPage() {
           {exercise && filtered.length > 0 && (
             <div className="bg-white rounded-lg border border-gray-200 overflow-hidden">
               <table className="w-full text-sm">
-                <thead className="bg-sage text-white">
+                <thead className="bg-forest text-white">
                   <tr>
                     <th className="p-2 text-left">Date</th>
                     <th className="p-2 text-left">Set</th>
@@ -124,7 +124,7 @@ export default function WorkoutHistoryPage() {
                     const val = s.weight ?? s.reps ?? 0;
                     const isPR = val === prByType[s.set_type] && val > 0;
                     return (
-                      <tr key={s.id} className={`border-b border-gray-100 ${isPR ? "bg-sage-pale/50" : ""}`}>
+                      <tr key={s.id} className={`border-b border-gray-100 ${isPR ? "bg-forest-pale/50" : ""}`}>
                         <td className="p-2 text-xs">
                           <div className="font-semibold text-charcoal">{session?.workout_date ?? "—"}</div>
                           <div className="text-gray-500">Day {session?.day_num ?? "?"}</div>

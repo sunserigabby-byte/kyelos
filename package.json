@@ -1,7 +1,7 @@
 {
-  "name": "tandem",
+  "name": "kyelos",
   "version": "1.0.0",
-  "description": "Athletic. Together.",
+  "description": "Every day. On purpose.",
   "private": true,
   "scripts": {
     "dev": "next dev",

@@ -116,14 +116,14 @@ export default function CheckItem({ person, dayNum, itemKey, title, subtitle, de
       onClick={toggle}
       className={`tappable rounded-lg p-4 mb-2 border ${
         checked
-          ? "bg-cream border-sage/30"
-          : "bg-white border-gray-200 active:border-sage/50"
+          ? "bg-cream border-forest/30"
+          : "bg-white border-gray-200 active:border-forest/50"
       }`}
     >
       <div className="flex items-start gap-3">
         <div
           className={`mt-0.5 w-6 h-6 rounded-md border-2 flex-shrink-0 flex items-center justify-center transition ${
-            checked ? "bg-sage border-sage" : "border-gray-300"
+            checked ? "bg-forest border-forest" : "border-gray-300"
           } ${animating ? "check-pop" : ""}`}
         >
           {checked && (

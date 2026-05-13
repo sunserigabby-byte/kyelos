@@ -25,9 +25,9 @@ export default function DaySelector({ currentDay, selectedDay, onSelect, totalDa
               }}
               className={`tappable flex-shrink-0 w-14 h-14 rounded-xl font-bold text-lg transition border-2 ${
                 isSelected
-                  ? "bg-sage text-white border-sage shadow-md"
+                  ? "bg-forest text-white border-forest shadow-md"
                   : isToday
-                  ? "bg-sage-pale text-charcoal border-terracotta"
+                  ? "bg-forest-pale text-charcoal border-terracotta"
                   : "bg-white text-gray-500 border-gray-200"
               }`}
             >

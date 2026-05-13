@@ -42,7 +42,7 @@ export default function EatingWindowBanner() {
   }
 
   return (
-    <div className="bg-sage text-cream rounded-md px-3 py-2 mb-3 text-sm flex items-center gap-2">
+    <div className="bg-forest text-cream rounded-md px-3 py-2 mb-3 text-sm flex items-center gap-2">
       <span className="text-base flex-shrink-0">{icon}</span>
       <span className="font-medium tracking-tight">{label}</span>
     </div>

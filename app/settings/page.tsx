@@ -125,7 +125,7 @@ export default function SettingsPage() {
         {permission === "default" && (
           <button
             onClick={enableNotifications}
-            className="tappable bg-sage text-terracotta font-semibold py-2.5 px-5 rounded-md text-sm"
+            className="tappable bg-forest text-terracotta font-semibold py-2.5 px-5 rounded-md text-sm"
           >
             Enable notifications
           </button>
@@ -201,7 +201,7 @@ function ToggleRow({
       </div>
       <div
         className={`relative w-11 h-6 rounded-full transition-colors flex-shrink-0 ${
-          checked ? "bg-sage" : "bg-gray-300"
+          checked ? "bg-forest" : "bg-gray-300"
         }`}
       >
         <div

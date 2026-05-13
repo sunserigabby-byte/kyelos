@@ -23,7 +23,7 @@ export default function SingleLegSection({ exercises, sessionId, dayNum }: Props
       </button>
       {open && (
         <div className="mt-2">
-          <div className="bg-sage-pale/40 border-l-4 border-terracotta px-3 py-2 mb-2 text-xs text-charcoal">
+          <div className="bg-forest-pale/40 border-l-4 border-terracotta px-3 py-2 mb-2 text-xs text-charcoal">
             Cross-education effect: training left leg maintains right leg strength via neural pathways.
           </div>
           {exercises.map((ex) => (

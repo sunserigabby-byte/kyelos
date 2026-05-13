@@ -42,7 +42,7 @@ export default function CyclePage() {
   return (
     <div>
       {/* Hero card */}
-      <div className="bg-sage text-white rounded-lg p-5 mb-4 border-t-4 border-b-4 border-terracotta">
+      <div className="bg-forest text-white rounded-lg p-5 mb-4 border-t-4 border-b-4 border-terracotta">
         <div className="text-terracotta text-xs font-bold tracking-widest mb-1">
           CYCLE DAY {cycleDay} OF {settings.cycle_length}
         </div>
@@ -161,7 +161,7 @@ function SettingsForm({
         <button
           onClick={save}
           disabled={saving}
-          className="tappable w-full bg-sage text-terracotta font-semibold py-3 rounded-md disabled:opacity-50"
+          className="tappable w-full bg-forest text-terracotta font-semibold py-3 rounded-md disabled:opacity-50"
         >
           {saving ? "Saving..." : savedAt ? "Saved ✓" : "Save"}
         </button>

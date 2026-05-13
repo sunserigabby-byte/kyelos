@@ -1,12 +1,12 @@
 import type { Metadata, Viewport } from "next";
-import { Manrope, Inter } from "next/font/google";
+import { Cormorant_Garamond, Inter } from "next/font/google";
 import "./globals.css";
 import Nav from "@/components/Nav";
 import { ProfileProvider } from "@/components/ProfileContext";
 import { PhaseProvider } from "@/components/PhaseContext";
 import ServiceWorkerRegister from "@/components/ServiceWorkerRegister";
 
-const manrope = Manrope({
+const cormorant = Cormorant_Garamond({
   subsets: ["latin"],
   weight: ["400", "500", "600"],
   variable: "--font-display",
@@ -21,13 +21,13 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  title: "Tandem",
-  description: "Athletic. Together. — A personal training companion.",
+  title: "Kyelos",
+  description: "Every day. On purpose.",
   manifest: "/manifest.json",
   appleWebApp: {
     capable: true,
     statusBarStyle: "default",
-    title: "Tandem",
+    title: "Kyelos",
   },
   icons: {
     icon: "/favicon.ico",
@@ -36,7 +36,7 @@ export const metadata: Metadata = {
 };
 
 export const viewport: Viewport = {
-  themeColor: "#9DAA92",
+  themeColor: "#1F2D24",
   width: "device-width",
   initialScale: 1,
   maximumScale: 1,
@@ -50,7 +50,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" className={`${manrope.variable} ${inter.variable}`}>
+    <html lang="en" className={`${cormorant.variable} ${inter.variable}`}>
       <body>
         <ProfileProvider>
           <PhaseProvider>

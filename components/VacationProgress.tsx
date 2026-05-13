@@ -127,7 +127,7 @@ export default function VacationProgress() {
   return (
     <div>
       {/* Trip overview */}
-      <div className="bg-sage text-white rounded-lg p-5 mb-4 border-t-4 border-b-4 border-terracotta">
+      <div className="bg-forest text-white rounded-lg p-5 mb-4 border-t-4 border-b-4 border-terracotta">
         <div className="text-terracotta text-xs font-bold tracking-widest mb-1">
           🌴 PUERTO RICO
         </div>

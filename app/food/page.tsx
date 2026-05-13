@@ -4,7 +4,7 @@ export default function FoodPage() {
   return (
     <div>
       {/* Callout banner */}
-      <div className="bg-sage-pale border-l-4 border-terracotta rounded-r-md p-4 mb-6">
+      <div className="bg-forest-pale border-l-4 border-terracotta rounded-r-md p-4 mb-6">
         <p className="text-sm text-charcoal leading-relaxed">
           Swap any protein for another lean protein at the same portion. Same
           for carbs, fats, veggies. Stay within your macros.

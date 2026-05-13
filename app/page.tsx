@@ -151,7 +151,7 @@ function CutTodayPage() {
       <PartnerNudgeToast person={person} />
 
       {showNotifBanner && (
-        <div className="bg-sage-pale border-2 border-terracotta rounded-lg p-3 mb-3 flex items-center gap-3">
+        <div className="bg-forest-pale border-2 border-terracotta rounded-lg p-3 mb-3 flex items-center gap-3">
           <div className="flex-1 text-sm text-charcoal">
             <div className="font-semibold mb-0.5">Want reminders?</div>
             <div className="text-xs text-charcoal/70">
@@ -160,7 +160,7 @@ function CutTodayPage() {
           </div>
           <button
             onClick={enableNotifications}
-            className="tappable bg-sage text-terracotta font-semibold py-2 px-3 rounded-md text-xs flex-shrink-0"
+            className="tappable bg-forest text-terracotta font-semibold py-2 px-3 rounded-md text-xs flex-shrink-0"
           >
             Enable
           </button>
@@ -174,7 +174,7 @@ function CutTodayPage() {
       )}
 
       {recentlyDueText && (
-        <div className="bg-sage text-white border-2 border-terracotta rounded-lg p-3 mb-3 flex items-start justify-between gap-2">
+        <div className="bg-forest text-white border-2 border-terracotta rounded-lg p-3 mb-3 flex items-start justify-between gap-2">
           <div className="text-sm">
             <div className="text-[10px] tracking-widest text-terracotta font-bold mb-0.5">
               REMINDER
@@ -196,7 +196,7 @@ function CutTodayPage() {
       <DaySelector currentDay={currentDay} selectedDay={selectedDay} onSelect={setSelectedDay} />
 
       {/* Day banner */}
-      <div className="bg-sage text-white rounded-lg p-5 mb-2 border-t-4 border-b-4 border-terracotta">
+      <div className="bg-forest text-white rounded-lg p-5 mb-2 border-t-4 border-b-4 border-terracotta">
         <div className="text-terracotta text-xs font-bold tracking-widest mb-1">
           DAY {day.day}  •  {day.date.toUpperCase()}
         </div>

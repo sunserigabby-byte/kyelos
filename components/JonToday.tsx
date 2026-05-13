@@ -188,7 +188,7 @@ function DailyTargetsCard({ person, dayNum, isoDate }: { person: "gabby" | "jon"
             <button
               key={d}
               onClick={() => { vibrate(8); save({ water_oz: m.water_oz + d }); }}
-              className="tappable bg-sage text-cream font-semibold py-1 px-2 rounded text-[11px]"
+              className="tappable bg-forest text-cream font-semibold py-1 px-2 rounded text-[11px]"
             >+{d}</button>
           ))}
           <button
@@ -213,7 +213,7 @@ function DailyTargetsCard({ person, dayNum, isoDate }: { person: "gabby" | "jon"
               const n = parseInt(stepsInput, 10);
               if (Number.isFinite(n)) { vibrate(8); save({ steps: n }); setStepsInput(""); }
             }}
-            className="tappable bg-sage text-cream font-semibold py-1 px-2 rounded text-[11px]"
+            className="tappable bg-forest text-cream font-semibold py-1 px-2 rounded text-[11px]"
           >Set</button>
         </div>
       </Bar>
@@ -238,7 +238,7 @@ function Bar({ label, current, target, unit, children, format }: { label: string
         <div className="text-sm font-semibold text-charcoal">{label}</div>
         <div className="text-xs text-charcoal"><span className="font-bold">{fmt(current)}</span><span className="text-gray-500"> / {fmt(target)}{unit}</span></div>
       </div>
-      <div className="h-2 bg-sage-pale rounded-full overflow-hidden mb-1">
+      <div className="h-2 bg-forest-pale rounded-full overflow-hidden mb-1">
         <div className="h-full bg-terracotta transition-all duration-300" style={{ width: `${pct}%` }} />
       </div>
       <div className="flex justify-end">{children}</div>
@@ -271,7 +271,7 @@ function ProteinQuickAdd({ current, onAdd, onClose }: { current: number; onAdd: 
             value={custom}
             onChange={(e) => setCustom(e.target.value.replace(/[^\d]/g, ""))}
             placeholder="Custom grams"
-            className="flex-1 border border-gray-300 rounded-md px-3 py-2 text-base focus:border-sage focus:outline-none"
+            className="flex-1 border border-gray-300 rounded-md px-3 py-2 text-base focus:border-forest focus:outline-none"
           />
           <button
             onClick={() => { const n = parseInt(custom, 10); if (Number.isFinite(n) && n > 0) onAdd(n); }}

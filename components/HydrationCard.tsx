@@ -123,7 +123,7 @@ export default function HydrationCard({ person, dayNum, isoDate, totalDays }: Pr
       </div>
 
       {/* Progress bar */}
-      <div className="h-3 bg-sage/10 rounded-full overflow-hidden mb-3">
+      <div className="h-3 bg-forest/10 rounded-full overflow-hidden mb-3">
         <div
           className="h-full bg-terracotta transition-all duration-300"
           style={{ width: `${pct}%` }}
@@ -134,19 +134,19 @@ export default function HydrationCard({ person, dayNum, isoDate, totalDays }: Pr
       <div className="flex gap-2">
         <button
           onClick={() => adjust(8)}
-          className="tappable flex-1 bg-sage text-terracotta font-semibold py-2.5 rounded-md text-sm"
+          className="tappable flex-1 bg-forest text-terracotta font-semibold py-2.5 rounded-md text-sm"
         >
           +8 oz
         </button>
         <button
           onClick={() => adjust(12)}
-          className="tappable flex-1 bg-sage text-terracotta font-semibold py-2.5 rounded-md text-sm"
+          className="tappable flex-1 bg-forest text-terracotta font-semibold py-2.5 rounded-md text-sm"
         >
           +12 oz
         </button>
         <button
           onClick={() => adjust(16)}
-          className="tappable flex-1 bg-sage text-terracotta font-semibold py-2.5 rounded-md text-sm"
+          className="tappable flex-1 bg-forest text-terracotta font-semibold py-2.5 rounded-md text-sm"
         >
           +16 oz
         </button>

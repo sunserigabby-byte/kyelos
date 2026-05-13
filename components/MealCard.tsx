@@ -207,7 +207,7 @@ function ComponentRow({
           {COMPONENT_LABEL[category]}
           {component.targetGrams > 0 ? ` · ${component.targetGrams}g target` : ""}
           {isSwapped && (
-            <span className="ml-2 text-[10px] uppercase tracking-wider text-charcoal bg-sage-pale px-1.5 py-0.5 rounded">
+            <span className="ml-2 text-[10px] uppercase tracking-wider text-charcoal bg-forest-pale px-1.5 py-0.5 rounded">
               swapped
             </span>
           )}

@@ -139,7 +139,7 @@ function WorkoutBlock({ day, selectedDay }: { day: any; selectedDay: number }) {
 function SwingPrepCard({ exercises, sessionId, dayNum }: { exercises: any[]; sessionId: string | null; dayNum: number }) {
   const [open, setOpen] = useState(true);
   return (
-    <div className="bg-sage-pale/30 border-l-4 border-terracotta rounded-r-md p-3 mb-3">
+    <div className="bg-forest-pale/30 border-l-4 border-terracotta rounded-r-md p-3 mb-3">
       <button onClick={() => setOpen((v) => !v)} className="tappable w-full text-left flex items-center justify-between">
         <div>
           <div className="font-bold text-charcoal text-sm">🏐 Swing Prep — 5 min</div>
@@ -253,7 +253,7 @@ function DailyMetricsCard({ person, dayNum, isoDate }: { person: "gabby" | "jon"
       <Bar label="🥩 Protein" current={m.protein_g} target={PROTEIN_TARGET} unit="g">
         <div className="flex gap-1">
           {[20, 30, 40].map((g) => (
-            <button key={g} onClick={() => { vibrate(8); save({ protein_g: m.protein_g + g }); }} className="tappable bg-sage text-terracotta font-semibold py-1 px-2 rounded text-[11px]">+{g}</button>
+            <button key={g} onClick={() => { vibrate(8); save({ protein_g: m.protein_g + g }); }} className="tappable bg-forest text-terracotta font-semibold py-1 px-2 rounded text-[11px]">+{g}</button>
           ))}
         </div>
       </Bar>
@@ -261,7 +261,7 @@ function DailyMetricsCard({ person, dayNum, isoDate }: { person: "gabby" | "jon"
       <Bar label="💧 Water" current={m.water_oz} target={WATER_TARGET} unit="oz">
         <div className="flex gap-1">
           {[8, 12, 16].map((d) => (
-            <button key={d} onClick={() => { vibrate(8); save({ water_oz: m.water_oz + d }); }} className="tappable bg-sage text-terracotta font-semibold py-1 px-2 rounded text-[11px]">+{d}</button>
+            <button key={d} onClick={() => { vibrate(8); save({ water_oz: m.water_oz + d }); }} className="tappable bg-forest text-terracotta font-semibold py-1 px-2 rounded text-[11px]">+{d}</button>
           ))}
           <button onClick={() => { vibrate(5); save({ water_oz: Math.max(0, m.water_oz - 8) }); }} className="tappable bg-white border border-gray-300 text-gray-600 font-semibold py-1 px-2 rounded text-[11px]">−8</button>
         </div>
@@ -282,7 +282,7 @@ function DailyMetricsCard({ person, dayNum, isoDate }: { person: "gabby" | "jon"
               const n = parseInt(stepsInput, 10);
               if (Number.isFinite(n)) { vibrate(8); save({ steps: n }); setStepsInput(""); }
             }}
-            className="tappable bg-sage text-terracotta font-semibold py-1 px-2 rounded text-[11px]"
+            className="tappable bg-forest text-terracotta font-semibold py-1 px-2 rounded text-[11px]"
           >Set</button>
         </div>
       </Bar>
@@ -306,7 +306,7 @@ function Bar({ label, current, target, unit, children, format }: { label: string
         <div className="text-sm font-semibold text-charcoal">{label}</div>
         <div className="text-xs text-charcoal"><span className="font-bold">{fmt(current)}</span><span className="text-gray-500"> / {fmt(target)}{unit}</span></div>
       </div>
-      <div className="h-2 bg-sage/10 rounded-full overflow-hidden mb-1">
+      <div className="h-2 bg-forest/10 rounded-full overflow-hidden mb-1">
         <div className="h-full bg-terracotta transition-all duration-300" style={{ width: `${pct}%` }} />
       </div>
       <div className="flex justify-end">{children}</div>
@@ -369,7 +369,7 @@ function KneePainCard({ person, dayNum, isoDate }: { person: "gabby" | "jon"; da
           <button
             key={n}
             onClick={() => save(n)}
-            className={`tappable w-8 h-8 rounded text-xs font-bold ${pain === n ? "bg-sage text-terracotta" : "bg-white border border-gray-300 text-gray-700"}`}
+            className={`tappable w-8 h-8 rounded text-xs font-bold ${pain === n ? "bg-forest text-terracotta" : "bg-white border border-gray-300 text-gray-700"}`}
           >{n}</button>
         ))}
       </div>

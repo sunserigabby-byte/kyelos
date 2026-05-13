@@ -21,12 +21,13 @@ function GearIcon() {
   );
 }
 
-function TandemMark() {
-  // Two interlocked rings — Gabby + Jon training in tandem.
+function KyelosMark() {
+  // Two asymmetric peaks (Gabby + Jon) with a shared sun above the meeting point.
+  // Peaks fill = cream (currentColor), sun = terracotta.
   return (
-    <svg width="28" height="15" viewBox="0 0 40 22" className="text-cream flex-shrink-0" aria-hidden="true">
-      <circle cx="13" cy="11" r="9" fill="none" stroke="currentColor" strokeWidth="2" />
-      <circle cx="27" cy="11" r="9" fill="none" stroke="currentColor" strokeWidth="2" />
+    <svg width="32" height="20" viewBox="0 0 44 44" className="text-cream flex-shrink-0" aria-hidden="true">
+      <circle cx="22" cy="11" r="5" fill="#C7785A" />
+      <path d="M 2 38 L 14 24 L 22 30 L 30 8 L 42 38 Z" fill="currentColor" />
     </svg>
   );
 }
@@ -43,13 +44,13 @@ export default function Nav() {
       : null;
 
   return (
-    <header className="bg-sage text-cream sticky top-0 z-50 shadow-md safe-top">
+    <header className="bg-forest text-cream sticky top-0 z-50 shadow-md safe-top">
       <div className="max-w-2xl mx-auto px-4 pb-3 pt-2">
         <div className="flex items-center justify-between mb-3">
-          <div className="flex items-center gap-2 min-w-0">
-            <TandemMark />
-            <span className="font-display text-xl font-medium tracking-tight flex-shrink-0">
-              Tandem
+          <div className="flex items-center gap-3 min-w-0">
+            <KyelosMark />
+            <span className="font-display text-2xl font-medium tracking-tight flex-shrink-0">
+              Kyelos
             </span>
             {vacationPill && (
               <span className="bg-terracotta text-cream text-[10px] font-bold tracking-wide px-1.5 py-0.5 rounded-full flex-shrink-0">
@@ -63,7 +64,7 @@ export default function Nav() {
               </span>
             )}
           </div>
-          <div className="flex gap-1 bg-sage-dark rounded-full p-1">
+          <div className="flex gap-1 bg-forest-light rounded-full p-1">
             <button
               onClick={() => setPerson("gabby")}
               className={`tappable px-4 py-1.5 text-sm rounded-full transition ${

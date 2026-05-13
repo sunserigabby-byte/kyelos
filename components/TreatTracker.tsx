@@ -155,7 +155,7 @@ export default function TreatTracker() {
         <span className="text-gray-500"> / {JON_WEEKLY_TREAT_BUDGET} cal</span>
       </div>
 
-      <div className="h-3 bg-sage-pale rounded-full overflow-hidden mb-1">
+      <div className="h-3 bg-forest-pale rounded-full overflow-hidden mb-1">
         <div
           className="h-full transition-all duration-300"
           style={{
@@ -244,7 +244,7 @@ function LogModal({
               <button
                 key={opt.id}
                 onClick={() => onLog(opt.name, opt.calories, opt.category)}
-                className="tappable bg-sage-pale border border-sage/30 rounded-md p-3 text-left"
+                className="tappable bg-forest-pale border border-forest/30 rounded-md p-3 text-left"
               >
                 <div className="text-xl mb-0.5">{opt.emoji}</div>
                 <div className="text-xs font-semibold text-charcoal">{opt.name}</div>
@@ -261,7 +261,7 @@ function LogModal({
                 placeholder="Treat name"
                 value={customName}
                 onChange={(e) => setCustomName(e.target.value)}
-                className="flex-1 border border-gray-300 rounded-md px-3 py-2 text-sm focus:border-sage focus:outline-none"
+                className="flex-1 border border-gray-300 rounded-md px-3 py-2 text-sm focus:border-forest focus:outline-none"
               />
               <input
                 type="text"
@@ -269,7 +269,7 @@ function LogModal({
                 placeholder="cal"
                 value={customCal}
                 onChange={(e) => setCustomCal(e.target.value.replace(/[^\d]/g, ""))}
-                className="w-20 border border-gray-300 rounded-md px-3 py-2 text-sm text-right focus:border-sage focus:outline-none"
+                className="w-20 border border-gray-300 rounded-md px-3 py-2 text-sm text-right focus:border-forest focus:outline-none"
               />
             </div>
             <button

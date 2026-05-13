@@ -168,7 +168,7 @@ export default function SwapModal({
               type="checkbox"
               checked={applyToFuture}
               onChange={(e) => setApplyToFuture(e.target.checked)}
-              className="w-4 h-4 accent-sage-dark"
+              className="w-4 h-4 accent-forest-light"
             />
             <span className="text-sm text-gray-700">
               Apply to all remaining days (Day {Math.max(currentDay, dayNum) + 1}–{maxDay})
