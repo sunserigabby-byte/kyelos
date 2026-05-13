@@ -10,9 +10,9 @@ import { gabbyMealSlots } from "@/lib/meal-options";
 import DaySelector from "@/components/DaySelector";
 import PhaseBanner from "@/components/PhaseBanner";
 import WorkoutTracker, { useWorkoutSession } from "@/components/WorkoutTracker";
+import WorkoutList from "@/components/WorkoutList";
 import MealSelector from "@/components/MealSelector";
 import CardioCard from "@/components/CardioCard";
-import SingleLegSection from "@/components/SingleLegSection";
 import RightLegRehab from "@/components/RightLegRehab";
 import PhotoPrompt from "@/components/PhotoPrompt";
 import CheckItem from "@/components/CheckItem";
@@ -55,6 +55,7 @@ export default function PRPToday() {
 
   if (!activePhase) return null;
   const day = gabbyPRP[selectedDay - 1] ?? gabbyPRP[0];
+  const isDay1Rest = selectedDay === 1;
 
   return (
     <div key={`prp-${activePhase.id}-${selectedDay}`}>
@@ -71,7 +72,7 @@ export default function PRPToday() {
 
       <NSAIDReminder selectedDay={selectedDay} />
 
-      <DayHeader day={day} />
+      {isDay1Rest ? <Day1RestBanner /> : <DayHeader day={day} />}
 
       <DailyMetricsCard person={person} dayNum={selectedDay} isoDate={day.isoDate} />
 
@@ -89,6 +90,25 @@ export default function PRPToday() {
       {gabbyMealSlots.map((slot) => (
         <MealSelector key={slot.key} slot={slot} dayNum={selectedDay} />
       ))}
+    </div>
+  );
+}
+
+function Day1RestBanner() {
+  return (
+    <div className="bg-cream-light border-2 border-terracotta rounded-lg p-4 mb-3">
+      <div className="text-terracotta text-[10px] font-bold tracking-widest mb-1">
+        TUE · WEEK 1 · DAY 1
+      </div>
+      <div className="text-xl font-bold text-charcoal mb-1">⚕️ Injection Day Rest</div>
+      <p className="text-sm text-charcoal/80 leading-relaxed">
+        You just had the PRP injection. Stay off your feet, hydrate well, and let
+        the joint settle today. Tomorrow we start training.
+      </p>
+      <div className="mt-3 pt-3 border-t border-terracotta/30 text-xs text-charcoal/70 italic">
+        Optional gentle upper-body mobility is in the Workout section below — skip
+        it entirely if the knee is throbbing. Sleep matters more than mobility tonight.
+      </div>
     </div>
   );
 }
@@ -114,20 +134,14 @@ function WorkoutBlock({ day, selectedDay }: { day: any; selectedDay: number }) {
 
   return (
     <>
-      {day.swingPrep && (
+      {day.swingPrep && day.swingPrep.length > 0 && (
         <SwingPrepCard exercises={day.swingPrep} sessionId={sessionId} dayNum={selectedDay} />
       )}
 
       <div className="text-charcoal font-bold text-sm uppercase tracking-wider border-b-2 border-terracotta/60 pb-1 mb-3 mt-6">
         Workout
       </div>
-      {day.exercises.map((ex: any) => (
-        <WorkoutTracker key={ex.name} exercise={ex} sessionId={sessionId} dayNum={selectedDay} />
-      ))}
-
-      {day.singleLegLeft && (
-        <SingleLegSection exercises={day.singleLegLeft} sessionId={sessionId} dayNum={selectedDay} />
-      )}
+      <WorkoutList exercises={day.exercises} sessionId={sessionId} dayNum={selectedDay} />
 
       {day.rightLegRehab && (
         <RightLegRehab exercises={day.rightLegRehab} sessionId={sessionId} currentDay={selectedDay} unlockDay={8} />

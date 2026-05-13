@@ -42,6 +42,12 @@ export type Exercise = {
   trackingMode: TrackingMode;
   optional?: boolean;
   unlocksOnDay?: number;
+  /** Letter (A/B/C/...). Consecutive exercises with the same letter form a superset. */
+  supersetGroup?: string;
+  /** Rest in seconds between alternating exercises within the superset. */
+  restBetweenExercises?: number;
+  /** Rest in seconds after completing a full round of all exercises in the superset. */
+  restBetweenRounds?: number;
 };
 
 export type WorkoutDay = {

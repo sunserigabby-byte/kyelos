@@ -1,19 +1,24 @@
-import type { Exercise, WorkoutDay } from "./training-types";
-import { rightLegRehab, singleLegLeft, swingPrep, tantrumFull } from "./exercises-common";
+import type { Exercise, ExerciseSet, WorkoutDay } from "./training-types";
+import {
+  leftLegFinisher,
+  leftLegStrength,
+  leftLegVolume,
+  rightLegRehab,
+  swingPrep,
+  tantrumFull,
+} from "./exercises-common";
 
 // ============================================
-// Date math: Day 1 = Wednesday May 13, 2026
-// (May 12 was the PRP injection rest day — not in the plan.)
-// Weekly cycle is calendar-driven (Mon..Sun), so day-of-week content
-// stays anchored: Tuesdays = Cycling+Core, Wednesdays = Heavy Pull, etc.
-// Phase 3 runs 38 days through Friday June 19.
+// Date math: Day 1 = Tuesday May 12, 2026 (injection-day REST).
+// Days 2-39 follow the weekly cycle: Wed/Thu/Fri/Sat/Sun/Mon/Tue.
+// Phase 3 runs 39 days through Friday June 19.
 // ============================================
 
-const START_ISO = "2026-05-13";
-const TOTAL_DAYS = 38;
+const START_ISO = "2026-05-12";
+const TOTAL_DAYS = 39;
 
-const DAY_NAMES = ["Tue", "Wed", "Thu", "Fri", "Sat", "Sun", "Mon"];
-const FULL_DAY_NAMES = ["Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday", "Monday"];
+const FULL_DAY_NAMES = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+const SHORT_DAY_NAMES = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
 const MONTHS = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
 
 function addDays(iso: string, n: number): string {
@@ -26,33 +31,24 @@ function addDays(iso: string, n: number): string {
   return `${yy}-${mm}-${dd}`;
 }
 
+function calendarDayOfWeek(iso: string): number {
+  const [y, m, d] = iso.split("-").map(Number);
+  return new Date(Date.UTC(y, m - 1, d)).getUTCDay(); // 0=Sun..6=Sat
+}
+
 function displayDate(iso: string): string {
-  const [y, m, d] = iso.split("-").map(Number);
-  return `${FULL_DAY_NAMES[((y && m && d) ? new Date(Date.UTC(y, m - 1, d)).getUTCDay() : 0)]}, ${MONTHS[m - 1]} ${d}`;
+  const calIdx = calendarDayOfWeek(iso);
+  const [, m, d] = iso.split("-").map(Number);
+  return `${FULL_DAY_NAMES[calIdx]}, ${MONTHS[m - 1]} ${d}`;
 }
 
-// Map calendar weekday (0=Sun, 1=Mon, ..., 6=Sat) to our cycle index (0=Tue, ..., 6=Mon)
-function cycleIndexFor(iso: string): number {
-  const [y, m, d] = iso.split("-").map(Number);
-  const calendarDow = new Date(Date.UTC(y, m - 1, d)).getUTCDay(); // 0=Sun
-  // 0=Sun -> 5, 1=Mon -> 6, 2=Tue -> 0, 3=Wed -> 1, ...
-  return (calendarDow + 5) % 7;
-}
-
-function displayWithCustomDay(iso: string): string {
-  const idx = cycleIndexFor(iso);
-  const [_, m, d] = iso.split("-").map(Number);
-  return `${FULL_DAY_NAMES[idx]}, ${MONTHS[m - 1]} ${d}`;
-}
-
-// ============================================
-// Weekly day-pattern factories — return exercises array.
-// Each day-of-week (Tue..Mon) has the same structure across all weeks;
-// progressionNote varies by week.
-// ============================================
-
-// Helper to build a set list
-function sets(count: number, reps: number | string, intensity: string, rest?: number, setType: "working" | "warmup" | "top" | "backoff" | "ramp" | "power" | "duration" = "working"): import("./training-types").ExerciseSet[] {
+function setsList(
+  count: number,
+  reps: number | string,
+  intensity: string,
+  rest?: number,
+  setType: "working" | "warmup" | "top" | "backoff" | "ramp" | "power" | "duration" = "working"
+): ExerciseSet[] {
   return Array.from({ length: count }, (_, i) => ({
     setNumber: i + 1,
     setType,
@@ -62,64 +58,93 @@ function sets(count: number, reps: number | string, intensity: string, rest?: nu
   }));
 }
 
-// ---------- Tuesday: Cycling + Anti-Rotation Core ----------
+function durationSets(count: number, durationSeconds: number, label: string, rest?: number): ExerciseSet[] {
+  return Array.from({ length: count }, (_, i) => ({
+    setNumber: i + 1,
+    setType: "duration",
+    targetReps: label,
+    targetIntensity: "Hold",
+    durationSeconds,
+    restSeconds: rest,
+  }));
+}
+
+// Tag a list of exercises as a superset group with shared rest values.
+function asSuperset(
+  group: string,
+  restBetweenExercises: number,
+  restBetweenRounds: number,
+  exs: Exercise[]
+): Exercise[] {
+  return exs.map((ex, i) => ({
+    ...ex,
+    supersetGroup: group,
+    restBetweenExercises: i === 0 ? restBetweenExercises : ex.restBetweenExercises,
+    restBetweenRounds: i === 0 ? restBetweenRounds : ex.restBetweenRounds,
+  }));
+}
+
+// ============================================
+// TUESDAY (Days 8, 15, 22, 29, 36): Cycling + Anti-Rotation Core
+// Day 1 (May 12) is REST — handled as a special case in the build loop.
+// ============================================
 function tuesdayExercises(): Exercise[] {
   return [
     {
       name: "Stationary Cycling",
       exerciseType: "conditioning",
       description: "30 min Zone 2, HR 130-140",
-      sets: [
-        { setNumber: 1, setType: "duration", targetReps: "30 min", targetIntensity: "Zone 2 conversational", durationSeconds: 1800 },
-      ],
+      sets: durationSets(1, 1800, "30 min"),
       trackingMode: "time",
       notes: "Conversational pace. Protects knee while building aerobic base.",
     },
-    {
-      name: "Pallof Press",
-      exerciseType: "core",
-      description: "3 × 12/side @ RPE 8",
-      sets: sets(3, "12/side", "RPE 8", 45),
-      trackingMode: "weight_reps",
-      volleyballNote: "Anti-rotation = power transfer without leaks.",
-    },
-    {
-      name: "Hollow Body Hold",
-      exerciseType: "core",
-      description: "3 × 30-45s",
-      sets: [
-        { setNumber: 1, setType: "duration", targetReps: "30-45s", targetIntensity: "Hold", durationSeconds: 45, restSeconds: 60 },
-        { setNumber: 2, setType: "duration", targetReps: "30-45s", targetIntensity: "Hold", durationSeconds: 45, restSeconds: 60 },
-        { setNumber: 3, setType: "duration", targetReps: "30-45s", targetIntensity: "Hold", durationSeconds: 45, restSeconds: 60 },
-      ],
-      trackingMode: "time",
-    },
-    {
-      name: "Dead Bug",
-      exerciseType: "core",
-      description: "3 × 12/side, slow tempo",
-      sets: sets(3, "12/side", "Slow tempo", 45),
-      trackingMode: "bodyweight",
-    },
-    {
-      name: "Side Plank with Reach-Through",
-      exerciseType: "core",
-      description: "3 × 10/side",
-      sets: sets(3, "10/side", "Bodyweight", 45),
-      trackingMode: "bodyweight",
-    },
+    ...asSuperset("A", 30, 60, [
+      {
+        name: "Pallof Press",
+        exerciseType: "core",
+        description: "3 × 12/side @ RPE 8",
+        sets: setsList(3, "12/side", "RPE 8"),
+        trackingMode: "weight_reps",
+        volleyballNote: "Anti-rotation = power transfer without leaks.",
+      },
+      {
+        name: "Hollow Body Hold",
+        exerciseType: "core",
+        description: "3 × 30-45s",
+        sets: durationSets(3, 45, "30-45s"),
+        trackingMode: "time",
+      },
+    ]),
+    ...asSuperset("B", 30, 60, [
+      {
+        name: "Dead Bug",
+        exerciseType: "core",
+        description: "3 × 12/side, slow tempo",
+        sets: setsList(3, "12/side", "Slow tempo"),
+        trackingMode: "bodyweight",
+      },
+      {
+        name: "Side Plank with Reach-Through",
+        exerciseType: "core",
+        description: "3 × 10/side",
+        sets: setsList(3, "10/side", "Bodyweight"),
+        trackingMode: "bodyweight",
+      },
+    ]),
     {
       name: "Cable Woodchop (high-to-low)",
       exerciseType: "core",
       description: "3 × 12/side",
-      sets: sets(3, "12/side", "RPE 7-8", 60),
+      sets: setsList(3, "12/side", "RPE 7-8", 60),
       trackingMode: "weight_reps",
       volleyballNote: "Diagonal force chain — same pattern as a spike.",
     },
   ];
 }
 
-// ---------- Wednesday: Heavy Pull ----------
+// ============================================
+// WEDNESDAY: Heavy Pull + Left Leg STRENGTH (supersetted)
+// ============================================
 function wednesdayExercises(): Exercise[] {
   return [
     {
@@ -137,140 +162,193 @@ function wednesdayExercises(): Exercise[] {
         { setNumber: 8, setType: "backoff", targetReps: 6, targetIntensity: "80% of top", restSeconds: 120 },
       ],
       trackingMode: "weight_reps",
-      volleyballNote: "Lats accelerate your arm down through contact. This is THE swing-strength lift.",
+      volleyballNote:
+        "Lats accelerate your arm down through contact. THE swing-strength lift.",
     },
-    { name: "Barbell Row", exerciseType: "volume", description: "4 × 8 @ RPE 8", sets: sets(4, 8, "RPE 8", 90), trackingMode: "weight_reps" },
-    { name: "Single-Arm DB Row", exerciseType: "volume", description: "3 × 10/side @ RPE 8", sets: sets(3, "10/side", "RPE 8", 60), trackingMode: "weight_reps" },
-    {
-      name: "Cable Rotational Pull (high-to-low)",
-      exerciseType: "power_throw",
-      description: "4 × 8/side, max acceleration",
-      sets: sets(4, "8/side", "Max acceleration", 60, "power"),
-      trackingMode: "power",
-      volleyballNote: "Mimics the downward pull of a spike.",
-    },
-    { name: "Face Pull", exerciseType: "accessory", description: "4 × 15 @ RPE 8", sets: sets(4, 15, "RPE 8", 45), trackingMode: "weight_reps" },
-    { name: "Hammer Curl", exerciseType: "accessory", description: "3 × 12 @ RPE 8", sets: sets(3, 12, "RPE 8", 45), trackingMode: "weight_reps" },
+    ...asSuperset("A", 45, 120, [
+      { name: "Barbell Row", exerciseType: "volume", description: "4 × 8 @ RPE 8", sets: setsList(4, 8, "RPE 8"), trackingMode: "weight_reps" },
+      leftLegStrength[0], // Single-Leg Hip Thrust LEFT
+    ]),
+    ...asSuperset("B", 45, 90, [
+      { name: "Single-Arm DB Row", exerciseType: "volume", description: "3 × 10/side @ RPE 8", sets: setsList(3, "10/side", "RPE 8"), trackingMode: "weight_reps" },
+      leftLegStrength[1], // Single-Leg Leg Press LEFT
+    ]),
+    ...asSuperset("C", 45, 90, [
+      leftLegStrength[2], // Glute-Bias Step Down LEFT (unlocks Day 8)
+      {
+        name: "Cable Rotational Pull (high-to-low)",
+        exerciseType: "power_throw",
+        description: "4 × 8/side, max acceleration",
+        sets: setsList(4, "8/side", "Max acceleration", 60, "power"),
+        trackingMode: "power",
+        volleyballNote: "Mimics the downward pull of a spike.",
+      },
+    ]),
+    ...asSuperset("D", 30, 75, [
+      leftLegStrength[3], // Supported Single-Leg RDL LEFT
+      { name: "Face Pull", exerciseType: "accessory", description: "4 × 15 @ RPE 8", sets: setsList(4, 15, "RPE 8"), trackingMode: "weight_reps" },
+    ]),
+    { name: "Hammer Curl", exerciseType: "accessory", description: "3 × 12 @ RPE 8", sets: setsList(3, 12, "RPE 8", 60), trackingMode: "weight_reps" },
   ];
 }
 
-// ---------- Thursday: Swing Power ----------
+// ============================================
+// THURSDAY: Swing Power + Cardio
+// ============================================
 function thursdayExercises(): Exercise[] {
   return [
     {
       name: "Kneeling Tennis Ball Throw",
       exerciseType: "power_throw",
       description: "4 × 10/side, max intent",
-      sets: sets(4, "10/side", "Max intent", 60, "power"),
+      sets: setsList(4, "10/side", "Max intent", 60, "power"),
       trackingMode: "power",
-      notes: "Drop to one knee. Hold tennis ball. Mimic full arm swing into wall, max effort. Rotate from torso.",
+      notes:
+        "Drop to one knee. Hold tennis ball. Mimic full arm swing into wall, max effort. Rotate from torso.",
+      volleyballNote: "Isolates the swing pattern without full-body kinetic chain.",
     },
-    {
-      name: "Standing Medicine Ball Overhead Slam",
-      exerciseType: "power_throw",
-      description: "4 × 10, max intent",
-      sets: sets(4, 10, "Max intent", 60, "power"),
-      trackingMode: "power",
-      notes: "8-12 lb ball overhead, slam down with max force, catch on bounce.",
-    },
-    {
-      name: "Standing Medicine Ball Rotational Throw",
-      exerciseType: "power_throw",
-      description: "4 × 8/side, max intent",
-      sets: sets(4, "8/side", "Max intent", 60, "power"),
-      trackingMode: "power",
-    },
-    {
-      name: "Banded Rotational Throw",
-      exerciseType: "power_throw",
-      description: "3 × 10/side, max intent",
-      sets: sets(3, "10/side", "Max intent", 45, "power"),
-      trackingMode: "power",
-    },
-    {
-      name: "Plyo Push-Up",
-      exerciseType: "power_plyo",
-      description: "3 × 6, max intent",
-      sets: sets(3, 6, "Max intent", 90, "power"),
-      trackingMode: "power",
-      notes: "Hands leave ground each rep. Elevate on bench if too hard.",
-    },
+    ...asSuperset("A", 30, 60, [
+      {
+        name: "Standing Medicine Ball Overhead Slam",
+        exerciseType: "power_throw",
+        description: "4 × 10, max intent",
+        sets: setsList(4, 10, "Max intent", 0, "power"),
+        trackingMode: "power",
+        notes: "8-12 lb ball overhead, slam down with max force, catch on bounce.",
+      },
+      {
+        name: "Standing Medicine Ball Rotational Throw",
+        exerciseType: "power_throw",
+        description: "4 × 8/side, max intent",
+        sets: setsList(4, "8/side", "Max intent", 0, "power"),
+        trackingMode: "power",
+      },
+    ]),
+    ...asSuperset("B", 30, 75, [
+      {
+        name: "Banded Rotational Throw",
+        exerciseType: "power_throw",
+        description: "3 × 10/side, max intent",
+        sets: setsList(3, "10/side", "Max intent", 0, "power"),
+        trackingMode: "power",
+      },
+      {
+        name: "Plyo Push-Up",
+        exerciseType: "power_plyo",
+        description: "3 × 6, max intent",
+        sets: setsList(3, 6, "Max intent", 0, "power"),
+        trackingMode: "bodyweight",
+        notes: "Hands leave ground each rep. Elevate on bench if too hard.",
+      },
+    ]),
     ...tantrumFull,
   ];
 }
 
-// ---------- Friday: Volume Push ----------
+// ============================================
+// FRIDAY: Volume Push + Left Leg VOLUME (supersetted)
+// ============================================
 function fridayExercises(): Exercise[] {
   return [
-    { name: "Incline DB Bench Press", exerciseType: "volume", description: "4 × 10 @ RPE 8", sets: sets(4, 10, "RPE 8", 90), trackingMode: "weight_reps" },
-    { name: "Seated DB Shoulder Press", exerciseType: "volume", description: "4 × 10 @ RPE 8", sets: sets(4, 10, "RPE 8", 90), trackingMode: "weight_reps" },
-    { name: "Landmine Press", exerciseType: "volume", description: "3 × 10/side @ RPE 8", sets: sets(3, "10/side", "RPE 8", 60), trackingMode: "weight_reps" },
-    {
-      name: "Push-Up to T",
-      exerciseType: "accessory",
-      description: "3 × 8/side",
-      sets: sets(3, "8/side", "Bodyweight", 45),
-      trackingMode: "bodyweight",
-      notes: "Push-up, rotate to one side reaching arm to ceiling, return, push-up, other side.",
-    },
-    { name: "Cable Lateral Raise", exerciseType: "accessory", description: "4 × 15 @ RPE 8", sets: sets(4, 15, "RPE 8", 45), trackingMode: "weight_reps" },
-    { name: "Overhead Tricep Extension", exerciseType: "accessory", description: "3 × 12 @ RPE 8", sets: sets(3, 12, "RPE 8", 45), trackingMode: "weight_reps" },
+    ...asSuperset("A", 60, 120, [
+      { name: "Incline DB Bench Press", exerciseType: "volume", description: "4 × 10 @ RPE 8", sets: setsList(4, 10, "RPE 8"), trackingMode: "weight_reps" },
+      leftLegVolume[0], // Single-Leg Explosive Hip Thrust LEFT
+    ]),
+    ...asSuperset("B", 45, 90, [
+      { name: "Seated DB Shoulder Press", exerciseType: "volume", description: "4 × 10 @ RPE 8", sets: setsList(4, 10, "RPE 8"), trackingMode: "weight_reps" },
+      leftLegVolume[2], // Seated Single-Leg Curl LEFT
+    ]),
+    ...asSuperset("C", 45, 90, [
+      { name: "Landmine Press", exerciseType: "volume", description: "3 × 10/side @ RPE 8", sets: setsList(3, "10/side", "RPE 8"), trackingMode: "weight_reps" },
+      leftLegVolume[1], // Supported Single-Leg RDL LEFT
+    ]),
+    ...asSuperset("D", 30, 60, [
+      {
+        name: "Push-Up to T",
+        exerciseType: "accessory",
+        description: "3 × 8/side",
+        sets: setsList(3, "8/side", "Bodyweight"),
+        trackingMode: "bodyweight",
+        notes:
+          "Push-up, rotate to one side reaching arm to ceiling, return, push-up, other side.",
+      },
+      leftLegVolume[3], // Standing Single-Leg Calf Raise LEFT
+    ]),
+    ...asSuperset("E", 30, 60, [
+      { name: "Cable Lateral Raise", exerciseType: "accessory", description: "4 × 15 @ RPE 8", sets: setsList(4, 15, "RPE 8"), trackingMode: "weight_reps" },
+      { name: "Overhead Tricep Extension", exerciseType: "accessory", description: "3 × 12 @ RPE 8", sets: setsList(3, 12, "RPE 8"), trackingMode: "weight_reps" },
+    ]),
   ];
 }
 
-// ---------- Saturday: Volume Pull + Shoulder Durability ----------
+// ============================================
+// SATURDAY: Volume Pull + Shoulder Durability + Left Leg FINISHER
+// ============================================
 function saturdayExercises(): Exercise[] {
   return [
-    {
-      name: "Straight-Arm Lat Pulldown",
-      exerciseType: "volume",
-      description: "4 × 12 @ RPE 8",
-      sets: sets(4, 12, "RPE 8", 60),
-      trackingMode: "weight_reps",
-      volleyballNote: "Pure lat work, no biceps. THE swing-down muscle in isolation.",
-    },
-    { name: "Chest-Supported Row", exerciseType: "volume", description: "4 × 10 @ RPE 8", sets: sets(4, 10, "RPE 8", 90), trackingMode: "weight_reps" },
-    {
-      name: "Cable Face Pull with External Rotation",
-      exerciseType: "accessory",
-      description: "4 × 15 @ RPE 8",
-      sets: sets(4, 15, "RPE 8", 45),
-      trackingMode: "weight_reps",
-      volleyballNote: "Most important shoulder health exercise. Do this religiously.",
-    },
-    {
-      name: "Prone Y-Raise (incline bench)",
-      exerciseType: "accessory",
-      description: "3 × 12 light weight",
-      sets: sets(3, 12, "Light", 45),
-      trackingMode: "weight_reps",
-      volleyballNote: "Lower trap — the muscle most lifters underuse and overhead athletes need most.",
-    },
-    { name: "Rear Delt Fly", exerciseType: "accessory", description: "4 × 15 @ RPE 8", sets: sets(4, 15, "RPE 8", 45), trackingMode: "weight_reps" },
+    ...asSuperset("A", 45, 90, [
+      {
+        name: "Straight-Arm Lat Pulldown",
+        exerciseType: "volume",
+        description: "4 × 12 @ RPE 8",
+        sets: setsList(4, 12, "RPE 8"),
+        trackingMode: "weight_reps",
+        volleyballNote: "Pure lat work. THE swing-down muscle in isolation.",
+      },
+      leftLegFinisher[0], // Seated Single-Leg Extension LEFT
+    ]),
+    ...asSuperset("B", 45, 90, [
+      { name: "Chest-Supported Row", exerciseType: "volume", description: "4 × 10 @ RPE 8", sets: setsList(4, 10, "RPE 8"), trackingMode: "weight_reps" },
+      leftLegFinisher[1], // Single-Leg Hip Thrust LEFT
+    ]),
+    ...asSuperset("C", 30, 75, [
+      {
+        name: "Cable Face Pull w/ External Rotation",
+        exerciseType: "accessory",
+        description: "4 × 15 @ RPE 8",
+        sets: setsList(4, 15, "RPE 8"),
+        trackingMode: "weight_reps",
+        volleyballNote: "Most important shoulder health exercise. Do religiously.",
+      },
+      leftLegFinisher[2], // Cable Single-Leg Kickback Explosive LEFT
+    ]),
+    ...asSuperset("D", 30, 60, [
+      {
+        name: "Prone Y-Raise (incline bench)",
+        exerciseType: "accessory",
+        description: "3 × 12 light weight",
+        sets: setsList(3, 12, "Light"),
+        trackingMode: "weight_reps",
+        volleyballNote: "Lower trap activation — critical for overhead athletes.",
+      },
+      leftLegFinisher[3], // Supine Single-Leg Glute Bridge LEFT
+    ]),
+    ...asSuperset("E", 30, 60, [
+      { name: "Rear Delt Fly", exerciseType: "accessory", description: "4 × 15 @ RPE 8", sets: setsList(4, 15, "RPE 8"), trackingMode: "weight_reps" },
+      leftLegFinisher[4], // Seated Single-Leg Calf Raise LEFT
+    ]),
     ...tantrumFull,
-    { name: "Barbell Curl", exerciseType: "accessory", description: "3 × 10 @ RPE 8", sets: sets(3, 10, "RPE 8", 60), trackingMode: "weight_reps" },
+    { name: "Barbell Curl", exerciseType: "accessory", description: "3 × 10 @ RPE 8", sets: setsList(3, 10, "RPE 8", 60), trackingMode: "weight_reps" },
   ];
 }
 
-// ---------- Sunday: Mobility + Walk + Check-In ----------
+// ============================================
+// SUNDAY: Mobility + Walk + Check-In (unchanged)
+// ============================================
 function sundayExercises(): Exercise[] {
   return [
     {
       name: "Outdoor Walk",
       exerciseType: "conditioning",
       description: "45-60 min brisk pace",
-      sets: [
-        { setNumber: 1, setType: "duration", targetReps: "45-60 min", targetIntensity: "Brisk", durationSeconds: 2700 },
-      ],
+      sets: durationSets(1, 2700, "45-60 min"),
       trackingMode: "time",
     },
     {
       name: "Mobility Flow",
       exerciseType: "mobility",
       description: "20 min flow",
-      sets: [
-        { setNumber: 1, setType: "duration", targetReps: "20 min", targetIntensity: "Easy", durationSeconds: 1200 },
-      ],
+      sets: durationSets(1, 1200, "20 min"),
       trackingMode: "time",
       notes:
         "Couch stretch 1 min/side, 90/90 hip rotations 8/side, T-spine open books 8/side, banded shoulder dislocates 15, child's pose 1 min.",
@@ -278,7 +356,9 @@ function sundayExercises(): Exercise[] {
   ];
 }
 
-// ---------- Monday: Heavy Push ----------
+// ============================================
+// MONDAY: Heavy Push
+// ============================================
 function mondayExercises(): Exercise[] {
   return [
     {
@@ -298,23 +378,28 @@ function mondayExercises(): Exercise[] {
       ],
       trackingMode: "weight_reps",
     },
-    { name: "Seated DB Shoulder Press", exerciseType: "volume", description: "4 × 8 @ RPE 8", sets: sets(4, 8, "RPE 8", 90), trackingMode: "weight_reps" },
-    { name: "Landmine Press", exerciseType: "volume", description: "3 × 10/side @ RPE 8", sets: sets(3, "10/side", "RPE 8", 60), trackingMode: "weight_reps" },
-    {
-      name: "Medicine Ball Rotational Throw",
-      exerciseType: "power_throw",
-      description: "4 × 8/side, max intent",
-      sets: sets(4, "8/side", "Max intent", 60, "power"),
-      trackingMode: "power",
-      notes: "6-10 lb ball, throw at wall as hard as possible. Rotate from hips up.",
-      volleyballNote: "This IS your swing pattern. The closest non-volleyball exercise to actual swing transfer.",
-    },
-    { name: "Tricep Rope Pushdown", exerciseType: "accessory", description: "3 × 12 @ RPE 8", sets: sets(3, 12, "RPE 8", 60), trackingMode: "weight_reps" },
+    ...asSuperset("A", 45, 90, [
+      { name: "Seated DB Shoulder Press", exerciseType: "volume", description: "4 × 8 @ RPE 8", sets: setsList(4, 8, "RPE 8"), trackingMode: "weight_reps" },
+      { name: "Pallof Press", exerciseType: "core", description: "3 × 12/side @ RPE 8", sets: setsList(3, "12/side", "RPE 8"), trackingMode: "weight_reps" },
+    ]),
+    ...asSuperset("B", 60, 90, [
+      { name: "Landmine Press", exerciseType: "volume", description: "3 × 10/side @ RPE 8", sets: setsList(3, "10/side", "RPE 8"), trackingMode: "weight_reps" },
+      {
+        name: "Medicine Ball Rotational Throw",
+        exerciseType: "power_throw",
+        description: "4 × 8/side, max intent",
+        sets: setsList(4, "8/side", "Max intent", 0, "power"),
+        trackingMode: "power",
+        notes: "6-10 lb ball, throw at wall as hard as possible. Rotate from hips up.",
+        volleyballNote: "This IS your swing pattern.",
+      },
+    ]),
+    { name: "Tricep Rope Pushdown", exerciseType: "accessory", description: "3 × 12 @ RPE 8", sets: setsList(3, 12, "RPE 8", 60), trackingMode: "weight_reps" },
   ];
 }
 
 // ============================================
-// Day metadata
+// Day metadata + builder
 // ============================================
 
 type DayMeta = {
@@ -322,124 +407,151 @@ type DayMeta = {
   workoutName: string;
   intro: string;
   exercises: () => Exercise[];
-  swingPrep: boolean;
-  hasSingleLegLeft: boolean;
+  hasSwingPrep: boolean;
   hasRightLegRehab: boolean;
 };
 
-const DAY_META: DayMeta[] = [
-  // Tue
-  {
-    focus: "Conditioning + Anti-Rotation Core",
-    workoutName: "Cycling + Anti-Rotation Core",
-    intro: "Knee-friendly cardio plus deep anti-rotation core. No swing prep today — no upper body lifting.",
-    exercises: tuesdayExercises,
-    swingPrep: false,
-    hasSingleLegLeft: true,
-    hasRightLegRehab: true,
-  },
-  // Wed
-  {
-    focus: "Lat Strength = Swing Power",
-    workoutName: "Heavy Pull",
-    intro:
-      "Weighted pull-ups ramped to top set of 5. Your lats accelerate your arm down through contact — this is THE swing-strength day.",
-    exercises: wednesdayExercises,
-    swingPrep: true,
-    hasSingleLegLeft: true,
-    hasRightLegRehab: true,
-  },
-  // Thu
-  {
-    focus: "Pure Sport Transfer",
-    workoutName: "Swing Power Day",
-    intro:
-      "Low load, max velocity. All upper body. Throws, slams, tantrums. This is where strength becomes swing speed.",
-    exercises: thursdayExercises,
-    swingPrep: true,
-    hasSingleLegLeft: false,
-    hasRightLegRehab: false,
-  },
-  // Fri
-  {
-    focus: "Hypertrophy + Sport Transfer",
-    workoutName: "Volume Push (Hybrid)",
-    intro: "Higher rep volume with volleyball-relevant exercise selection.",
-    exercises: fridayExercises,
-    swingPrep: true,
-    hasSingleLegLeft: true,
-    hasRightLegRehab: true,
-  },
-  // Sat
-  {
-    focus: "Shoulder Health + Pulling Volume",
-    workoutName: "Volume Pull + Shoulder Durability",
-    intro:
-      "This is the day that keeps you healthy. Heavy on rotator cuff, lower trap, and lats. Volleyball is hard on shoulders — this is your insurance.",
-    exercises: saturdayExercises,
-    swingPrep: true,
-    hasSingleLegLeft: false,
-    hasRightLegRehab: true,
-  },
-  // Sun
-  {
+const META_BY_CAL_DOW: Record<number, DayMeta> = {
+  0: {
     focus: "Recovery + Reflection",
     workoutName: "Mobility + Walk + Check-In",
     intro:
       "Long walk, mobility flow, weekly check-in. Photo day on Days 1, 8, 15, 22, 29, 36.",
     exercises: sundayExercises,
-    swingPrep: false,
-    hasSingleLegLeft: false,
+    hasSwingPrep: false,
     hasRightLegRehab: true,
   },
-  // Mon
-  {
+  1: {
     focus: "Strength Foundation",
     workoutName: "Heavy Push",
     intro:
-      "Heavy bench with Thibaudeau ramping. Every ramp set is practice for the top — push with intent. Finish with rotational med ball.",
+      "Heavy bench, Thibaudeau ramping. Push every rep with intent. Finish with rotational med ball.",
     exercises: mondayExercises,
-    swingPrep: true,
-    hasSingleLegLeft: true,
+    hasSwingPrep: true,
     hasRightLegRehab: true,
   },
-];
+  2: {
+    focus: "Conditioning + Anti-Rotation Core",
+    workoutName: "Cycling + Core",
+    intro:
+      "Zone 2 cycle + anti-rotation core. Anti-rotation core = no power leaks during the swing.",
+    exercises: tuesdayExercises,
+    hasSwingPrep: false,
+    hasRightLegRehab: true,
+  },
+  3: {
+    focus: "Lat Strength + Left Leg Build",
+    workoutName: "Heavy Pull + Left Leg",
+    intro:
+      "Weighted pull-ups ramped to top set. Left leg trains strength alongside. Supersetted to save time.",
+    exercises: wednesdayExercises,
+    hasSwingPrep: true,
+    hasRightLegRehab: true,
+  },
+  4: {
+    focus: "Pure Sport Transfer",
+    workoutName: "Swing Power Day",
+    intro:
+      "Low load, max velocity. Throws, slams, tantrums. Where strength becomes swing speed. Cardio after.",
+    exercises: thursdayExercises,
+    hasSwingPrep: true,
+    hasRightLegRehab: false,
+  },
+  5: {
+    focus: "Hypertrophy Push + Speed",
+    workoutName: "Volume Push + Left Leg Volume",
+    intro:
+      "Higher rep volume push paired with left leg volume and speed work.",
+    exercises: fridayExercises,
+    hasSwingPrep: true,
+    hasRightLegRehab: true,
+  },
+  6: {
+    focus: "Shoulder Health + Pull Volume + Left Leg Finish",
+    workoutName: "Volume Pull + Shoulders + Left Leg",
+    intro:
+      "Highest-volume day. Pulls, shoulder health, left leg lighter work, tantrums.",
+    exercises: saturdayExercises,
+    hasSwingPrep: true,
+    hasRightLegRehab: true,
+  },
+};
 
 const PROGRESSION_BY_WEEK: Record<number, string> = {
-  1: "Find your baseline. Top sets: weight you can do 5 clean reps with 1 left in tank. Tantrums: focus on form before speed.",
-  2: "Add 2.5-5 lbs to top sets where last week felt under RPE 9. Right-leg rehab unlocks today — start the daily routine.",
-  3: "Continue adding load OR add 1 rep to top sets. Knee should feel progressively better.",
-  4: "Push the heaviest top sets of the cycle. This is your strongest week of pure work.",
+  1: "Find your baseline. Top sets: weight you can do 5 clean reps with 1 left in tank. Tantrums: form before speed. Cardio activates Thursday Day 3.",
+  2: "Add 2.5-5 lbs to top sets where last week felt under RPE 9. Right-leg rehab UNLOCKS today. Glute-bias step-downs UNLOCK today. Calf raise moves to Saturday.",
+  3: "Continue adding load OR add 1 rep to top sets. Single-leg leg press should feel meaningfully stronger.",
+  4: "Heaviest top sets of the cycle. Final hard week before tournament prep. Photo Day 28.",
   5: "Last full intensity week. Lock in PRs you can repeat in tournament prep.",
   6: "Deload + sharpening. Lighter top sets, technique focus. Tournament taper begins in Phase 4.",
 };
+
+const DAY_1_PROGRESSION_NOTE = "Week 1 starts tomorrow. Today is recovery only.";
+
+// Day 1 (May 12): special rest day. Just optional gentle mobility.
+function buildDay1(): WorkoutDay {
+  return {
+    day: 1,
+    weekNum: 1,
+    dayOfWeek: "Tue",
+    date: "Tuesday, May 12",
+    isoDate: "2026-05-12",
+    focus: "Rest + Settling",
+    workoutName: "Injection Day Rest",
+    intro:
+      "You just got the PRP injection today. Stay off your feet, hydrate, and let the joint settle. No structured workout. Light mobility only if you feel like moving.",
+    swingPrep: undefined,
+    exercises: [
+      {
+        name: "Optional Gentle Mobility",
+        exerciseType: "mobility",
+        description:
+          "Upper body only — shoulder dislocates, T-spine rotations, neck rolls. 10 min max.",
+        sets: [
+          {
+            setNumber: 1,
+            setType: "duration",
+            targetReps: "Gentle",
+            targetIntensity: "No strain",
+            durationSeconds: 600,
+          },
+        ],
+        trackingMode: "time",
+        optional: true,
+        notes:
+          "Skip entirely if knee is throbbing. Sleep is more important than mobility tonight.",
+      },
+    ],
+    rightLegRehab: rightLegRehab, // still locked (unlocksOnDay 8), but shown locked
+    progressionNote: DAY_1_PROGRESSION_NOTE,
+  };
+}
 
 // ============================================
 // Build the 39-day plan
 // ============================================
 
 export const gabbyPRP: WorkoutDay[] = Array.from({ length: TOTAL_DAYS }, (_, i): WorkoutDay => {
+  if (i === 0) return buildDay1();
+
   const dayNum = i + 1;
   const iso = addDays(START_ISO, i);
-  const cycleIdx = cycleIndexFor(iso);
-  const meta = DAY_META[cycleIdx];
+  const calIdx = calendarDayOfWeek(iso);
+  const meta = META_BY_CAL_DOW[calIdx];
   const weekNum = Math.floor(i / 7) + 1;
-  const rehab = meta.hasRightLegRehab ? rightLegRehab : undefined;
-  const sLeg = meta.hasSingleLegLeft ? singleLegLeft : undefined;
 
   return {
     day: dayNum,
     weekNum,
-    dayOfWeek: DAY_NAMES[cycleIdx],
-    date: displayWithCustomDay(iso),
+    dayOfWeek: SHORT_DAY_NAMES[calIdx],
+    date: displayDate(iso),
     isoDate: iso,
     focus: meta.focus,
     workoutName: meta.workoutName,
     intro: meta.intro,
-    swingPrep: meta.swingPrep ? swingPrep : undefined,
+    swingPrep: meta.hasSwingPrep ? swingPrep : undefined,
     exercises: meta.exercises(),
-    singleLegLeft: sLeg,
-    rightLegRehab: rehab,
+    rightLegRehab: meta.hasRightLegRehab ? rightLegRehab : undefined,
     progressionNote: PROGRESSION_BY_WEEK[weekNum] ?? PROGRESSION_BY_WEEK[6],
   };
 });

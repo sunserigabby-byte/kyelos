@@ -62,6 +62,19 @@ export default function CardioCard({ dayNum }: Props) {
     }
   }
 
+  // Days 1-2: gate completely with a "starts Day 3" message — no controls.
+  if (dayNum < 3) {
+    return (
+      <div className="bg-white border border-gray-200 rounded-lg p-3 mb-3">
+        <div className="font-bold text-charcoal text-sm mb-1">Daily Cardio</div>
+        <p className="text-xs text-amber-700 italic">
+          Cardio resumes Day 3 (Thursday) per doctor&apos;s protocol. Rest the joint
+          today; the heart can wait.
+        </p>
+      </div>
+    );
+  }
+
   const restingDays = dayNum <= 4;
 
   return (
@@ -69,7 +82,7 @@ export default function CardioCard({ dayNum }: Props) {
       <div className="font-bold text-charcoal text-sm mb-1">Daily Cardio</div>
       {restingDays ? (
         <p className="text-xs text-amber-700 italic mb-2">
-          Optional — let knee settle first. Walk only if comfortable.
+          Early days — keep it easy. Walk or bike only if comfortable.
         </p>
       ) : (
         <p className="text-xs text-gray-500 mb-2">Pick a modality and duration.</p>

@@ -97,6 +97,185 @@ export const tantrumFull: Exercise[] = [
   },
 ];
 
+// Left-leg STRENGTH (Wednesday — supersetted with heavy pull)
+export const leftLegStrength: Exercise[] = [
+  {
+    name: "Single-Leg Hip Thrust (LEFT)",
+    exerciseType: "single_leg",
+    description: "4 × 8 @ RPE 9. Left foot on bench, right leg straight up in air.",
+    sets: [
+      { setNumber: 1, setType: "working", targetReps: 8, targetIntensity: "RPE 9" },
+      { setNumber: 2, setType: "working", targetReps: 8, targetIntensity: "RPE 9" },
+      { setNumber: 3, setType: "working", targetReps: 8, targetIntensity: "RPE 9" },
+      { setNumber: 4, setType: "working", targetReps: 8, targetIntensity: "RPE 9" },
+    ],
+    trackingMode: "weight_reps",
+    notes: "Right leg held straight up, no ground contact. Drive through left heel.",
+    volleyballNote: "Single-leg glute strength preserves jump power on the working side.",
+  },
+  {
+    name: "Single-Leg Leg Press (LEFT)",
+    exerciseType: "single_leg",
+    description: "3 × 8 @ RPE 8. Left foot on platform, right foot completely off.",
+    sets: [
+      { setNumber: 1, setType: "working", targetReps: 8, targetIntensity: "RPE 8" },
+      { setNumber: 2, setType: "working", targetReps: 8, targetIntensity: "RPE 8" },
+      { setNumber: 3, setType: "working", targetReps: 8, targetIntensity: "RPE 8" },
+    ],
+    trackingMode: "weight_reps",
+    notes:
+      "Right foot OFF platform entirely. If gym has unilateral leg press, use it. Otherwise, hack squat with one foot.",
+  },
+  {
+    name: "Glute-Bias Step Down (LEFT)",
+    exerciseType: "single_leg",
+    description: "3 × 8 @ RPE 8. Box step-down with rack support, right toe taps only.",
+    sets: [
+      { setNumber: 1, setType: "working", targetReps: 8, targetIntensity: "RPE 8" },
+      { setNumber: 2, setType: "working", targetReps: 8, targetIntensity: "RPE 8" },
+      { setNumber: 3, setType: "working", targetReps: 8, targetIntensity: "RPE 8" },
+    ],
+    trackingMode: "weight_reps",
+    unlocksOnDay: 8,
+    notes:
+      "12-18\" box. Hand on rack upright for balance only. 3-sec descent — right toe taps floor with ZERO weight transfer. 1-sec pause. Drive up through left heel. Week 2: bodyweight. Week 3: light DB in left hand. Week 4: moderate DB.",
+    volleyballNote:
+      "Eccentric quad/glute strength on the working side. Mimics landing mechanics without impact.",
+  },
+  {
+    name: "Supported Single-Leg RDL (LEFT)",
+    exerciseType: "single_leg",
+    description: "3 × 10 @ RPE 8. One hand on rack support for balance.",
+    sets: [
+      { setNumber: 1, setType: "working", targetReps: 10, targetIntensity: "RPE 8" },
+      { setNumber: 2, setType: "working", targetReps: 10, targetIntensity: "RPE 8" },
+      { setNumber: 3, setType: "working", targetReps: 10, targetIntensity: "RPE 8" },
+    ],
+    trackingMode: "weight_reps",
+    notes:
+      "Hold rack with non-working-side hand. DB in working-side hand. Right leg extends behind, foot OFF floor entirely. Hinge with intent.",
+  },
+];
+
+// Left-leg VOLUME + speed (Friday — supersetted with volume push)
+export const leftLegVolume: Exercise[] = [
+  {
+    name: "Single-Leg Explosive Hip Thrust (LEFT)",
+    exerciseType: "single_leg",
+    description: "4 × 6 max-intent concentric speed.",
+    sets: [
+      { setNumber: 1, setType: "power", targetReps: 6, targetIntensity: "Max concentric speed" },
+      { setNumber: 2, setType: "power", targetReps: 6, targetIntensity: "Max concentric speed" },
+      { setNumber: 3, setType: "power", targetReps: 6, targetIntensity: "Max concentric speed" },
+      { setNumber: 4, setType: "power", targetReps: 6, targetIntensity: "Max concentric speed" },
+    ],
+    trackingMode: "weight_reps",
+    notes:
+      "Same setup as regular hip thrust. SNAP UP fast, lower controlled. Moderate weight (60-70% of strength hip thrust). Focus on bar speed.",
+    volleyballNote:
+      "Trains rate of force development without joint impact. Closest legal substitute for jumping during recovery.",
+  },
+  {
+    name: "Supported Single-Leg RDL (LEFT)",
+    exerciseType: "single_leg",
+    description: "4 × 10 @ RPE 8.",
+    sets: [
+      { setNumber: 1, setType: "working", targetReps: 10, targetIntensity: "RPE 8" },
+      { setNumber: 2, setType: "working", targetReps: 10, targetIntensity: "RPE 8" },
+      { setNumber: 3, setType: "working", targetReps: 10, targetIntensity: "RPE 8" },
+      { setNumber: 4, setType: "working", targetReps: 10, targetIntensity: "RPE 8" },
+    ],
+    trackingMode: "weight_reps",
+  },
+  {
+    name: "Seated Single-Leg Curl (LEFT)",
+    exerciseType: "single_leg",
+    description: "4 × 12 @ RPE 8.",
+    sets: [
+      { setNumber: 1, setType: "working", targetReps: 12, targetIntensity: "RPE 8" },
+      { setNumber: 2, setType: "working", targetReps: 12, targetIntensity: "RPE 8" },
+      { setNumber: 3, setType: "working", targetReps: 12, targetIntensity: "RPE 8" },
+      { setNumber: 4, setType: "working", targetReps: 12, targetIntensity: "RPE 8" },
+    ],
+    trackingMode: "weight_reps",
+    notes: "Right leg rests off pad.",
+  },
+  {
+    name: "Standing Single-Leg Calf Raise (LEFT)",
+    exerciseType: "single_leg",
+    description: "3 × 15 @ RPE 8. Hold rail, right foot off ground.",
+    sets: [
+      { setNumber: 1, setType: "working", targetReps: 15, targetIntensity: "RPE 8" },
+      { setNumber: 2, setType: "working", targetReps: 15, targetIntensity: "RPE 8" },
+      { setNumber: 3, setType: "working", targetReps: 15, targetIntensity: "RPE 8" },
+    ],
+    trackingMode: "weight_reps",
+  },
+];
+
+// Left-leg FINISHER (Saturday — supersetted with volume pull)
+export const leftLegFinisher: Exercise[] = [
+  {
+    name: "Seated Single-Leg Extension (LEFT)",
+    exerciseType: "single_leg",
+    description: "4 × 10 @ RPE 8.",
+    sets: [
+      { setNumber: 1, setType: "working", targetReps: 10, targetIntensity: "RPE 8" },
+      { setNumber: 2, setType: "working", targetReps: 10, targetIntensity: "RPE 8" },
+      { setNumber: 3, setType: "working", targetReps: 10, targetIntensity: "RPE 8" },
+      { setNumber: 4, setType: "working", targetReps: 10, targetIntensity: "RPE 8" },
+    ],
+    trackingMode: "weight_reps",
+  },
+  {
+    name: "Single-Leg Hip Thrust (LEFT)",
+    exerciseType: "single_leg",
+    description: "3 × 10 @ RPE 8.",
+    sets: [
+      { setNumber: 1, setType: "working", targetReps: 10, targetIntensity: "RPE 8" },
+      { setNumber: 2, setType: "working", targetReps: 10, targetIntensity: "RPE 8" },
+      { setNumber: 3, setType: "working", targetReps: 10, targetIntensity: "RPE 8" },
+    ],
+    trackingMode: "weight_reps",
+  },
+  {
+    name: "Cable Single-Leg Kickback Explosive (LEFT)",
+    exerciseType: "single_leg",
+    description: "3 × 10 max-intent concentric.",
+    sets: [
+      { setNumber: 1, setType: "power", targetReps: 10, targetIntensity: "Max concentric speed" },
+      { setNumber: 2, setType: "power", targetReps: 10, targetIntensity: "Max concentric speed" },
+      { setNumber: 3, setType: "power", targetReps: 10, targetIntensity: "Max concentric speed" },
+    ],
+    trackingMode: "weight_reps",
+    notes:
+      "Standing, hold support for balance. Right foot rests fully on floor (no kickback). Left leg kicks back explosively against cable.",
+  },
+  {
+    name: "Supine Single-Leg Glute Bridge (LEFT)",
+    exerciseType: "single_leg",
+    description: "3 × 12 @ RPE 8.",
+    sets: [
+      { setNumber: 1, setType: "working", targetReps: 12, targetIntensity: "RPE 8" },
+      { setNumber: 2, setType: "working", targetReps: 12, targetIntensity: "RPE 8" },
+      { setNumber: 3, setType: "working", targetReps: 12, targetIntensity: "RPE 8" },
+    ],
+    trackingMode: "bodyweight",
+  },
+  {
+    name: "Seated Single-Leg Calf Raise (LEFT)",
+    exerciseType: "single_leg",
+    description: "3 × 15 @ RPE 8.",
+    sets: [
+      { setNumber: 1, setType: "working", targetReps: 15, targetIntensity: "RPE 8" },
+      { setNumber: 2, setType: "working", targetReps: 15, targetIntensity: "RPE 8" },
+      { setNumber: 3, setType: "working", targetReps: 15, targetIntensity: "RPE 8" },
+    ],
+    trackingMode: "weight_reps",
+  },
+];
+
+// Legacy export (kept for back-compat with older plan-data imports)
 export const singleLegLeft: Exercise[] = [
   {
     name: "Seated Single-Leg Curl (LEFT)",
