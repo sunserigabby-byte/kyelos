@@ -173,28 +173,21 @@ function SwingPrepCard({ exercises, sessionId, dayNum }: { exercises: any[]; ses
 }
 
 function NSAIDReminder({ selectedDay }: { selectedDay: number }) {
-  const [dismissed, setDismissed] = useState(false);
-  useEffect(() => {
-    if (typeof window === "undefined") return;
-    if (localStorage.getItem("prp_nsaid_ack")) setDismissed(true);
-  }, []);
-  if (dismissed) return null;
-  if (selectedDay > 28) return null; // First 4 weeks only
+  // Always visible through Week 4 (Day 28) — not dismissible.
+  // PRP healing is too important to risk forgetting.
+  if (selectedDay > 28) return null;
 
-  function dismiss() {
-    localStorage.setItem("prp_nsaid_ack", "1");
-    setDismissed(true);
-  }
   return (
     <div className="bg-red-50 border-2 border-red-300 rounded-lg p-3 mb-3 flex items-start gap-3">
       <div className="text-xl flex-shrink-0">⚠️</div>
       <div className="flex-1 min-w-0">
-        <div className="font-bold text-red-900 text-sm mb-0.5">First 4 weeks: NO ibuprofen / Advil / Naproxen</div>
-        <div className="text-xs text-red-800">Tylenol OK. NSAIDs blunt the PRP healing response.</div>
+        <div className="font-bold text-red-900 text-sm mb-0.5">
+          First 4 weeks: NO ibuprofen / Advil / Naproxen
+        </div>
+        <div className="text-xs text-red-800">
+          Tylenol only if needed for pain. NSAIDs blunt the PRP healing response.
+        </div>
       </div>
-      <button onClick={dismiss} className="tappable text-red-700/60 text-xs underline-offset-2 hover:underline flex-shrink-0">
-        Got it
-      </button>
     </div>
   );
 }
