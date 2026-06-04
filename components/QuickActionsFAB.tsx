@@ -23,7 +23,7 @@ type Mode = "menu" | "contribution" | "income" | "weight";
 export default function QuickActionsFAB() {
   const pathname = usePathname();
   const router = useRouter();
-  const { person } = useProfile();
+  const { person, isCoupleMode } = useProfile();
   const [open, setOpen] = useState(false);
   const [mode, setMode] = useState<Mode>("menu");
   const [activeFinancialPhase, setActiveFinancialPhase] = useState<{
@@ -111,7 +111,8 @@ export default function QuickActionsFAB() {
               <ContributionForm
                 goalTitle={activeFinancialPhase.goal.title}
                 phase={activeFinancialPhase.phase}
-                person={person}
+                defaultPerson={person}
+                allowPersonPick={isCoupleMode}
                 onSaved={close}
                 onCancel={() => setMode("menu")}
               />
@@ -220,19 +221,22 @@ function ActionButton({
 function ContributionForm({
   goalTitle,
   phase,
-  person,
+  defaultPerson,
+  allowPersonPick,
   onSaved,
   onCancel,
 }: {
   goalTitle: string;
   phase: GoalPhase;
-  person: "gabby" | "jon";
+  defaultPerson: "gabby" | "jon";
+  allowPersonPick: boolean;
   onSaved: () => void;
   onCancel: () => void;
 }) {
   const [amount, setAmount] = useState("");
   const [note, setNote] = useState("");
   const [date, setDate] = useState(todayLocalISO());
+  const [createdBy, setCreatedBy] = useState<"gabby" | "jon">(defaultPerson);
   const [saving, setSaving] = useState(false);
 
   async function submit() {
@@ -244,7 +248,7 @@ function ContributionForm({
       amount: n,
       date,
       note: note.trim() || undefined,
-      createdBy: person,
+      createdBy,
     });
     setSaving(false);
     onSaved();
@@ -259,6 +263,29 @@ function ContributionForm({
       <div className="text-[11px] text-charcoal/60 mb-3">
         {goalTitle} · Phase {phase.phase_number}: {phase.title}
       </div>
+
+      {allowPersonPick && (
+        <>
+          <Label>Logged by</Label>
+          <div className="grid grid-cols-2 gap-2 mb-3">
+            {(["gabby", "jon"] as const).map((p) => (
+              <button
+                key={p}
+                onClick={() => setCreatedBy(p)}
+                className={`tappable rounded-md py-2 text-sm font-semibold ${
+                  createdBy === p
+                    ? p === "gabby"
+                      ? "bg-terracotta text-cream"
+                      : "bg-forest text-cream"
+                    : "bg-white border border-gray-300 text-gray-700"
+                }`}
+              >
+                {p === "gabby" ? "Gabby" : "Jon"}
+              </button>
+            ))}
+          </div>
+        </>
+      )}
 
       <Label>Amount ($)</Label>
       <input

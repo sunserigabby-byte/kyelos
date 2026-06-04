@@ -33,7 +33,7 @@ function KyelosMark() {
 }
 
 export default function Nav() {
-  const { person, setPerson } = useProfile();
+  const { view, setView } = useProfile();
   const { activePhase } = usePhase();
   const pathname = usePathname();
   const { isConnected } = useLiveStatus();
@@ -64,22 +64,30 @@ export default function Nav() {
               </span>
             )}
           </div>
-          <div className="flex gap-1 bg-forest-light rounded-full p-1">
+          <div className="flex gap-0.5 bg-forest-light rounded-full p-1">
             <button
-              onClick={() => setPerson("gabby")}
-              className={`tappable px-4 py-1.5 text-sm rounded-full transition ${
-                person === "gabby" ? "bg-terracotta text-cream font-medium" : "text-cream/70"
+              onClick={() => setView("gabby")}
+              className={`tappable px-3 py-1.5 text-xs sm:text-sm rounded-full transition ${
+                view === "gabby" ? "bg-terracotta text-cream font-medium" : "text-cream/70"
               }`}
             >
               Gabby
             </button>
             <button
-              onClick={() => setPerson("jon")}
-              className={`tappable px-4 py-1.5 text-sm rounded-full transition ${
-                person === "jon" ? "bg-terracotta text-cream font-medium" : "text-cream/70"
+              onClick={() => setView("jon")}
+              className={`tappable px-3 py-1.5 text-xs sm:text-sm rounded-full transition ${
+                view === "jon" ? "bg-terracotta text-cream font-medium" : "text-cream/70"
               }`}
             >
               Jon
+            </button>
+            <button
+              onClick={() => setView("together")}
+              className={`tappable px-3 py-1.5 text-xs sm:text-sm rounded-full transition ${
+                view === "together" ? "bg-terracotta text-cream font-medium" : "text-cream/70"
+              }`}
+            >
+              🤝
             </button>
           </div>
         </div>

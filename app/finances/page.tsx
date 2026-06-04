@@ -28,7 +28,7 @@ import {
 import { displayShort } from "@/lib/local-date";
 
 export default function FinancesPage() {
-  const { person } = useProfile();
+  const { person, isCoupleMode } = useProfile();
   const [primaryGoal, setPrimaryGoal] = useState<Goal | null>(null);
   const [phases, setPhases] = useState<GoalPhase[]>([]);
   const [contribs, setContribs] = useState<GoalContribution[]>([]);
@@ -39,8 +39,10 @@ export default function FinancesPage() {
   const load = useCallback(async () => {
     setLoading(true);
     const goals = await getVisibleGoals(person);
-    const financial = goals.filter((g) => g.category === "financial");
-    setAllGoals(goals);
+    // Couple mode → shared goals only. Individual mode → that person's + shared.
+    const scoped = isCoupleMode ? goals.filter((g) => g.owner === "shared") : goals;
+    const financial = scoped.filter((g) => g.category === "financial");
+    setAllGoals(scoped);
 
     const primary =
       financial.find((g) => g.status === "active") ??
@@ -63,7 +65,7 @@ export default function FinancesPage() {
       setSplit({ gabby: 0, jon: 0, combined: 0 });
     }
     setLoading(false);
-  }, [person]);
+  }, [person, isCoupleMode]);
 
   useEffect(() => {
     load();
@@ -86,9 +88,13 @@ export default function FinancesPage() {
   return (
     <div>
       <TodayBadge startISO={primaryGoal?.start_date} context={primaryGoal ? "plan" : undefined} />
-      <h1 className="text-2xl font-bold text-charcoal mb-1">Finances</h1>
+      <h1 className="text-2xl font-bold text-charcoal mb-1">
+        {isCoupleMode ? "Finances Together" : "Finances"}
+      </h1>
       <p className="text-sm text-gray-500 mb-4">
-        Where you are, where you're going, and what to do this week.
+        {isCoupleMode
+          ? "Shared goals only. Switch profile to view individual money goals."
+          : "Where you are, where you're going, and what to do this week."}
       </p>
 
       {!primaryGoal ? (

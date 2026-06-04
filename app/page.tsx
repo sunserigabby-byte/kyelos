@@ -15,6 +15,7 @@ import VacationToday from "@/components/VacationToday";
 import PRPToday from "@/components/PRPToday";
 import TournamentToday from "@/components/TournamentToday";
 import JonToday from "@/components/JonToday";
+import TogetherToday from "@/components/TogetherToday";
 import { useCycleSettings } from "@/components/useCycleSettings";
 import { useMealSwaps } from "@/components/useMealSwaps";
 import {
@@ -36,10 +37,12 @@ import {
 } from "@/lib/notifications";
 
 export default function TodayPage() {
+  const { isCoupleMode } = useProfile();
   const { activePhase, loading } = usePhase();
   if (loading) {
     return <div className="text-center text-gray-500 py-8">Loading...</div>;
   }
+  if (isCoupleMode) return <TogetherToday />;
   if (activePhase?.phase_type === "vacation") return <VacationToday />;
   if (activePhase?.phase_type === "recovery_cut") return <PRPToday />;
   if (activePhase?.phase_type === "tournament_peak") return <TournamentToday />;

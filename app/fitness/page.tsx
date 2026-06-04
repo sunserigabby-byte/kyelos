@@ -28,17 +28,51 @@ type Session = {
   completed: boolean | null;
 };
 
+type CoupleSession = Session & { person: "gabby" | "jon" };
+
 export default function FitnessPage() {
-  const { person } = useProfile();
+  const { person, isCoupleMode } = useProfile();
   const { activePhase } = usePhase();
   const [weights, setWeights] = useState<WeightPoint[]>([]);
+  const [weightsByPerson, setWeightsByPerson] = useState<{ gabby: WeightPoint[]; jon: WeightPoint[] }>({
+    gabby: [],
+    jon: [],
+  });
   const [sessions, setSessions] = useState<Session[]>([]);
+  const [coupleSessions, setCoupleSessions] = useState<CoupleSession[]>([]);
   const [fitnessGoals, setFitnessGoals] = useState<(Goal & { phases: GoalPhase[] })[]>([]);
   const [loading, setLoading] = useState(true);
   const [weightOpen, setWeightOpen] = useState(false);
 
   const load = useCallback(async () => {
     setLoading(true);
+
+    if (isCoupleMode) {
+      const [g, j, sessionRes, allGoals] = await Promise.all([
+        supabase.from("daily_logs").select("date, weight").eq("person", "gabby").not("weight", "is", null).order("date", { ascending: false }).limit(30),
+        supabase.from("daily_logs").select("date, weight").eq("person", "jon").not("weight", "is", null).order("date", { ascending: false }).limit(30),
+        supabase.from("workout_sessions").select("id, workout_name, workout_date, day_num, completed, person").order("workout_date", { ascending: false }).limit(10),
+        getVisibleGoals(person),
+      ]);
+      const toPoints = (rows: { date: string; weight: number }[] | null) =>
+        (rows ?? [])
+          .filter((w) => w.date && w.weight)
+          .map((w) => ({ date: w.date, weight: Number(w.weight) }))
+          .sort((a, b) => a.date.localeCompare(b.date));
+      setWeightsByPerson({
+        gabby: toPoints(g.data as { date: string; weight: number }[] | null),
+        jon: toPoints(j.data as { date: string; weight: number }[] | null),
+      });
+      setCoupleSessions((sessionRes.data as CoupleSession[]) ?? []);
+      const sharedFits = allGoals
+        .filter((x) => x.owner === "shared" && x.category === "fitness");
+      const withPhases = await Promise.all(
+        sharedFits.map(async (gl) => ({ ...gl, phases: await getPhasesForGoal(gl.id) }))
+      );
+      setFitnessGoals(withPhases);
+      setLoading(false);
+      return;
+    }
 
     const [weightRes, sessionRes, allGoals] = await Promise.all([
       supabase
@@ -72,7 +106,7 @@ export default function FitnessPage() {
     setFitnessGoals(withPhases);
 
     setLoading(false);
-  }, [person]);
+  }, [person, isCoupleMode]);
 
   useEffect(() => {
     load();
@@ -97,14 +131,23 @@ export default function FitnessPage() {
         startISO={activePhase?.start_date}
         context={activePhase ? "phase" : undefined}
       />
-      <h1 className="text-2xl font-bold text-charcoal mb-1">Fitness</h1>
+      <h1 className="text-2xl font-bold text-charcoal mb-1">
+        {isCoupleMode ? "Fitness Together" : "Fitness"}
+      </h1>
       <p className="text-sm text-gray-500 mb-4">
-        Where you are in your plan, body progress, recent training.
+        {isCoupleMode
+          ? "Both of your plans, body progress, and recent training."
+          : "Where you are in your plan, body progress, recent training."}
       </p>
 
-      <PhaseHero />
+      {!isCoupleMode && <PhaseHero />}
 
-      {weights.length > 0 ? (
+      {isCoupleMode ? (
+        <CoupleWeightSection
+          weightsByPerson={weightsByPerson}
+          onLog={() => setWeightOpen(true)}
+        />
+      ) : weights.length > 0 ? (
         <WeightTrendCard points={weights} onLog={() => setWeightOpen(true)} />
       ) : (
         <EmptyWeight onLog={() => setWeightOpen(true)} />
@@ -120,7 +163,11 @@ export default function FitnessPage() {
         />
       )}
 
-      <RecentSessions sessions={sessions} />
+      {isCoupleMode ? (
+        <CoupleSessions sessions={coupleSessions} />
+      ) : (
+        <RecentSessions sessions={sessions} />
+      )}
 
       {fitnessGoals.length > 0 && <FitnessGoalsSection goals={fitnessGoals} />}
 
@@ -330,6 +377,128 @@ function FitnessGoalsSection({ goals }: { goals: (Goal & { phases: GoalPhase[] }
           </Link>
         );
       })}
+    </div>
+  );
+}
+
+function CoupleWeightSection({
+  weightsByPerson,
+  onLog,
+}: {
+  weightsByPerson: { gabby: WeightPoint[]; jon: WeightPoint[] };
+  onLog: () => void;
+}) {
+  const { gabby, jon } = weightsByPerson;
+  const empty = gabby.length === 0 && jon.length === 0;
+  if (empty) {
+    return <EmptyWeight onLog={onLog} />;
+  }
+  return (
+    <div className="mb-4">
+      <div className="flex items-baseline justify-between border-b-2 border-terracotta/60 pb-1 mb-3">
+        <div className="text-charcoal font-bold text-sm uppercase tracking-wider">
+          Weight Trends
+        </div>
+        <button
+          onClick={onLog}
+          className="tappable bg-forest text-terracotta font-semibold py-1.5 px-2.5 rounded-md text-[11px]"
+        >
+          + Log
+        </button>
+      </div>
+      <CoupleWeightRow label="Gabby" accent="border-l-terracotta" points={gabby} />
+      <CoupleWeightRow label="Jon" accent="border-l-forest" points={jon} />
+    </div>
+  );
+}
+
+function CoupleWeightRow({
+  label,
+  accent,
+  points,
+}: {
+  label: string;
+  accent: string;
+  points: WeightPoint[];
+}) {
+  if (points.length === 0) {
+    return (
+      <div className={`bg-white border border-gray-200 border-l-4 ${accent} rounded-lg p-3 mb-3 text-xs text-charcoal/60 italic`}>
+        {label}: no weight logs yet.
+      </div>
+    );
+  }
+  const last = points[points.length - 1];
+  const first = points[0];
+  const delta = last.weight - first.weight;
+  const trendLabel =
+    Math.abs(delta) < 0.1
+      ? "flat"
+      : delta < 0
+      ? `↓ ${Math.abs(delta).toFixed(1)} lb`
+      : `↑ ${delta.toFixed(1)} lb`;
+  const trendColor = delta < 0 ? "text-emerald-700" : delta > 0 ? "text-amber-700" : "text-charcoal/70";
+
+  return (
+    <div className={`bg-white border border-gray-200 border-l-4 ${accent} rounded-lg p-3 mb-3`}>
+      <div className="flex items-baseline justify-between mb-1">
+        <div className="text-sm font-bold text-charcoal">{label}</div>
+        <div className="text-right">
+          <div className="text-base font-mono font-bold text-charcoal">{last.weight.toFixed(1)} lb</div>
+          <div className={`text-[11px] font-semibold ${trendColor}`}>
+            {trendLabel} · {points.length} logs
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function CoupleSessions({ sessions }: { sessions: CoupleSession[] }) {
+  return (
+    <div className="mb-4">
+      <div className="flex items-baseline justify-between border-b-2 border-terracotta/60 pb-1 mb-3">
+        <div className="text-charcoal font-bold text-sm uppercase tracking-wider">
+          Recent Workouts
+        </div>
+        <Link href="/workout-history" className="text-[11px] text-charcoal/60 hover:text-charcoal">
+          All sessions →
+        </Link>
+      </div>
+      {sessions.length === 0 ? (
+        <div className="bg-white border border-gray-200 rounded-lg p-4 text-xs text-charcoal/60 italic">
+          No workouts logged yet.
+        </div>
+      ) : (
+        <div className="bg-white border border-gray-200 rounded-lg divide-y divide-gray-100">
+          {sessions.map((s) => {
+            const isGabby = s.person === "gabby";
+            const pill = isGabby
+              ? "bg-terracotta/15 text-terracotta border-terracotta/20"
+              : "bg-forest/15 text-forest border-forest/30";
+            return (
+              <div key={s.id} className="p-3 flex items-baseline gap-3">
+                <span
+                  className={`text-[10px] font-bold tracking-wider uppercase border rounded px-1.5 py-0.5 flex-shrink-0 ${pill}`}
+                >
+                  {isGabby ? "Gabby" : "Jon"}
+                </span>
+                <div className="min-w-0 flex-1">
+                  <div className="text-sm font-bold text-charcoal truncate">{s.workout_name}</div>
+                  <div className="text-[11px] text-charcoal/60">
+                    {displayShort(s.workout_date)} · Day {s.day_num}
+                  </div>
+                </div>
+                {s.completed && (
+                  <span className="text-[10px] font-bold text-emerald-700 bg-emerald-50 px-1.5 py-0.5 rounded flex-shrink-0">
+                    ✓
+                  </span>
+                )}
+              </div>
+            );
+          })}
+        </div>
+      )}
     </div>
   );
 }
