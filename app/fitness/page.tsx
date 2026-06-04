@@ -6,6 +6,7 @@ import { supabase } from "@/lib/supabase";
 import { useProfile } from "@/components/ProfileContext";
 import { usePhase } from "@/components/PhaseContext";
 import TodayBadge from "@/components/TodayBadge";
+import WeightLogModal from "@/components/WeightLogModal";
 import { getCurrentPhaseDay, getTotalDays } from "@/lib/phases";
 import {
   getVisibleGoals,
@@ -34,6 +35,7 @@ export default function FitnessPage() {
   const [sessions, setSessions] = useState<Session[]>([]);
   const [fitnessGoals, setFitnessGoals] = useState<(Goal & { phases: GoalPhase[] })[]>([]);
   const [loading, setLoading] = useState(true);
+  const [weightOpen, setWeightOpen] = useState(false);
 
   const load = useCallback(async () => {
     setLoading(true);
@@ -103,12 +105,18 @@ export default function FitnessPage() {
       <PhaseHero />
 
       {weights.length > 0 ? (
-        <WeightTrendCard points={weights} />
+        <WeightTrendCard points={weights} onLog={() => setWeightOpen(true)} />
       ) : (
-        <EmptyStat
-          icon="⚖️"
-          title="No weight logs yet"
-          body="Log a weight on your daily check-in to start the trend chart."
+        <EmptyWeight onLog={() => setWeightOpen(true)} />
+      )}
+
+      {weightOpen && (
+        <WeightLogModal
+          onSaved={() => {
+            setWeightOpen(false);
+            load();
+          }}
+          onCancel={() => setWeightOpen(false)}
         />
       )}
 
@@ -183,7 +191,7 @@ function PhaseHero() {
   );
 }
 
-function WeightTrendCard({ points }: { points: WeightPoint[] }) {
+function WeightTrendCard({ points, onLog }: { points: WeightPoint[]; onLog: () => void }) {
   const min = Math.min(...points.map((p) => p.weight));
   const max = Math.max(...points.map((p) => p.weight));
   const range = Math.max(1, max - min);
@@ -218,17 +226,23 @@ function WeightTrendCard({ points }: { points: WeightPoint[] }) {
 
   return (
     <div className="bg-white border border-gray-200 rounded-lg p-3 mb-4">
-      <div className="flex items-baseline justify-between mb-2">
-        <div>
+      <div className="flex items-baseline justify-between mb-2 gap-2">
+        <div className="min-w-0">
           <div className="text-sm font-bold text-charcoal">Weight Trend</div>
-          <div className="text-[11px] text-charcoal/60">
+          <div className="text-[11px] text-charcoal/60 truncate">
             {points.length} logs · {displayShort(first.date)} – {displayShort(last.date)}
           </div>
         </div>
-        <div className="text-right">
+        <div className="text-right flex-shrink-0">
           <div className="text-base font-mono font-bold text-charcoal">{last.weight.toFixed(1)} lb</div>
           <div className={`text-[11px] font-semibold ${trendColor}`}>{trendLabel}</div>
         </div>
+        <button
+          onClick={onLog}
+          className="tappable bg-forest text-terracotta font-semibold py-1.5 px-2.5 rounded-md text-[11px] flex-shrink-0"
+        >
+          + Log
+        </button>
       </div>
       <svg viewBox={`0 0 ${w} ${h}`} className="w-full" aria-label="Weight trend chart">
         <line x1={pad.l} y1={h - pad.b} x2={w - pad.r} y2={h - pad.b} stroke="#e5e7eb" />
@@ -320,12 +334,20 @@ function FitnessGoalsSection({ goals }: { goals: (Goal & { phases: GoalPhase[] }
   );
 }
 
-function EmptyStat({ icon, title, body }: { icon: string; title: string; body: string }) {
+function EmptyWeight({ onLog }: { onLog: () => void }) {
   return (
     <div className="bg-white border border-gray-200 rounded-lg p-4 mb-4 text-center">
-      <div className="text-3xl mb-1">{icon}</div>
-      <div className="text-sm font-bold text-charcoal mb-0.5">{title}</div>
-      <p className="text-xs text-charcoal/60">{body}</p>
+      <div className="text-3xl mb-1">⚖️</div>
+      <div className="text-sm font-bold text-charcoal mb-0.5">No weight logs yet</div>
+      <p className="text-xs text-charcoal/60 mb-3">
+        Log a weight to start the trend chart. Anytime works — morning weigh-in or whenever.
+      </p>
+      <button
+        onClick={onLog}
+        className="tappable bg-forest text-terracotta font-semibold py-2 px-4 rounded-md text-sm"
+      >
+        + Log weight
+      </button>
     </div>
   );
 }

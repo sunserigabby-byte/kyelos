@@ -14,8 +14,9 @@ import {
 } from "@/lib/goals";
 import { addIncomeEntry, currentMonthInfo } from "@/lib/income-ramp";
 import { todayLocalISO } from "@/lib/local-date";
+import WeightLogModal from "@/components/WeightLogModal";
 
-type Mode = "menu" | "contribution" | "income";
+type Mode = "menu" | "contribution" | "income" | "weight";
 
 // Global floating "+" button. Available on every route except settings/login.
 // Surfaces the 3-4 most common quick actions so tracking is always one tap away.
@@ -98,10 +99,7 @@ export default function QuickActionsFAB() {
                 hasFinancialPhase={!!activeFinancialPhase}
                 onLogContribution={() => setMode("contribution")}
                 onLogIncome={() => setMode("income")}
-                onGoToToday={() => {
-                  router.push("/");
-                  close();
-                }}
+                onLogWeight={() => setMode("weight")}
                 onGoToFinances={() => {
                   router.push("/finances");
                   close();
@@ -125,6 +123,13 @@ export default function QuickActionsFAB() {
                 onCancel={() => setMode("menu")}
               />
             )}
+            {mode === "weight" && (
+              <WeightLogModal
+                inline
+                onSaved={close}
+                onCancel={() => setMode("menu")}
+              />
+            )}
           </div>
         </div>
       )}
@@ -136,14 +141,14 @@ function Menu({
   hasFinancialPhase,
   onLogContribution,
   onLogIncome,
-  onGoToToday,
+  onLogWeight,
   onGoToFinances,
   onClose,
 }: {
   hasFinancialPhase: boolean;
   onLogContribution: () => void;
   onLogIncome: () => void;
-  onGoToToday: () => void;
+  onLogWeight: () => void;
   onGoToFinances: () => void;
   onClose: () => void;
 }) {
@@ -157,6 +162,12 @@ function Menu({
       </div>
       <div className="grid grid-cols-2 gap-2">
         <ActionButton
+          icon="⚖️"
+          label="Log weight"
+          sub="Anytime"
+          onClick={onLogWeight}
+        />
+        <ActionButton
           icon="💸"
           label="Log contribution"
           sub={hasFinancialPhase ? "Active financial phase" : "No active phase"}
@@ -168,12 +179,6 @@ function Menu({
           label="Log income"
           sub="Side-job earnings"
           onClick={onLogIncome}
-        />
-        <ActionButton
-          icon="📅"
-          label="Today"
-          sub="Daily checklist"
-          onClick={onGoToToday}
         />
         <ActionButton
           icon="💰"
