@@ -7,11 +7,13 @@ import { useProfile } from "@/components/ProfileContext";
 import TodayBadge from "@/components/TodayBadge";
 import IncomeRampCard from "@/components/IncomeRampCard";
 import WeeklyContributionCard from "@/components/WeeklyContributionCard";
+import TogetherThisMonthCard from "@/components/TogetherThisMonthCard";
 import PhaseChecklist from "@/components/PhaseChecklist";
 import {
   getVisibleGoals,
   getPhasesForGoal,
   getContributionsForGoal,
+  getContributionSplitForGoal,
   overallProgress,
   phaseProgress,
   paceSummary,
@@ -21,6 +23,7 @@ import {
   type Goal,
   type GoalPhase,
   type GoalContribution,
+  type ContributionSplit,
 } from "@/lib/goals";
 import { displayShort } from "@/lib/local-date";
 
@@ -30,6 +33,7 @@ export default function FinancesPage() {
   const [phases, setPhases] = useState<GoalPhase[]>([]);
   const [contribs, setContribs] = useState<GoalContribution[]>([]);
   const [allGoals, setAllGoals] = useState<Goal[]>([]);
+  const [split, setSplit] = useState<ContributionSplit>({ gabby: 0, jon: 0, combined: 0 });
   const [loading, setLoading] = useState(true);
 
   const load = useCallback(async () => {
@@ -45,15 +49,18 @@ export default function FinancesPage() {
     setPrimaryGoal(primary);
 
     if (primary) {
-      const [ps, cs] = await Promise.all([
+      const [ps, cs, sp] = await Promise.all([
         getPhasesForGoal(primary.id),
         getContributionsForGoal(primary.id),
+        getContributionSplitForGoal(primary.id),
       ]);
       setPhases(ps);
       setContribs(cs);
+      setSplit(sp);
     } else {
       setPhases([]);
       setContribs([]);
+      setSplit({ gabby: 0, jon: 0, combined: 0 });
     }
     setLoading(false);
   }, [person]);
@@ -88,7 +95,8 @@ export default function FinancesPage() {
         <EmptyState />
       ) : (
         <>
-          <PaceHero goal={primaryGoal} phases={phases} contribs={contribs} />
+          <PaceHero goal={primaryGoal} phases={phases} contribs={contribs} split={split} />
+          <TogetherThisMonthCard goalId={primaryGoal.id} />
           <WeeklyContributionCard goalId={primaryGoal.id} />
           <IncomeRampCard />
           <ActivePhaseSection phases={phases} contribs={contribs} goalId={primaryGoal.id} />
@@ -129,10 +137,12 @@ function PaceHero({
   goal,
   phases,
   contribs,
+  split,
 }: {
   goal: Goal;
   phases: GoalPhase[];
   contribs: GoalContribution[];
+  split: ContributionSplit;
 }) {
   const overall = overallProgress(phases);
   const pct = Math.round(overall * 100);
@@ -151,10 +161,14 @@ function PaceHero({
       ? "from-amber-600 to-amber-700"
       : "from-forest to-forest-dark";
 
+  const splitTotal = split.combined;
+  const gabbyPct = splitTotal > 0 ? Math.round((split.gabby / splitTotal) * 100) : 0;
+  const jonPct = splitTotal > 0 ? 100 - gabbyPct : 0;
+
   return (
     <div className={`rounded-xl p-5 mb-4 text-cream bg-gradient-to-br ${paceColor} shadow-md`}>
       <div className="text-[10px] tracking-widest font-bold text-cream/70 mb-1">
-        {goal.title.toUpperCase()}
+        {goal.title.toUpperCase()} · TOGETHER
       </div>
       <div className="flex items-baseline gap-2 mb-1">
         <div className="text-3xl font-bold font-mono leading-none">
@@ -173,9 +187,32 @@ function PaceHero({
           </>
         )}
       </div>
-      <div className="h-2 bg-cream/20 rounded-full overflow-hidden">
+      <div className="h-2 bg-cream/20 rounded-full overflow-hidden mb-3">
         <div className="h-full bg-terracotta" style={{ width: `${pct}%` }} />
       </div>
+
+      {splitTotal > 0 ? (
+        <div className="grid grid-cols-2 gap-2 text-xs">
+          <div className="bg-cream/10 rounded px-2 py-1.5">
+            <div className="text-[10px] uppercase tracking-wider text-cream/60">Gabby</div>
+            <div className="font-mono font-bold">
+              ${Math.round(split.gabby).toLocaleString()}{" "}
+              <span className="text-cream/60 font-normal">· {gabbyPct}%</span>
+            </div>
+          </div>
+          <div className="bg-cream/10 rounded px-2 py-1.5">
+            <div className="text-[10px] uppercase tracking-wider text-cream/60">Jon</div>
+            <div className="font-mono font-bold">
+              ${Math.round(split.jon).toLocaleString()}{" "}
+              <span className="text-cream/60 font-normal">· {jonPct}%</span>
+            </div>
+          </div>
+        </div>
+      ) : (
+        <div className="text-[11px] text-cream/70 italic">
+          No contributions yet — first one starts the split.
+        </div>
+      )}
     </div>
   );
 }
@@ -283,14 +320,23 @@ function RecentContributions({
       <div className="bg-white border border-gray-200 rounded-lg divide-y divide-gray-100">
         {recent.map((c) => {
           const ph = phaseOf(c.phase_id);
+          const isGabby = c.created_by === "gabby";
+          const pillClass = isGabby
+            ? "bg-terracotta/10 text-terracotta border-terracotta/20"
+            : "bg-forest/10 text-forest border-forest/30";
           return (
             <div key={c.id} className="p-3 flex items-baseline gap-3">
               <div className="font-mono font-bold text-charcoal text-sm flex-shrink-0">
                 ${Math.round(Number(c.amount)).toLocaleString()}
               </div>
+              <span
+                className={`text-[10px] font-bold tracking-wider uppercase border rounded px-1.5 py-0.5 flex-shrink-0 ${pillClass}`}
+              >
+                {isGabby ? "Gabby" : "Jon"}
+              </span>
               <div className="flex-1 min-w-0">
                 <div className="text-[11px] text-charcoal/60">
-                  {displayShort(c.date)} · {c.created_by === "gabby" ? "Gabby" : "Jon"}
+                  {displayShort(c.date)}
                   {ph ? ` · Phase ${ph.phase_number}` : ""}
                 </div>
                 {c.note && (

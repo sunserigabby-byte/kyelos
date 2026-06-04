@@ -510,3 +510,70 @@ export async function getWeeklyContributionsForGoal(goalId: string): Promise<num
     0
   );
 }
+
+// ============================================
+// Per-person splits (couple view)
+// ============================================
+
+export type ContributionSplit = {
+  gabby: number;
+  jon: number;
+  combined: number;
+};
+
+function splitRows(rows: { amount: number; created_by: Person }[]): ContributionSplit {
+  let gabby = 0;
+  let jon = 0;
+  for (const r of rows) {
+    const n = Number(r.amount);
+    if (r.created_by === "gabby") gabby += n;
+    else if (r.created_by === "jon") jon += n;
+  }
+  return { gabby, jon, combined: gabby + jon };
+}
+
+// All-time contributions across a goal's phases, split by who logged them.
+export async function getContributionSplitForGoal(goalId: string): Promise<ContributionSplit> {
+  const phases = await getPhasesForGoal(goalId);
+  if (phases.length === 0) return { gabby: 0, jon: 0, combined: 0 };
+  const { data } = await supabase
+    .from("goal_contributions")
+    .select("amount, created_by")
+    .in("phase_id", phases.map((p) => p.id));
+  return splitRows((data as { amount: number; created_by: Person }[] | null) ?? []);
+}
+
+// Contributions to a goal for a calendar month (YYYY-MM), split by person.
+export async function getContributionSplitForMonth(
+  goalId: string,
+  yyyyMm: string
+): Promise<ContributionSplit> {
+  const phases = await getPhasesForGoal(goalId);
+  if (phases.length === 0) return { gabby: 0, jon: 0, combined: 0 };
+  const [y, m] = yyyyMm.split("-").map(Number);
+  const ny = m === 12 ? y + 1 : y;
+  const nm = m === 12 ? 1 : m + 1;
+  const start = `${yyyyMm}-01`;
+  const end = `${ny}-${String(nm).padStart(2, "0")}-01`;
+  const { data } = await supabase
+    .from("goal_contributions")
+    .select("amount, created_by")
+    .in("phase_id", phases.map((p) => p.id))
+    .gte("date", start)
+    .lt("date", end);
+  return splitRows((data as { amount: number; created_by: Person }[] | null) ?? []);
+}
+
+// Contributions to a goal for the current week (Mon-Sun), split by person.
+export async function getContributionSplitForWeek(goalId: string): Promise<ContributionSplit> {
+  const phases = await getPhasesForGoal(goalId);
+  if (phases.length === 0) return { gabby: 0, jon: 0, combined: 0 };
+  const { start, end } = weekRange();
+  const { data } = await supabase
+    .from("goal_contributions")
+    .select("amount, created_by")
+    .in("phase_id", phases.map((p) => p.id))
+    .gte("date", start)
+    .lte("date", end);
+  return splitRows((data as { amount: number; created_by: Person }[] | null) ?? []);
+}
