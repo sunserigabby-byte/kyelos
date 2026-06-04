@@ -15,6 +15,9 @@ export type NotifSettings = Record<NotifKey, boolean> & {
   partner_workout: boolean;
   partner_meals: boolean;
   partner_supps: boolean;
+  weekly_transfer: boolean;
+  weekly_transfer_day: number;   // 0=Sun..6=Sat (default Mon = 1)
+  weekly_transfer_hour: number;  // 0..23 (default 9)
 };
 
 export type ReminderDef = {
@@ -107,4 +110,40 @@ export function recentlyDueReminders(
     }
   }
   return result;
+}
+
+// Weekly transfer reminder — fires only if today's day-of-week matches the
+// user's configured day. Returns the timeout id (or 0 if not today / past).
+export function scheduleWeeklyTransferReminder(settings: NotifSettings): number {
+  if (!settings.weekly_transfer) return 0;
+  const today = new Date().getDay();
+  if (today !== (settings.weekly_transfer_day ?? 1)) return 0;
+  return scheduleLocalReminder(
+    settings.weekly_transfer_hour ?? 9,
+    0,
+    "Weekly money transfer 💸",
+    "Move this week's contribution to your goal — keeps the ramp on pace."
+  );
+}
+
+export function weeklyTransferRecentlyDue(
+  settings: NotifSettings,
+  windowMin = 60
+): ReminderDef | null {
+  if (!settings.weekly_transfer) return null;
+  const now = new Date();
+  if (now.getDay() !== (settings.weekly_transfer_day ?? 1)) return null;
+  const target = new Date();
+  target.setHours(settings.weekly_transfer_hour ?? 9, 0, 0, 0);
+  const diffMin = (now.getTime() - target.getTime()) / (60 * 1000);
+  if (diffMin >= 0 && diffMin <= windowMin) {
+    return {
+      key: "wake_supps", // placeholder; UI just uses title/body
+      hour: settings.weekly_transfer_hour ?? 9,
+      minute: 0,
+      title: "Weekly money transfer 💸",
+      body: "Move this week's contribution to your goal.",
+    };
+  }
+  return null;
 }

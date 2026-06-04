@@ -15,6 +15,7 @@ import VacationToday from "@/components/VacationToday";
 import PRPToday from "@/components/PRPToday";
 import TournamentToday from "@/components/TournamentToday";
 import JonToday from "@/components/JonToday";
+import GoalsDashboardWidget from "@/components/GoalsDashboardWidget";
 import { useCycleSettings } from "@/components/useCycleSettings";
 import { useMealSwaps } from "@/components/useMealSwaps";
 import {
@@ -28,6 +29,8 @@ import {
   notificationPermissionState,
   requestNotificationPermission,
   scheduleLocalReminder,
+  scheduleWeeklyTransferReminder,
+  weeklyTransferRecentlyDue,
   showNotification,
   recentlyDueReminders,
   type NotifSettings,
@@ -38,18 +41,19 @@ export default function TodayPage() {
   if (loading) {
     return <div className="text-center text-gray-500 py-8">Loading...</div>;
   }
-  if (activePhase?.phase_type === "vacation") {
-    return <VacationToday />;
-  }
-  if (activePhase?.phase_type === "recovery_cut") {
-    return <PRPToday />;
-  }
-  if (activePhase?.phase_type === "tournament_peak") {
-    return <TournamentToday />;
-  }
-  if (activePhase?.phase_type === "sustained_cut") {
-    return <JonToday />;
-  }
+  return (
+    <>
+      <GoalsDashboardWidget />
+      <TodayBody activePhase={activePhase} />
+    </>
+  );
+}
+
+function TodayBody({ activePhase }: { activePhase: ReturnType<typeof usePhase>["activePhase"] }) {
+  if (activePhase?.phase_type === "vacation") return <VacationToday />;
+  if (activePhase?.phase_type === "recovery_cut") return <PRPToday />;
+  if (activePhase?.phase_type === "tournament_peak") return <TournamentToday />;
+  if (activePhase?.phase_type === "sustained_cut") return <JonToday />;
   return <CutTodayPage />;
 }
 
@@ -101,12 +105,17 @@ function CutTodayPage() {
           const id = scheduleLocalReminder(r.hour, r.minute, r.title, r.body);
           if (id) scheduledIds.current.push(id);
         }
+        const weeklyId = scheduleWeeklyTransferReminder(enabled);
+        if (weeklyId) scheduledIds.current.push(weeklyId);
       }
 
       // Show a banner for any reminders that fired in the last 30 minutes
       // (e.g. user opened the app late). Only the most recent one.
       const due = recentlyDueReminders(enabled);
-      if (due.length > 0) {
+      const weeklyDue = weeklyTransferRecentlyDue(enabled);
+      if (weeklyDue) {
+        setRecentlyDueText(`${weeklyDue.title} — ${weeklyDue.body}`);
+      } else if (due.length > 0) {
         const last = due[due.length - 1];
         setRecentlyDueText(`${last.title} — ${last.body}`);
       }

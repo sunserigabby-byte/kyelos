@@ -18,6 +18,9 @@ type Settings = {
   partner_workout: boolean;
   partner_meals: boolean;
   partner_supps: boolean;
+  weekly_transfer: boolean;
+  weekly_transfer_day: number;
+  weekly_transfer_hour: number;
 };
 
 const DEFAULTS: Settings = {
@@ -30,9 +33,26 @@ const DEFAULTS: Settings = {
   partner_workout: true,
   partner_meals: false,
   partner_supps: false,
+  weekly_transfer: false,
+  weekly_transfer_day: 1,
+  weekly_transfer_hour: 9,
 };
 
-const REMINDER_LABELS: { key: keyof Settings; label: string; sub: string }[] = [
+const DOW_OPTIONS: { value: number; label: string }[] = [
+  { value: 0, label: "Sunday" },
+  { value: 1, label: "Monday" },
+  { value: 2, label: "Tuesday" },
+  { value: 3, label: "Wednesday" },
+  { value: 4, label: "Thursday" },
+  { value: 5, label: "Friday" },
+  { value: 6, label: "Saturday" },
+];
+
+type BoolKey = {
+  [K in keyof Settings]: Settings[K] extends boolean ? K : never;
+}[keyof Settings];
+
+const REMINDER_LABELS: { key: BoolKey; label: string; sub: string }[] = [
   { key: "wake_supps", label: "5:30 AM — Wake up", sub: "Coffee + electrolytes" },
   { key: "am_cardio", label: "6:00 AM — Cardio", sub: "Fasted incline walk" },
   { key: "tea_2pm", label: "2:00 PM — Tea break", sub: "Dandelion cup 1" },
@@ -40,7 +60,7 @@ const REMINDER_LABELS: { key: keyof Settings; label: string; sub: string }[] = [
   { key: "wind_down", label: "9:30 PM — Wind down", sub: "Magnesium + tea" },
 ];
 
-const PARTNER_LABELS: { key: keyof Settings; label: string; sub: string }[] = [
+const PARTNER_LABELS: { key: BoolKey; label: string; sub: string }[] = [
   { key: "partner_cardio", label: "Partner finished cardio", sub: "Notify me when they walk" },
   { key: "partner_workout", label: "Partner finished workout", sub: "Notify on workout complete" },
   { key: "partner_meals", label: "Partner is on track with meals", sub: "Fires once per day on meal 2" },
@@ -73,6 +93,9 @@ export default function SettingsPage() {
             partner_workout: data.partner_workout ?? true,
             partner_meals: data.partner_meals ?? false,
             partner_supps: data.partner_supps ?? false,
+            weekly_transfer: data.weekly_transfer ?? false,
+            weekly_transfer_day: data.weekly_transfer_day ?? 1,
+            weekly_transfer_hour: data.weekly_transfer_hour ?? 9,
           });
         }
       });
@@ -82,7 +105,9 @@ export default function SettingsPage() {
   }, [person]);
 
   async function toggle(key: keyof Settings) {
-    const next = { ...settings, [key]: !settings[key] };
+    const current = settings[key];
+    if (typeof current !== "boolean") return;
+    const next = { ...settings, [key]: !current };
     setSettings(next);
     setSavingKey(key);
     await supabase
@@ -92,6 +117,17 @@ export default function SettingsPage() {
         { onConflict: "person" }
       );
     setSavingKey(null);
+  }
+
+  async function setField<K extends keyof Settings>(key: K, value: Settings[K]) {
+    const next = { ...settings, [key]: value };
+    setSettings(next);
+    await supabase
+      .from("notification_settings")
+      .upsert(
+        { person, ...next, updated_at: new Date().toISOString() },
+        { onConflict: "person" }
+      );
   }
 
   async function enableNotifications() {
@@ -159,8 +195,55 @@ export default function SettingsPage() {
           />
         ))}
       </Section>
+
+      {/* Goals */}
+      <Section title="Goals">
+        <ToggleRow
+          label="Weekly transfer reminder"
+          sub={`Every ${DOW_OPTIONS.find((o) => o.value === settings.weekly_transfer_day)?.label} at ${formatHour(settings.weekly_transfer_hour)}`}
+          checked={settings.weekly_transfer}
+          saving={savingKey === "weekly_transfer"}
+          onChange={() => toggle("weekly_transfer")}
+        />
+        {settings.weekly_transfer && (
+          <div className="p-3 bg-gray-50">
+            <div className="grid grid-cols-2 gap-3">
+              <div>
+                <div className="text-[11px] font-semibold text-charcoal/70 mb-1">Day</div>
+                <select
+                  value={settings.weekly_transfer_day}
+                  onChange={(e) => setField("weekly_transfer_day", Number(e.target.value))}
+                  className="w-full bg-white border border-gray-300 rounded px-2 py-1.5 text-sm"
+                >
+                  {DOW_OPTIONS.map((o) => (
+                    <option key={o.value} value={o.value}>{o.label}</option>
+                  ))}
+                </select>
+              </div>
+              <div>
+                <div className="text-[11px] font-semibold text-charcoal/70 mb-1">Hour</div>
+                <select
+                  value={settings.weekly_transfer_hour}
+                  onChange={(e) => setField("weekly_transfer_hour", Number(e.target.value))}
+                  className="w-full bg-white border border-gray-300 rounded px-2 py-1.5 text-sm"
+                >
+                  {Array.from({ length: 24 }, (_, h) => h).map((h) => (
+                    <option key={h} value={h}>{formatHour(h)}</option>
+                  ))}
+                </select>
+              </div>
+            </div>
+          </div>
+        )}
+      </Section>
     </div>
   );
+}
+
+function formatHour(h: number): string {
+  const ampm = h < 12 ? "AM" : "PM";
+  const hr = h === 0 ? 12 : h > 12 ? h - 12 : h;
+  return `${hr}:00 ${ampm}`;
 }
 
 function Section({ title, children }: { title: string; children: React.ReactNode }) {

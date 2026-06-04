@@ -123,6 +123,12 @@ export default function Nav() {
             Phases
           </Link>
           <Link
+            href="/goals"
+            className={`pb-1 transition ${pathname.startsWith("/goals") ? "border-b-2 border-terracotta text-cream" : "text-cream/60"}`}
+          >
+            Goals
+          </Link>
+          <Link
             href="/settings"
             className={`pb-1 transition ml-auto ${pathname === "/settings" ? "border-b-2 border-terracotta text-cream" : "text-cream/60"}`}
             aria-label="Settings"
