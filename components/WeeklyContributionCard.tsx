@@ -18,9 +18,11 @@ type Props = {
   goalId: string;
   /** Optional title override (defaults to "Weekly Target"). */
   title?: string;
+  /** Show per-person pills (Gabby / Jon). Default false. */
+  showSplit?: boolean;
 };
 
-export default function WeeklyContributionCard({ goalId, title = "Weekly Target" }: Props) {
+export default function WeeklyContributionCard({ goalId, title = "Weekly Target", showSplit = false }: Props) {
   const [phases, setPhases] = useState<GoalPhase[]>([]);
   const [weekTotal, setWeekTotal] = useState(0);
   const [split, setSplit] = useState<ContributionSplit>({ gabby: 0, jon: 0, combined: 0 });
@@ -78,7 +80,7 @@ export default function WeeklyContributionCard({ goalId, title = "Weekly Target"
           <div className="h-full bg-terracotta" style={{ width: `${pct}%` }} />
         </div>
       )}
-      {split.combined > 0 && (
+      {showSplit && split.combined > 0 && (
         <div className="grid grid-cols-2 gap-2 mb-2 text-[11px]">
           <div className="bg-terracotta/10 border border-terracotta/20 text-terracotta rounded px-2 py-1">
             <div className="text-[10px] uppercase tracking-wider opacity-80">Gabby this week</div>

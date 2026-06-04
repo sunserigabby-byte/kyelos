@@ -87,7 +87,7 @@ export default function Nav() {
                 view === "together" ? "bg-terracotta text-cream font-medium" : "text-cream/70"
               }`}
             >
-              🤝
+              Us
             </button>
           </div>
         </div>

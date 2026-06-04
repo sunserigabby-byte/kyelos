@@ -101,12 +101,23 @@ export default function FinancesPage() {
         <EmptyState />
       ) : (
         <>
-          <PaceHero goal={primaryGoal} phases={phases} contribs={contribs} split={split} />
-          <TogetherThisMonthCard goalId={primaryGoal.id} />
-          <WeeklyContributionCard goalId={primaryGoal.id} />
+          <PaceHero
+            goal={primaryGoal}
+            phases={phases}
+            contribs={contribs}
+            split={split}
+            showSplit={isCoupleMode}
+          />
+          {isCoupleMode && <TogetherThisMonthCard goalId={primaryGoal.id} />}
+          <WeeklyContributionCard goalId={primaryGoal.id} showSplit={isCoupleMode} />
           <IncomeRampCard />
           <ActivePhaseSection phases={phases} contribs={contribs} goalId={primaryGoal.id} />
-          <RecentContributions contribs={contribs} phases={phases} goalId={primaryGoal.id} />
+          <RecentContributions
+            contribs={contribs}
+            phases={phases}
+            goalId={primaryGoal.id}
+            showPersonPill={isCoupleMode}
+          />
           <OtherFinancialGoals
             goals={allGoals.filter((g) => g.category === "financial" && g.id !== primaryGoal.id)}
           />
@@ -144,11 +155,13 @@ function PaceHero({
   phases,
   contribs,
   split,
+  showSplit,
 }: {
   goal: Goal;
   phases: GoalPhase[];
   contribs: GoalContribution[];
   split: ContributionSplit;
+  showSplit: boolean;
 }) {
   const overall = overallProgress(phases);
   const pct = Math.round(overall * 100);
@@ -174,7 +187,7 @@ function PaceHero({
   return (
     <div className={`rounded-xl p-5 mb-4 text-cream bg-gradient-to-br ${paceColor} shadow-md`}>
       <div className="text-[10px] tracking-widest font-bold text-cream/70 mb-1">
-        {goal.title.toUpperCase()} · TOGETHER
+        {goal.title.toUpperCase()}{showSplit ? " · TOGETHER" : ""}
       </div>
       <div className="flex items-baseline gap-2 mb-1">
         <div className="text-3xl font-bold font-mono leading-none">
@@ -193,11 +206,11 @@ function PaceHero({
           </>
         )}
       </div>
-      <div className="h-2 bg-cream/20 rounded-full overflow-hidden mb-3">
+      <div className={`h-2 bg-cream/20 rounded-full overflow-hidden ${showSplit ? "mb-3" : ""}`}>
         <div className="h-full bg-terracotta" style={{ width: `${pct}%` }} />
       </div>
 
-      {splitTotal > 0 ? (
+      {showSplit && (splitTotal > 0 ? (
         <div className="grid grid-cols-2 gap-2 text-xs">
           <div className="bg-cream/10 rounded px-2 py-1.5">
             <div className="text-[10px] uppercase tracking-wider text-cream/60">Gabby</div>
@@ -218,7 +231,7 @@ function PaceHero({
         <div className="text-[11px] text-cream/70 italic">
           No contributions yet — first one starts the split.
         </div>
-      )}
+      ))}
     </div>
   );
 }
@@ -291,10 +304,12 @@ function RecentContributions({
   contribs,
   phases,
   goalId,
+  showPersonPill,
 }: {
   contribs: GoalContribution[];
   phases: GoalPhase[];
   goalId: string;
+  showPersonPill: boolean;
 }) {
   if (contribs.length === 0) {
     return (
@@ -335,11 +350,13 @@ function RecentContributions({
               <div className="font-mono font-bold text-charcoal text-sm flex-shrink-0">
                 ${Math.round(Number(c.amount)).toLocaleString()}
               </div>
-              <span
-                className={`text-[10px] font-bold tracking-wider uppercase border rounded px-1.5 py-0.5 flex-shrink-0 ${pillClass}`}
-              >
-                {isGabby ? "Gabby" : "Jon"}
-              </span>
+              {showPersonPill && (
+                <span
+                  className={`text-[10px] font-bold tracking-wider uppercase border rounded px-1.5 py-0.5 flex-shrink-0 ${pillClass}`}
+                >
+                  {isGabby ? "Gabby" : "Jon"}
+                </span>
+              )}
               <div className="flex-1 min-w-0">
                 <div className="text-[11px] text-charcoal/60">
                   {displayShort(c.date)}
