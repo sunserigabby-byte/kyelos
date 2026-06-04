@@ -5,7 +5,7 @@ import { useProfile } from "@/components/ProfileContext";
 import { usePhase } from "@/components/PhaseContext";
 import { supabase } from "@/lib/supabase";
 import { getCurrentPhaseDay, getTotalDays } from "@/lib/phases";
-import { gabbyPRP, PRP_PHOTO_DAYS } from "@/lib/prp-plan";
+import { gabbyPRP, PRP_PHOTO_DAYS, PRP_INJECTION_DAYS } from "@/lib/prp-plan";
 import { gabbyMealSlots } from "@/lib/meal-options";
 import DaySelector from "@/components/DaySelector";
 import PhaseBanner from "@/components/PhaseBanner";
@@ -56,6 +56,8 @@ export default function PRPToday() {
   if (!activePhase) return null;
   const day = gabbyPRP[selectedDay - 1] ?? gabbyPRP[0];
   const isDay1Rest = selectedDay === 1;
+  const isDay2Rest = selectedDay === 2;
+  const isInjectionDay2 = PRP_INJECTION_DAYS.has(selectedDay) && selectedDay !== 1;
 
   return (
     <div key={`prp-${activePhase.id}-${selectedDay}`}>
@@ -72,7 +74,15 @@ export default function PRPToday() {
 
       <NSAIDReminder selectedDay={selectedDay} />
 
-      {isDay1Rest ? <Day1RestBanner /> : <DayHeader day={day} />}
+      {isInjectionDay2 && <InjectionDay2Banner />}
+
+      {isDay1Rest ? (
+        <Day1RestBanner />
+      ) : isDay2Rest ? (
+        <Day2RestBanner />
+      ) : (
+        <DayHeader day={day} />
+      )}
 
       <DailyMetricsCard person={person} dayNum={selectedDay} isoDate={day.isoDate} />
 
@@ -103,12 +113,48 @@ function Day1RestBanner() {
       <div className="text-xl font-bold text-charcoal mb-1">⚕️ Injection Day Rest</div>
       <p className="text-sm text-charcoal/80 leading-relaxed">
         You just had the PRP injection. Stay off your feet, hydrate well, and let
-        the joint settle today. Tomorrow we start training.
+        the joint settle today.
       </p>
       <div className="mt-3 pt-3 border-t border-terracotta/30 text-xs text-charcoal/70 italic">
         Optional gentle upper-body mobility is in the Workout section below — skip
         it entirely if the knee is throbbing. Sleep matters more than mobility tonight.
       </div>
+    </div>
+  );
+}
+
+function Day2RestBanner() {
+  return (
+    <div className="bg-cream-light border-2 border-terracotta rounded-lg p-4 mb-3">
+      <div className="text-terracotta text-[10px] font-bold tracking-widest mb-1">
+        WED · WEEK 1 · DAY 2
+      </div>
+      <div className="text-xl font-bold text-charcoal mb-1">🛌 Bonus Rest Day</div>
+      <p className="text-sm text-charcoal/80 leading-relaxed">
+        Another rest day to let the joint settle. Workouts begin tomorrow
+        (Thursday May 14).
+      </p>
+      <div className="mt-3 pt-3 border-t border-terracotta/30 text-xs text-charcoal/70 italic">
+        Optional gentle upper-body mobility is in the Workout section below if
+        you need to move a little.
+      </div>
+    </div>
+  );
+}
+
+function InjectionDay2Banner() {
+  return (
+    <div className="bg-red-50 border-2 border-red-400 rounded-lg p-4 mb-3">
+      <div className="text-red-700 text-[10px] font-bold tracking-widest mb-1">
+        TUE MAY 26 · INJECTION DAY 2
+      </div>
+      <div className="text-xl font-bold text-charcoal mb-1">
+        💉 Second PRP Injection Today
+      </div>
+      <p className="text-sm text-charcoal/80 leading-relaxed">
+        No cycling, no right-leg work. Upper body and left-leg work only through
+        Friday May 29. Right-leg rehab and cardio resume Saturday May 30.
+      </p>
     </div>
   );
 }

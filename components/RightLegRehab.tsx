@@ -26,7 +26,7 @@ export default function RightLegRehab({ exercises, sessionId, currentDay, unlock
           </span>
         </div>
         <p className="text-xs text-gray-600 mt-1">
-          Right-leg rehab unlocks May 20 (Week 2). Until then, full rest for the injected knee. {daysUntilUnlock > 0 ? `(${daysUntilUnlock} days to go)` : ""}
+          Right-leg rehab unlocks May 19 (Week 2). Until then, full rest for the injected knee. {daysUntilUnlock > 0 ? `(${daysUntilUnlock} days to go)` : ""}
         </p>
       </div>
     );

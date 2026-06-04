@@ -10,12 +10,17 @@ import {
 
 // ============================================
 // Date math: Day 1 = Tuesday May 12, 2026 (injection-day REST).
-// Days 2-39 follow the weekly cycle: Wed/Thu/Fri/Sat/Sun/Mon/Tue.
+// Day 2 (Wed May 13) is a bonus rest day — see buildDay2().
+// Day 15 (Tue May 26) is the second PRP injection — restricted to
+// upper body + left leg through Day 18 (Fri May 29). Normal from Day 19.
 // Phase 3 runs 39 days through Friday June 19.
 // ============================================
 
 const START_ISO = "2026-05-12";
 const TOTAL_DAYS = 39;
+
+const SECOND_INJECTION_DAY = 15; // Tue May 26
+const POST_INJECTION_2_RESTRICTED = new Set([15, 16, 17, 18]); // No right-leg work, no cardio through Fri May 29
 
 const FULL_DAY_NAMES = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
 const SHORT_DAY_NAMES = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
@@ -486,9 +491,32 @@ const PROGRESSION_BY_WEEK: Record<number, string> = {
   6: "Deload + sharpening. Lighter top sets, technique focus. Tournament taper begins in Phase 4.",
 };
 
-const DAY_1_PROGRESSION_NOTE = "Week 1 starts tomorrow. Today is recovery only.";
+const DAY_1_PROGRESSION_NOTE = "Week 1 starts after the rest window. Today is recovery only.";
+const DAY_2_PROGRESSION_NOTE = "Bonus rest day. Workouts start tomorrow (Thu May 14).";
 
-// Day 1 (May 12): special rest day. Just optional gentle mobility.
+function gentleMobilityExercise(): Exercise {
+  return {
+    name: "Optional Gentle Mobility",
+    exerciseType: "mobility",
+    description:
+      "Upper body only — shoulder dislocates, T-spine rotations, neck rolls. 10 min max.",
+    sets: [
+      {
+        setNumber: 1,
+        setType: "duration",
+        targetReps: "Gentle",
+        targetIntensity: "No strain",
+        durationSeconds: 600,
+      },
+    ],
+    trackingMode: "time",
+    optional: true,
+    notes:
+      "Skip entirely if knee is throbbing. Sleep is more important than mobility tonight.",
+  };
+}
+
+// Day 1 (May 12): injection-day rest.
 function buildDay1(): WorkoutDay {
   return {
     day: 1,
@@ -501,29 +529,28 @@ function buildDay1(): WorkoutDay {
     intro:
       "You just got the PRP injection today. Stay off your feet, hydrate, and let the joint settle. No structured workout. Light mobility only if you feel like moving.",
     swingPrep: undefined,
-    exercises: [
-      {
-        name: "Optional Gentle Mobility",
-        exerciseType: "mobility",
-        description:
-          "Upper body only — shoulder dislocates, T-spine rotations, neck rolls. 10 min max.",
-        sets: [
-          {
-            setNumber: 1,
-            setType: "duration",
-            targetReps: "Gentle",
-            targetIntensity: "No strain",
-            durationSeconds: 600,
-          },
-        ],
-        trackingMode: "time",
-        optional: true,
-        notes:
-          "Skip entirely if knee is throbbing. Sleep is more important than mobility tonight.",
-      },
-    ],
+    exercises: [gentleMobilityExercise()],
     rightLegRehab: rightLegRehab, // still locked (unlocksOnDay 8), but shown locked
     progressionNote: DAY_1_PROGRESSION_NOTE,
+  };
+}
+
+// Day 2 (May 13): bonus rest day — extra day to let the joint settle.
+function buildDay2(): WorkoutDay {
+  return {
+    day: 2,
+    weekNum: 1,
+    dayOfWeek: "Wed",
+    date: "Wednesday, May 13",
+    isoDate: "2026-05-13",
+    focus: "Extra Rest",
+    workoutName: "Bonus Rest Day",
+    intro:
+      "Another rest day to let the joint settle. No structured workout. Light mobility only if you feel like moving. Workouts begin Thursday.",
+    swingPrep: undefined,
+    exercises: [gentleMobilityExercise()],
+    rightLegRehab: rightLegRehab, // still locked
+    progressionNote: DAY_2_PROGRESSION_NOTE,
   };
 }
 
@@ -531,8 +558,15 @@ function buildDay1(): WorkoutDay {
 // Build the 39-day plan
 // ============================================
 
+// Strip cardio (conditioning) exercises from a workout — used during the
+// 3-day window after the second PRP injection.
+function stripCardio(exercises: Exercise[]): Exercise[] {
+  return exercises.filter((ex) => ex.exerciseType !== "conditioning");
+}
+
 export const gabbyPRP: WorkoutDay[] = Array.from({ length: TOTAL_DAYS }, (_, i): WorkoutDay => {
   if (i === 0) return buildDay1();
+  if (i === 1) return buildDay2();
 
   const dayNum = i + 1;
   const iso = addDays(START_ISO, i);
@@ -540,21 +574,46 @@ export const gabbyPRP: WorkoutDay[] = Array.from({ length: TOTAL_DAYS }, (_, i):
   const meta = META_BY_CAL_DOW[calIdx];
   const weekNum = Math.floor(i / 7) + 1;
 
+  const isPostInjection2 = POST_INJECTION_2_RESTRICTED.has(dayNum);
+  const isInjectionDay2 = dayNum === SECOND_INJECTION_DAY;
+
+  const rawExercises = meta.exercises();
+  const exercises = isPostInjection2 ? stripCardio(rawExercises) : rawExercises;
+
+  let workoutName = meta.workoutName;
+  let intro = meta.intro;
+  let focus = meta.focus;
+
+  if (isInjectionDay2) {
+    workoutName = "Injection Day 2 — Upper Body Only";
+    focus = "Second PRP injection";
+    intro =
+      "Second PRP injection today. No cycling, no right-leg work. Anti-rotation core only — keeps the system engaged without loading the knee.";
+  } else if (isPostInjection2) {
+    const daysAfter = dayNum - SECOND_INJECTION_DAY;
+    workoutName = `${meta.workoutName} (Post-Injection)`;
+    focus = `Day ${daysAfter} after injection 2 — restricted`;
+    intro = `${meta.intro} Post-injection: no cardio and no right-leg rehab today. Right-leg work resumes Day 19 (Sat May 30).`;
+  }
+
   return {
     day: dayNum,
     weekNum,
     dayOfWeek: SHORT_DAY_NAMES[calIdx],
     date: displayDate(iso),
     isoDate: iso,
-    focus: meta.focus,
-    workoutName: meta.workoutName,
-    intro: meta.intro,
+    focus,
+    workoutName,
+    intro,
     swingPrep: meta.hasSwingPrep ? swingPrep : undefined,
-    exercises: meta.exercises(),
-    rightLegRehab: meta.hasRightLegRehab ? rightLegRehab : undefined,
+    exercises,
+    rightLegRehab: meta.hasRightLegRehab && !isPostInjection2 ? rightLegRehab : undefined,
     progressionNote: PROGRESSION_BY_WEEK[weekNum] ?? PROGRESSION_BY_WEEK[6],
   };
 });
 
 // Photo days for Phase 3: Days 1, 8, 15, 22, 29, 36
 export const PRP_PHOTO_DAYS = new Set([1, 8, 15, 22, 29, 36]);
+
+// PRP injection days within Phase 3 — surfaces a banner in the UI.
+export const PRP_INJECTION_DAYS = new Set([1, 15]);
