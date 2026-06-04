@@ -9,16 +9,14 @@ import { gabbyPRP, PRP_PHOTO_DAYS, PRP_INJECTION_DAYS } from "@/lib/prp-plan";
 import { gabbyMealSlots } from "@/lib/meal-options";
 import DaySelector from "@/components/DaySelector";
 import PhaseBanner from "@/components/PhaseBanner";
-import WorkoutTracker, { useWorkoutSession } from "@/components/WorkoutTracker";
-import WorkoutList from "@/components/WorkoutList";
 import MealSelector from "@/components/MealSelector";
 import CardioCard from "@/components/CardioCard";
-import RightLegRehab from "@/components/RightLegRehab";
 import PhotoPrompt from "@/components/PhotoPrompt";
 import CheckItem from "@/components/CheckItem";
 import MoneyTodayCard from "@/components/MoneyTodayCard";
 import CycleTodayCard from "@/components/CycleTodayCard";
 import CollapsibleSection from "@/components/CollapsibleSection";
+import WorkoutGrid from "@/components/WorkoutGrid";
 
 type DailyMetrics = {
   protein_g: number;
@@ -58,8 +56,6 @@ export default function PRPToday() {
 
   if (!activePhase) return null;
   const day = gabbyPRP[selectedDay - 1] ?? gabbyPRP[0];
-  const isDay1Rest = selectedDay === 1;
-  const isDay2Rest = selectedDay === 2;
   const isInjectionDay2 = PRP_INJECTION_DAYS.has(selectedDay) && selectedDay !== 1;
 
   return (
@@ -82,19 +78,11 @@ export default function PRPToday() {
 
       {isInjectionDay2 && <InjectionDay2Banner />}
 
-      {isDay1Rest ? (
-        <Day1RestBanner />
-      ) : isDay2Rest ? (
-        <Day2RestBanner />
-      ) : (
-        <DayHeader day={day} />
-      )}
-
       <DailyMetricsCard person={person} dayNum={selectedDay} isoDate={day.isoDate} />
 
       <CardioCard dayNum={selectedDay} />
 
-      <WorkoutBlock day={day} selectedDay={selectedDay} />
+      <WorkoutGrid preview />
 
       <SupplementsCard dayNum={selectedDay} />
 
@@ -160,44 +148,6 @@ function MealsBlock({ dayNum }: { dayNum: number }) {
   );
 }
 
-function Day1RestBanner() {
-  return (
-    <div className="bg-cream-light border-2 border-terracotta rounded-lg p-4 mb-3">
-      <div className="text-terracotta text-[10px] font-bold tracking-widest mb-1">
-        TUE · WEEK 1 · DAY 1
-      </div>
-      <div className="text-xl font-bold text-charcoal mb-1">⚕️ Injection Day Rest</div>
-      <p className="text-sm text-charcoal/80 leading-relaxed">
-        You just had the PRP injection. Stay off your feet, hydrate well, and let
-        the joint settle today.
-      </p>
-      <div className="mt-3 pt-3 border-t border-terracotta/30 text-xs text-charcoal/70 italic">
-        Optional gentle upper-body mobility is in the Workout section below — skip
-        it entirely if the knee is throbbing. Sleep matters more than mobility tonight.
-      </div>
-    </div>
-  );
-}
-
-function Day2RestBanner() {
-  return (
-    <div className="bg-cream-light border-2 border-terracotta rounded-lg p-4 mb-3">
-      <div className="text-terracotta text-[10px] font-bold tracking-widest mb-1">
-        WED · WEEK 1 · DAY 2
-      </div>
-      <div className="text-xl font-bold text-charcoal mb-1">🛌 Bonus Rest Day</div>
-      <p className="text-sm text-charcoal/80 leading-relaxed">
-        Another rest day to let the joint settle. Workouts begin tomorrow
-        (Thursday May 14).
-      </p>
-      <div className="mt-3 pt-3 border-t border-terracotta/30 text-xs text-charcoal/70 italic">
-        Optional gentle upper-body mobility is in the Workout section below if
-        you need to move a little.
-      </div>
-    </div>
-  );
-}
-
 function InjectionDay2Banner() {
   return (
     <div className="bg-red-50 border-2 border-red-400 rounded-lg p-4 mb-3">
@@ -211,65 +161,6 @@ function InjectionDay2Banner() {
         No cycling, no right-leg work. Upper body and left-leg work only through
         Friday May 29. Right-leg rehab and cardio resume Saturday May 30.
       </p>
-    </div>
-  );
-}
-
-function DayHeader({ day }: { day: any }) {
-  return (
-    <div className="bg-white border border-gray-200 rounded-lg p-4 mb-3">
-      <div className="text-terracotta text-[10px] font-bold tracking-widest mb-1">
-        {day.dayOfWeek.toUpperCase()} · WEEK {day.weekNum}
-      </div>
-      <div className="text-xl font-bold text-charcoal">{day.workoutName}</div>
-      <div className="text-sm text-charcoal/70 italic mb-2">{day.focus}</div>
-      <p className="text-sm text-gray-700 leading-relaxed">{day.intro}</p>
-      <div className="mt-3 pt-3 border-t border-gray-100 text-xs text-gray-600">
-        <span className="font-semibold text-charcoal">Week {day.weekNum} note:</span> {day.progressionNote}
-      </div>
-    </div>
-  );
-}
-
-function WorkoutBlock({ day, selectedDay }: { day: any; selectedDay: number }) {
-  const sessionId = useWorkoutSession(selectedDay, day.workoutName, day.isoDate);
-
-  return (
-    <>
-      {day.swingPrep && day.swingPrep.length > 0 && (
-        <SwingPrepCard exercises={day.swingPrep} sessionId={sessionId} dayNum={selectedDay} />
-      )}
-
-      <div className="text-charcoal font-bold text-sm uppercase tracking-wider border-b-2 border-terracotta/60 pb-1 mb-3 mt-6">
-        Workout
-      </div>
-      <WorkoutList exercises={day.exercises} sessionId={sessionId} dayNum={selectedDay} />
-
-      {day.rightLegRehab && (
-        <RightLegRehab exercises={day.rightLegRehab} sessionId={sessionId} currentDay={selectedDay} unlockDay={8} />
-      )}
-    </>
-  );
-}
-
-function SwingPrepCard({ exercises, sessionId, dayNum }: { exercises: any[]; sessionId: string | null; dayNum: number }) {
-  const [open, setOpen] = useState(true);
-  return (
-    <div className="bg-forest-pale/30 border-l-4 border-terracotta rounded-r-md p-3 mb-3">
-      <button onClick={() => setOpen((v) => !v)} className="tappable w-full text-left flex items-center justify-between">
-        <div>
-          <div className="font-bold text-charcoal text-sm">🏐 Swing Prep — 5 min</div>
-          <div className="text-xs text-charcoal/70">Mandatory shoulder warm-up before any lifting</div>
-        </div>
-        <div className="text-charcoal/40 text-xs">{open ? "▲" : "▼"}</div>
-      </button>
-      {open && (
-        <div className="mt-2 space-y-1">
-          {exercises.map((ex) => (
-            <WorkoutTracker key={ex.name} exercise={ex} sessionId={sessionId} dayNum={dayNum} />
-          ))}
-        </div>
-      )}
     </div>
   );
 }

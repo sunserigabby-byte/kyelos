@@ -7,6 +7,7 @@ import { useProfile } from "@/components/ProfileContext";
 import { usePhase } from "@/components/PhaseContext";
 import TodayBadge from "@/components/TodayBadge";
 import WeightLogModal from "@/components/WeightLogModal";
+import WorkoutGrid from "@/components/WorkoutGrid";
 import { getCurrentPhaseDay, getTotalDays } from "@/lib/phases";
 import {
   getVisibleGoals,
@@ -141,6 +142,12 @@ export default function FitnessPage() {
       </p>
 
       {!isCoupleMode && <PhaseHero />}
+
+      {!isCoupleMode && (
+        <div className="mb-2">
+          <WorkoutGrid preview />
+        </div>
+      )}
 
       {isCoupleMode ? (
         <CoupleWeightSection
