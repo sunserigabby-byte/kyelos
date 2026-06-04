@@ -15,7 +15,6 @@ import VacationToday from "@/components/VacationToday";
 import PRPToday from "@/components/PRPToday";
 import TournamentToday from "@/components/TournamentToday";
 import JonToday from "@/components/JonToday";
-import GoalsDashboardWidget from "@/components/GoalsDashboardWidget";
 import { useCycleSettings } from "@/components/useCycleSettings";
 import { useMealSwaps } from "@/components/useMealSwaps";
 import {
@@ -41,15 +40,6 @@ export default function TodayPage() {
   if (loading) {
     return <div className="text-center text-gray-500 py-8">Loading...</div>;
   }
-  return (
-    <>
-      <GoalsDashboardWidget />
-      <TodayBody activePhase={activePhase} />
-    </>
-  );
-}
-
-function TodayBody({ activePhase }: { activePhase: ReturnType<typeof usePhase>["activePhase"] }) {
   if (activePhase?.phase_type === "vacation") return <VacationToday />;
   if (activePhase?.phase_type === "recovery_cut") return <PRPToday />;
   if (activePhase?.phase_type === "tournament_peak") return <TournamentToday />;

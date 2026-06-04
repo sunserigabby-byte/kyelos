@@ -11,6 +11,8 @@ export type Phase = {
   start_date: string; // YYYY-MM-DD
   end_date: string;
   is_active: boolean;
+  focus_label?: string | null;
+  purpose_text?: string | null;
 };
 
 export async function getActivePhase(person: Person): Promise<Phase | null> {

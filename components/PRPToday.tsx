@@ -16,6 +16,9 @@ import CardioCard from "@/components/CardioCard";
 import RightLegRehab from "@/components/RightLegRehab";
 import PhotoPrompt from "@/components/PhotoPrompt";
 import CheckItem from "@/components/CheckItem";
+import MoneyTodayCard from "@/components/MoneyTodayCard";
+import CycleTodayCard from "@/components/CycleTodayCard";
+import CollapsibleSection from "@/components/CollapsibleSection";
 
 type DailyMetrics = {
   protein_g: number;
@@ -72,6 +75,9 @@ export default function PRPToday() {
 
       {PRP_PHOTO_DAYS.has(selectedDay) && <PhotoPrompt dayNum={selectedDay} />}
 
+      <MoneyTodayCard />
+      <CycleTodayCard />
+
       <NSAIDReminder selectedDay={selectedDay} />
 
       {isInjectionDay2 && <InjectionDay2Banner />}
@@ -94,13 +100,63 @@ export default function PRPToday() {
 
       <KneePainCard person={person} dayNum={selectedDay} isoDate={day.isoDate} />
 
-      <div className="text-charcoal font-bold text-sm uppercase tracking-wider border-b-2 border-terracotta/60 pb-1 mb-3 mt-6">
-        Meals
-      </div>
-      {gabbyMealSlots.map((slot) => (
-        <MealSelector key={slot.key} slot={slot} dayNum={selectedDay} />
-      ))}
+      <MealsBlock dayNum={selectedDay} />
     </div>
+  );
+}
+
+function MealsBlock({ dayNum }: { dayNum: number }) {
+  const { person } = useProfile();
+  const { activePhase } = usePhase();
+  const [loggedCount, setLoggedCount] = useState(0);
+  const totalSlots = gabbyMealSlots.length;
+
+  useEffect(() => {
+    if (!activePhase) return;
+    let cancelled = false;
+    (async () => {
+      const { count } = await supabase
+        .from("meal_selections")
+        .select("*", { count: "exact", head: true })
+        .eq("person", person)
+        .eq("phase_id", activePhase.id)
+        .eq("day_num", dayNum);
+      if (!cancelled) setLoggedCount(count ?? 0);
+    })();
+
+    const channel = supabase
+      .channel(`meals_done_${person}_${dayNum}_${activePhase.id}`)
+      .on(
+        "postgres_changes",
+        { event: "*", schema: "public", table: "meal_selections", filter: `person=eq.${person}` },
+        async () => {
+          const { count } = await supabase
+            .from("meal_selections")
+            .select("*", { count: "exact", head: true })
+            .eq("person", person)
+            .eq("phase_id", activePhase.id)
+            .eq("day_num", dayNum);
+          setLoggedCount(count ?? 0);
+        }
+      )
+      .subscribe();
+    return () => {
+      cancelled = true;
+      supabase.removeChannel(channel);
+    };
+  }, [person, dayNum, activePhase]);
+
+  const done = loggedCount >= totalSlots;
+  const doneLabel = done
+    ? `${loggedCount}/${totalSlots} logged`
+    : `${loggedCount}/${totalSlots} so far`;
+
+  return (
+    <CollapsibleSection title="Meals" done={done} doneLabel={doneLabel}>
+      {gabbyMealSlots.map((slot) => (
+        <MealSelector key={slot.key} slot={slot} dayNum={dayNum} />
+      ))}
+    </CollapsibleSection>
   );
 }
 

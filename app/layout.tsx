@@ -5,6 +5,7 @@ import Nav from "@/components/Nav";
 import { ProfileProvider } from "@/components/ProfileContext";
 import { PhaseProvider } from "@/components/PhaseContext";
 import ServiceWorkerRegister from "@/components/ServiceWorkerRegister";
+import QuickActionsFAB from "@/components/QuickActionsFAB";
 
 const cormorant = Cormorant_Garamond({
   subsets: ["latin"],
@@ -59,6 +60,7 @@ export default function RootLayout({
             <main className="max-w-2xl mx-auto px-4 pb-24 pt-4 safe-padding">
               {children}
             </main>
+            <QuickActionsFAB />
           </PhaseProvider>
         </ProfileProvider>
       </body>

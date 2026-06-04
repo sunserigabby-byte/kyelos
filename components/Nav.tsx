@@ -83,7 +83,7 @@ export default function Nav() {
             </button>
           </div>
         </div>
-        <nav className="flex gap-5 text-sm">
+        <nav className="flex gap-6 text-sm">
           <Link
             href="/"
             className={`pb-1 transition ${pathname === "/" ? "border-b-2 border-terracotta text-cream" : "text-cream/60"}`}
@@ -91,42 +91,27 @@ export default function Nav() {
             Today
           </Link>
           <Link
-            href="/food"
-            className={`pb-1 transition ${pathname === "/food" ? "border-b-2 border-terracotta text-cream" : "text-cream/60"}`}
+            href="/fitness"
+            className={`pb-1 transition ${
+              pathname.startsWith("/fitness") ||
+              pathname.startsWith("/workout-history") ||
+              pathname.startsWith("/phases") ||
+              pathname.startsWith("/progress")
+                ? "border-b-2 border-terracotta text-cream"
+                : "text-cream/60"
+            }`}
           >
-            Food
-          </Link>
-          {person === "gabby" && (
-            <Link
-              href="/cycle"
-              className={`pb-1 transition ${pathname === "/cycle" ? "border-b-2 border-terracotta text-cream" : "text-cream/60"}`}
-            >
-              Cycle
-            </Link>
-          )}
-          <Link
-            href="/progress"
-            className={`pb-1 transition ${pathname === "/progress" ? "border-b-2 border-terracotta text-cream" : "text-cream/60"}`}
-          >
-            Progress
+            Fitness
           </Link>
           <Link
-            href="/workout-history"
-            className={`pb-1 transition ${pathname === "/workout-history" ? "border-b-2 border-terracotta text-cream" : "text-cream/60"}`}
+            href="/finances"
+            className={`pb-1 transition ${
+              pathname.startsWith("/finances") || pathname.startsWith("/goals")
+                ? "border-b-2 border-terracotta text-cream"
+                : "text-cream/60"
+            }`}
           >
-            Lifts
-          </Link>
-          <Link
-            href="/phases"
-            className={`pb-1 transition ${pathname === "/phases" ? "border-b-2 border-terracotta text-cream" : "text-cream/60"}`}
-          >
-            Phases
-          </Link>
-          <Link
-            href="/goals"
-            className={`pb-1 transition ${pathname.startsWith("/goals") ? "border-b-2 border-terracotta text-cream" : "text-cream/60"}`}
-          >
-            Goals
+            Finances
           </Link>
           <Link
             href="/settings"
