@@ -143,7 +143,7 @@ export default function FitnessPage() {
 
       {!isCoupleMode && <PhaseHero />}
 
-      {!isCoupleMode && (
+      {!isCoupleMode && activePhase?.phase_type !== "training_plan" && (
         <div className="mb-2">
           <WorkoutGrid preview />
         </div>

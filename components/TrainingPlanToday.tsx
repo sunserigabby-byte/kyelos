@@ -11,7 +11,7 @@ import CycleTodayCard from "@/components/CycleTodayCard";
 import ActivePhaseBanner from "@/components/ActivePhaseBanner";
 import MilestoneCard from "@/components/MilestoneCard";
 import LongRangeGoalsCard from "@/components/LongRangeGoalsCard";
-import WorkoutGrid from "@/components/WorkoutGrid";
+import TrainingSplitCard from "@/components/TrainingSplitCard";
 import CardioCard from "@/components/CardioCard";
 import DailyActivationCard from "@/components/DailyActivationCard";
 import CheckItem from "@/components/CheckItem";
@@ -61,7 +61,7 @@ export default function TrainingPlanToday() {
 
       <DailyActivationCard dayNum={todayDay} />
 
-      <WorkoutGrid preview />
+      <TrainingSplitCard />
 
       <SupplementsCard dayNum={todayDay} />
 
