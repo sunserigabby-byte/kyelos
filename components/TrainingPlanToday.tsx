@@ -13,6 +13,7 @@ import MilestoneCard from "@/components/MilestoneCard";
 import LongRangeGoalsCard from "@/components/LongRangeGoalsCard";
 import WorkoutGrid from "@/components/WorkoutGrid";
 import CardioCard from "@/components/CardioCard";
+import DailyActivationCard from "@/components/DailyActivationCard";
 import CheckItem from "@/components/CheckItem";
 import MealSelector from "@/components/MealSelector";
 import CollapsibleSection from "@/components/CollapsibleSection";
@@ -57,6 +58,8 @@ export default function TrainingPlanToday() {
       <DailyMetricsCard person={person} dayNum={todayDay} phaseId={activePhase.id} />
 
       <CardioCard dayNum={todayDay} />
+
+      <DailyActivationCard dayNum={todayDay} />
 
       <WorkoutGrid preview />
 

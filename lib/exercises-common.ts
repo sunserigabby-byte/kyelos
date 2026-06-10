@@ -391,3 +391,116 @@ export const rightLegRehab: Exercise[] = [
     notes: "Point and flex foot. Promotes circulation, important for healing.",
   },
 ];
+
+// ============================================
+// Daily VMO + Glute Activation Circuit
+// Bilateral, low-volume, every morning. ~10-15 min.
+// THP covers VMO/glute-med under-load work on lift days — this
+// is the daily activation only.
+// ============================================
+export const dailyKneeGluteActivation: Exercise[] = [
+  {
+    name: "Quad Sets with VMO Emphasis",
+    exerciseType: "activation",
+    description: "2 × 10 with 5-second holds. Toes slightly out, squeeze inner quad.",
+    sets: [
+      { setNumber: 1, setType: "duration", targetReps: 10, targetIntensity: "Hold 5s", durationSeconds: 50 },
+      { setNumber: 2, setType: "duration", targetReps: 10, targetIntensity: "Hold 5s", durationSeconds: 50 },
+    ],
+    trackingMode: "bodyweight",
+    notes:
+      "Sit with leg extended. Press knee into floor, hold 5 sec. Focus on the inner-knee teardrop muscle (VMO).",
+  },
+  {
+    name: "Banded Clamshells",
+    exerciseType: "activation",
+    description: "2 × 15/side. Light to moderate band above knees.",
+    sets: [
+      { setNumber: 1, setType: "working", targetReps: 15, targetIntensity: "Light-moderate band" },
+      { setNumber: 2, setType: "working", targetReps: 15, targetIntensity: "Light-moderate band" },
+    ],
+    trackingMode: "bodyweight",
+    notes:
+      "Side-lying, knees bent 90°, feet together. Open knees against band without rolling hips back.",
+  },
+  {
+    name: "Banded Lateral Steps",
+    exerciseType: "activation",
+    description: "2 × 12 each direction. Band above knees or around ankles.",
+    sets: [
+      { setNumber: 1, setType: "working", targetReps: 12, targetIntensity: "Band" },
+      { setNumber: 2, setType: "working", targetReps: 12, targetIntensity: "Band" },
+    ],
+    trackingMode: "bodyweight",
+    notes:
+      "Slight athletic stance, step sideways under band tension. 12 right, then 12 left.",
+  },
+  {
+    name: "Glute Bridge (bilateral)",
+    exerciseType: "activation",
+    description: "2 × 20 with 2-second hold at top.",
+    sets: [
+      { setNumber: 1, setType: "working", targetReps: 20, targetIntensity: "Bodyweight" },
+      { setNumber: 2, setType: "working", targetReps: 20, targetIntensity: "Bodyweight" },
+    ],
+    trackingMode: "bodyweight",
+    notes: "Squeeze glutes hard at top — DON'T hyperextend lower back.",
+  },
+  {
+    name: "Wall Sit with Ball Squeeze",
+    exerciseType: "activation",
+    description: "1 × 45 seconds with ball/towel between knees.",
+    sets: [
+      { setNumber: 1, setType: "duration", targetReps: "Hold", targetIntensity: "Squeeze", durationSeconds: 45 },
+    ],
+    trackingMode: "time",
+    notes:
+      "Wall sit at 90° knees. Squeeze something between knees the entire time (small ball, rolled towel). Activates VMO + adductors together.",
+  },
+  {
+    name: "Single-Leg Balance Reach",
+    exerciseType: "activation",
+    description: "2 × 8/leg. Reach forward, sideways, back.",
+    sets: [
+      { setNumber: 1, setType: "working", targetReps: 8, targetIntensity: "Bodyweight" },
+      { setNumber: 2, setType: "working", targetReps: 8, targetIntensity: "Bodyweight" },
+    ],
+    trackingMode: "bodyweight",
+    notes:
+      "Stand on one leg, reach opposite hand forward / lateral / back. Light squat each rep. Proprioception + glute med stabilization.",
+  },
+];
+
+// ============================================
+// Glute hypertrophy — supplementary hip-hinge work only.
+// Used as an optional finisher on Saturday. THP covers full-range
+// VMO loading, Bulgarian split squats, cable hip abduction.
+// ============================================
+export const gluteHypertrophy: Exercise[] = [
+  {
+    name: "Cable Pull-Through",
+    exerciseType: "accessory",
+    description: "3 × 12 with cable between legs.",
+    sets: [
+      { setNumber: 1, setType: "working", targetReps: 12, targetIntensity: "RPE 8", restSeconds: 60 },
+      { setNumber: 2, setType: "working", targetReps: 12, targetIntensity: "RPE 8", restSeconds: 60 },
+      { setNumber: 3, setType: "working", targetReps: 12, targetIntensity: "RPE 8", restSeconds: 60 },
+    ],
+    trackingMode: "weight_reps",
+    notes:
+      "Pure hip hinge. Cable rope attachment between legs, drive hips forward to lock out. Squeeze glutes hard at top.",
+  },
+  {
+    name: "45-Degree Back Extension (Glute Focus)",
+    exerciseType: "accessory",
+    description: "3 × 15 with rounded upper back and chin tucked.",
+    sets: [
+      { setNumber: 1, setType: "working", targetReps: 15, targetIntensity: "Bodyweight", restSeconds: 60 },
+      { setNumber: 2, setType: "working", targetReps: 15, targetIntensity: "Bodyweight", restSeconds: 60 },
+      { setNumber: 3, setType: "working", targetReps: 15, targetIntensity: "Bodyweight", restSeconds: 60 },
+    ],
+    trackingMode: "weight_reps",
+    notes:
+      "Forgotten glute hypertrophy exercise. Round upper back slightly, chin tucked, drive through heels and pad. Squeeze glutes — DON'T arch lower back to lift higher.",
+  },
+];

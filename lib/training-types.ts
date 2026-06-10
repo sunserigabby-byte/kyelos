@@ -10,7 +10,8 @@ export type ExerciseType =
   | "mobility"
   | "swing_prep"
   | "single_leg"
-  | "rehab";
+  | "rehab"
+  | "activation";
 
 export type SetType =
   | "warmup"

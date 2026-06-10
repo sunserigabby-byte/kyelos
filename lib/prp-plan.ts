@@ -1,5 +1,6 @@
 import type { Exercise, ExerciseSet, WorkoutDay } from "./training-types";
 import {
+  gluteHypertrophy,
   leftLegFinisher,
   leftLegStrength,
   leftLegVolume,
@@ -334,6 +335,15 @@ function saturdayExercises(): Exercise[] {
     ]),
     ...tantrumFull,
     { name: "Barbell Curl", exerciseType: "accessory", description: "3 × 10 @ RPE 8", sets: setsList(3, 10, "RPE 8", 60), trackingMode: "weight_reps" },
+
+    // Optional Saturday glute finisher — supplementary hip-hinge work
+    // to gap-fill what THP's program doesn't cover. ~15 min total.
+    // Skip entirely if recovery is the priority that week.
+    ...gluteHypertrophy.map((ex) => ({
+      ...ex,
+      optional: true,
+      notes: `Optional finisher — skip if recovery is the priority. ${ex.notes ?? ""}`.trim(),
+    })),
   ];
 }
 
