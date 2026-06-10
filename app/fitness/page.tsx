@@ -180,10 +180,22 @@ export default function FitnessPage() {
 
       <div className="mt-6 grid grid-cols-2 gap-2">
         <Link
+          href="/fitness/vertical"
+          className="tappable bg-white border border-forest/30 text-charcoal font-semibold py-2.5 px-3 rounded-md text-xs text-center"
+        >
+          🦘 Vertical Jump →
+        </Link>
+        <Link
+          href="/fitness/strength"
+          className="tappable bg-white border border-forest/30 text-charcoal font-semibold py-2.5 px-3 rounded-md text-xs text-center"
+        >
+          🏋️ Strength PRs →
+        </Link>
+        <Link
           href="/workout-history"
           className="tappable bg-white border border-forest/30 text-charcoal font-semibold py-2.5 px-3 rounded-md text-xs text-center"
         >
-          Lift History &amp; PRs →
+          Lift History →
         </Link>
         <Link
           href="/progress"

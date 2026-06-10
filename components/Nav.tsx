@@ -91,12 +91,18 @@ export default function Nav() {
             </button>
           </div>
         </div>
-        <nav className="flex gap-6 text-sm">
+        <nav className="flex gap-4 text-sm">
           <Link
             href="/"
             className={`pb-1 transition ${pathname === "/" ? "border-b-2 border-terracotta text-cream" : "text-cream/60"}`}
           >
             Today
+          </Link>
+          <Link
+            href="/plan"
+            className={`pb-1 transition ${pathname.startsWith("/plan") ? "border-b-2 border-terracotta text-cream" : "text-cream/60"}`}
+          >
+            Plan
           </Link>
           <Link
             href="/fitness"

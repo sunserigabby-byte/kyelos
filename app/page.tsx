@@ -16,6 +16,7 @@ import PRPToday from "@/components/PRPToday";
 import TournamentToday from "@/components/TournamentToday";
 import JonToday from "@/components/JonToday";
 import TogetherToday from "@/components/TogetherToday";
+import TrainingPlanToday from "@/components/TrainingPlanToday";
 import { useCycleSettings } from "@/components/useCycleSettings";
 import { useMealSwaps } from "@/components/useMealSwaps";
 import {
@@ -43,6 +44,7 @@ export default function TodayPage() {
     return <div className="text-center text-gray-500 py-8">Loading...</div>;
   }
   if (isCoupleMode) return <TogetherToday />;
+  if (activePhase?.phase_type === "training_plan") return <TrainingPlanToday />;
   if (activePhase?.phase_type === "vacation") return <VacationToday />;
   if (activePhase?.phase_type === "recovery_cut") return <PRPToday />;
   if (activePhase?.phase_type === "tournament_peak") return <TournamentToday />;
